@@ -1,0 +1,9 @@
+/* 
+  LocalizedText.strings
+  test
+
+  Created by Ramy Eldesoky on 8/2/17.
+  Copyright © 2017 Ramy Eldesoky. All rights reserved.
+*/
+"Sura" = "Sura %d";
+"Pg" = "Pg: %d";

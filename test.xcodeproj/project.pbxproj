@@ -7,25 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D48D3571F40D9720058552F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D48D3551F40D9720058552F /* HomeViewController.swift */; };
+		2D48D35E1F530AAA0058552F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D48D35D1F530AAA0058552F /* MainViewController.swift */; };
+		2D48D3601F530CF40058552F /* pg_map in Resources */ = {isa = PBXBuildFile; fileRef = 2D48D35F1F530CF40058552F /* pg_map */; };
 		2D7F5F641F04BDA40076316B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F631F04BDA40076316B /* AppDelegate.swift */; };
-		2D7F5F661F04BDA40076316B /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F651F04BDA40076316B /* RootViewController.swift */; };
-		2D7F5F681F04BDA40076316B /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F671F04BDA40076316B /* DataViewController.swift */; };
-		2D7F5F6A1F04BDA40076316B /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F691F04BDA40076316B /* ModelController.swift */; };
+		2D7F5F661F04BDA40076316B /* QPagesBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */; };
+		2D7F5F681F04BDA40076316B /* QPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F671F04BDA40076316B /* QPageView.swift */; };
+		2D7F5F6A1F04BDA40076316B /* QPagesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7F5F691F04BDA40076316B /* QPagesDataSource.swift */; };
 		2D7F5F6D1F04BDA40076316B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7F5F6B1F04BDA40076316B /* Main.storyboard */; };
 		2D7F5F6F1F04BDA50076316B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D7F5F6E1F04BDA50076316B /* Assets.xcassets */; };
 		2D7F5F721F04BDA50076316B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7F5F701F04BDA50076316B /* LaunchScreen.storyboard */; };
+		2DCEFD821F2EF25E00EAC321 /* QIndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */; };
+		2DCEFD981F32EC8700EAC321 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFD961F32EC8700EAC321 /* Localizable.strings */; };
+		2DCEFDA21F33FCFC00EAC321 /* SuraNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */; };
+		2DCEFDA51F3498E800EAC321 /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
+		2DCEFDA71F34AA6000EAC321 /* QData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA61F34AA6000EAC321 /* QData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D48D3551F40D9720058552F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
 		2D7F5F601F04BDA40076316B /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D7F5F631F04BDA40076316B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2D7F5F651F04BDA40076316B /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		2D7F5F671F04BDA40076316B /* DataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
-		2D7F5F691F04BDA40076316B /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
+		2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPagesBrowser.swift; sourceTree = "<group>"; };
+		2D7F5F671F04BDA40076316B /* QPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageView.swift; sourceTree = "<group>"; };
+		2D7F5F691F04BDA40076316B /* QPagesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPagesDataSource.swift; sourceTree = "<group>"; };
 		2D7F5F6C1F04BDA40076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2D7F5F6E1F04BDA50076316B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
+		2DCEFD831F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
+		2DCEFD841F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		2DCEFD971F32EC8700EAC321 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2DCEFD991F32EC9C00EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2DCEFDA11F33FCFC00EAC321 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/SuraNames.plist; sourceTree = "<group>"; };
+		2DCEFDA31F33FD0D00EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ar-EG"; path = "ar-EG.lproj/SuraNames.plist"; sourceTree = "<group>"; };
+		2DCEFDA41F3498E800EAC321 /* qdata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = qdata.json; sourceTree = "<group>"; };
+		2DCEFDA61F34AA6000EAC321 /* QData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +59,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D48D3591F52E7E80058552F /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				2D7F5F671F04BDA40076316B /* QPageView.swift */,
+				2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */,
+			);
+			name = controller;
+			sourceTree = "<group>";
+		};
+		2D48D35A1F52E7FD0058552F /* model */ = {
+			isa = PBXGroup;
+			children = (
+				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
+				2D7F5F691F04BDA40076316B /* QPagesDataSource.swift */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		2D48D35B1F52ED6C0058552F /* data */ = {
+			isa = PBXGroup;
+			children = (
+				2D48D35F1F530CF40058552F /* pg_map */,
+				2DCEFDA41F3498E800EAC321 /* qdata.json */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
+		2D48D35C1F5308AF0058552F /* controller.main */ = {
+			isa = PBXGroup;
+			children = (
+				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
+				2D48D3551F40D9720058552F /* HomeViewController.swift */,
+				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
+			);
+			name = controller.main;
+			sourceTree = "<group>";
+		};
 		2D7F5F571F04BDA40076316B = {
 			isa = PBXGroup;
 			children = (
@@ -58,10 +115,13 @@
 		2D7F5F621F04BDA40076316B /* test */ = {
 			isa = PBXGroup;
 			children = (
+				2D48D35C1F5308AF0058552F /* controller.main */,
+				2D48D35B1F52ED6C0058552F /* data */,
+				2D48D35A1F52E7FD0058552F /* model */,
+				2D48D3591F52E7E80058552F /* controller */,
+				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
+				2DCEFD961F32EC8700EAC321 /* Localizable.strings */,
 				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
-				2D7F5F651F04BDA40076316B /* RootViewController.swift */,
-				2D7F5F671F04BDA40076316B /* DataViewController.swift */,
-				2D7F5F691F04BDA40076316B /* ModelController.swift */,
 				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
 				2D7F5F6E1F04BDA50076316B /* Assets.xcassets */,
 				2D7F5F701F04BDA50076316B /* LaunchScreen.storyboard */,
@@ -113,6 +173,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"ar-EG",
 			);
 			mainGroup = 2D7F5F571F04BDA40076316B;
 			productRefGroup = 2D7F5F611F04BDA40076316B /* Products */;
@@ -130,8 +191,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D7F5F721F04BDA50076316B /* LaunchScreen.storyboard in Resources */,
+				2D48D3601F530CF40058552F /* pg_map in Resources */,
+				2DCEFD981F32EC8700EAC321 /* Localizable.strings in Resources */,
 				2D7F5F6F1F04BDA50076316B /* Assets.xcassets in Resources */,
 				2D7F5F6D1F04BDA40076316B /* Main.storyboard in Resources */,
+				2DCEFDA21F33FCFC00EAC321 /* SuraNames.plist in Resources */,
+				2DCEFDA51F3498E800EAC321 /* qdata.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,10 +207,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D7F5F661F04BDA40076316B /* RootViewController.swift in Sources */,
-				2D7F5F6A1F04BDA40076316B /* ModelController.swift in Sources */,
-				2D7F5F681F04BDA40076316B /* DataViewController.swift in Sources */,
+				2D7F5F661F04BDA40076316B /* QPagesBrowser.swift in Sources */,
+				2D7F5F6A1F04BDA40076316B /* QPagesDataSource.swift in Sources */,
+				2D7F5F681F04BDA40076316B /* QPageView.swift in Sources */,
+				2DCEFDA71F34AA6000EAC321 /* QData.swift in Sources */,
 				2D7F5F641F04BDA40076316B /* AppDelegate.swift in Sources */,
+				2D48D3571F40D9720058552F /* HomeViewController.swift in Sources */,
+				2DCEFD821F2EF25E00EAC321 /* QIndexViewController.swift in Sources */,
+				2D48D35E1F530AAA0058552F /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +225,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				2D7F5F6C1F04BDA40076316B /* Base */,
+				2DCEFD831F305D7600EAC321 /* ar-EG */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -164,8 +234,27 @@
 			isa = PBXVariantGroup;
 			children = (
 				2D7F5F711F04BDA50076316B /* Base */,
+				2DCEFD841F305D7600EAC321 /* ar-EG */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2DCEFD961F32EC8700EAC321 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DCEFD971F32EC8700EAC321 /* Base */,
+				2DCEFD991F32EC9C00EAC321 /* ar-EG */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DCEFDA11F33FCFC00EAC321 /* Base */,
+				2DCEFDA31F33FD0D00EAC321 /* ar-EG */,
+			);
+			name = SuraNames.plist;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -175,6 +264,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -226,6 +316,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -270,6 +361,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muslim-web.test";
@@ -282,6 +374,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muslim-web.test";
@@ -309,6 +402,7 @@
 				2D7F5F781F04BDA50076316B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

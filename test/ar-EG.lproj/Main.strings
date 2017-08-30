@@ -1,0 +1,21 @@
+
+/* Class = "UIViewController"; title = "Browser"; ObjectID = "703-4V-yAM"; */
+"703-4V-yAM.title" = "متصفح";
+
+/* Class = "UIViewController"; title = "Page View"; ObjectID = "S4R-Ja-viH"; */
+"S4R-Ja-viH.title" = "عرض الصفحة";
+
+/* Class = "UITableViewController"; title = "Quran Index"; ObjectID = "UuV-Ke-L9r"; */
+"UuV-Ke-L9r.title" = "فهرس السور";
+
+/* Class = "UILabel"; text = "Page Number"; ObjectID = "cF2-Le-7mQ"; */
+"cF2-Le-7mQ.text" = "رقم الصفحة";
+
+/* Class = "UINavigationItem"; title = "Reading"; ObjectID = "cqr-3I-KYN"; */
+"cqr-3I-KYN.title" = "قراءة";
+
+/* Class = "UILabel"; text = "Sura Name #"; ObjectID = "oGq-2Z-yCC"; */
+"oGq-2Z-yCC.text" = "سورة #";
+
+/* Class = "UINavigationItem"; title = "Quran Index"; ObjectID = "qA5-Dq-stA"; */
+"qA5-Dq-stA.title" = "الفهرس";
