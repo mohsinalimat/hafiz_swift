@@ -17,6 +17,7 @@ class QIndexViewController: UITableViewController{
     
     override
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "Sura Info", for: indexPath)
 
         let rowIndex = indexPath.row;
@@ -44,8 +45,8 @@ class QIndexViewController: UITableViewController{
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let qPagesBrowser = segue.destination as! QPagesBrowser
-        if let viewCell = sender as? UITableViewCell {
+        //let qPagesBrowser = segue.destination as! QPagesBrowser
+        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser {
             qPagesBrowser.startingPage = viewCell.tag
         }
         

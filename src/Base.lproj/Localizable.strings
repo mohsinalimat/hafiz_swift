@@ -5,5 +5,7 @@
   Created by Ramy Eldesoky on 8/2/17.
   Copyright © 2017 Ramy Eldesoky. All rights reserved.
 */
-"Sura"= "سورة: %d";
-"Pg" = "ص: %d";
+"Sura" = "Sura %d";
+"Pg" = "Pg: %d";
+"Part" = "Part %d";
+"PartInfo" = "Page %d - Sura %d - %@";

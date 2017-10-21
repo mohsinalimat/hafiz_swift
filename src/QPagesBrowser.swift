@@ -14,9 +14,32 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
     var startingPage:Int?
 
     @IBOutlet weak var actionsLabel: UIBarButtonItem!
+    @IBOutlet weak var pageNumberLabel: UILabel!
+    @IBOutlet weak var nextSura: UIButton!
+    @IBOutlet weak var prevSura: UIButton!
 
     override func viewWillAppear(_ animated: Bool) {
         //self.navigationController?.navigationBar.backgroundColor = .green
+    }
+    
+    func gotoPage(_ pageNum: Int ){
+
+        let startingViewController: QPageView = self.modelController.viewControllerAtIndex(
+            pageNum,
+            storyboard: self.storyboard!
+            )!
+        
+        //pass inital set of page viewers
+        let viewControllers = [startingViewController]
+        
+        self.pageViewController!.setViewControllers(
+            viewControllers,
+            direction: .forward,
+            animated: false,
+            completion: {done in}
+        )
+        
+        updateTitle()
     }
     
     override func viewDidLoad() {
@@ -28,31 +51,12 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
                                                        options: nil)
         // set this object as a delegate
         self.pageViewController!.delegate = self
-        
-        // force Right to Left pages direction
-        func clickedAction(_ sender: UIBarButtonItem) {
-        }
-        //self.pageViewController.
-        
-        let urStartingPage = self.startingPage ?? 1
-
-        let startingViewController: QPageView = self.modelController.viewControllerAtIndex(
-            urStartingPage,
-            storyboard: self.storyboard!
-        )!
-        
-        //pass inital set of page viewers
-        let viewControllers = [startingViewController]
-        
-        self.pageViewController!.setViewControllers(
-            viewControllers,
-            direction: .forward,
-            animated: false,
-            completion: {done in}
-        )
-
         self.pageViewController!.dataSource = self.modelController
+        
+        let uwStartingPage = self.startingPage ?? 1
 
+        gotoPage(uwStartingPage)
+        
         self.addChildViewController(self.pageViewController!)
         
         self.view.addSubview(self.pageViewController!.view)
@@ -60,6 +64,9 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
         // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
         var pageViewRect = self.view.bounds
         
+        pageViewRect.size.height = pageViewRect.height - 30
+        
+        //If IPad, add 40 pixel padding around the view
         if UIDevice.current.userInterfaceIdiom == .pad {
             pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
         }
@@ -70,7 +77,6 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
         
         self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         
-        updateTitle()
     }
     
     override func didReceiveMemoryWarning() {
@@ -88,35 +94,57 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
     }
 
     var _modelController: QPagesDataSource? = nil
-    
-    @IBAction func clickedActions(_ sender: Any) {
-        let mnuController = UIMenuController.shared
-        //mnuController.setTargetRect(actionsLabel.fra, in: <#T##UIView#>)
-        mnuController.setTargetRect(CGRect(x:0,y:0,width:100,height:20), in: self.view)
-        
-        let lookupMenu = UIMenuItem(title: "Item",
-                                    action: #selector(QPagesBrowser.menuAction1))
 
-        mnuController.menuItems = [lookupMenu]
-        
-        // This makes the menu item visible.
-        mnuController.setMenuVisible(true, animated: true)
+  
+    @IBAction func clickedActions(_ sender: Any) {
+
     }
+    
+    
+    // Find the active QPageView and read its pageNumber, find the suraName and update the title
+    //Note viewControllers array holds one view in case of portrait and 2 in case of landscape showing two pages
+    func updateTitle(){
+        //reference the first QPageView
+        let pageIndex = currentPageIndx()
+        
+        if let uwData = qData  {
+            //get suraName from pageIndex
+            self.title = uwData.suraName(pageIndex: pageIndex)
+            self.pageNumberLabel.text = "\(pageIndex+1)"
+        }
+    }
+    
+    func currentPageIndx()->Int{
+        let qPageView = self.pageViewController!.viewControllers![0] as! QPageView
+        if let uwPageNumber = qPageView.pageNumber{
+            return uwPageNumber - 1
+        }
+        return 0
+    }
+
+    // MARK: Event Hanlders
     
     func menuAction1(){
         print("Action1")
     }
     
-    func updateTitle(){
-        let currentViewController = self.pageViewController!.viewControllers![0] as! QPageView
+    @IBAction func gotoNextSura(_ sender: Any) {
+        if let uwData = qData {
+            gotoPage( uwData.suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
+        }
         
-        let pageNumber = self.modelController.pageIndex( currentViewController )
-        
-        if let urData = qData {
-            self.title = urData.suraName(pageIndex: pageNumber - 1)
+    }
+    
+    @IBAction func gotoPrevSura(_ sender: Any) {
+        if let uwData = qData {
+            gotoPage( uwData.suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
         }
     }
-
+    
+//    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+//        return true
+//    }
+    
     // MARK: - UIPageViewController delegate methods
 
     func pageViewController(_
@@ -138,7 +166,7 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
             )
 
             self.pageViewController!.isDoubleSided = false
-            return .min
+            return .min //show only one page
         }
 
         // In landscape orientation: Set set the spine location to "mid" and the page view controller's view controllers array to contain two view controllers. If the current page is even, set it to contain the current and next view controllers; if it is odd, set the array to contain the previous and current view controllers.
@@ -165,7 +193,7 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
             completion: {done in }
         )
         
-        return .mid
+        return .mid //using two view controllers with middle spine
     }
     
     func pageViewController(_
@@ -177,6 +205,5 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
         updateTitle()
     }
     
-
 }
 
