@@ -46,7 +46,7 @@ class QPageView: UIViewController{
         }
     }
     
-    func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
+    @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
         becomeFirstResponder()
         clickedAya = tapGestureRecognizer.view
         clickedAya!.backgroundColor = .blue
@@ -122,11 +122,11 @@ class QPageView: UIViewController{
         }
     }
 
-    func ayaTafseer(){
+    @objc func ayaTafseer(){
         performSegue(withIdentifier: "ShowTafseer", sender: clickedAya)
     }
 
-    func ayaRecite(){
+    @objc func ayaRecite(){
         print("Recite")
     }
 

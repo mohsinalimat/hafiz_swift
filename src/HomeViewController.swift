@@ -69,14 +69,25 @@ extension String {
             //result.rangeAt(<#T##idx: Int##Int#>)
             //ns.substring(with: result.range)
             //TODO: Enum all ranges
-            ns.substring(with: result.rangeAt(1))
+            ns.substring(with: result.range(at: 1))
         }
     }
     
     func convertHtml() -> NSAttributedString{
-        guard let data = data(using: .utf8) else { return NSAttributedString() }
+        guard let data = data(using: .utf8)
+            else {
+                return NSAttributedString()
+            }
+        
         do{
-            return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: String.Encoding.utf8.rawValue], documentAttributes: nil)
+            return try NSAttributedString(
+              data: data,
+              options: [
+                NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html,
+                NSAttributedString.DocumentReadingOptionKey.characterEncoding: String.Encoding.utf8.rawValue
+              ],
+              documentAttributes: nil
+            )
         }catch{
             return NSAttributedString()
         }
