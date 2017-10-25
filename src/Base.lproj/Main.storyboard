@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -115,8 +115,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JfJ-lY-KJM">
+                                <rect key="frame" x="16" y="205" width="343" height="442"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QgD-cI-Gul">
-                                <rect key="frame" x="16" y="49" width="343" height="598"/>
+                                <rect key="frame" x="16" y="49" width="343" height="148"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <attributedString key="attributedText">
                                     <fragment content="Loading Tafseer...">
@@ -132,15 +136,20 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="E1n-5C-ipv" firstAttribute="leading" secondItem="ZWI-xC-xlp" secondAttribute="leadingMargin" id="ANL-lS-3eR"/>
+                            <constraint firstItem="QgD-cI-Gul" firstAttribute="leading" secondItem="E1n-5C-ipv" secondAttribute="leading" id="ARe-Iw-cAe"/>
                             <constraint firstItem="E1n-5C-ipv" firstAttribute="top" secondItem="WgS-wk-GQW" secondAttribute="bottom" id="Hgo-tn-XKY"/>
                             <constraint firstItem="E1n-5C-ipv" firstAttribute="trailing" secondItem="ZWI-xC-xlp" secondAttribute="trailingMargin" id="JWb-Dp-NLW"/>
-                            <constraint firstItem="E1n-5C-ipv" firstAttribute="trailing" secondItem="QgD-cI-Gul" secondAttribute="trailing" id="VLh-Yk-75l"/>
-                            <constraint firstItem="QgD-cI-Gul" firstAttribute="top" secondItem="E1n-5C-ipv" secondAttribute="bottom" constant="8" symbolic="YES" id="av0-Sb-8xw"/>
-                            <constraint firstAttribute="bottom" secondItem="QgD-cI-Gul" secondAttribute="bottom" constant="20" symbolic="YES" id="fQZ-5d-1fp"/>
-                            <constraint firstItem="E1n-5C-ipv" firstAttribute="leading" secondItem="QgD-cI-Gul" secondAttribute="leading" id="uHJ-Zi-oOw"/>
+                            <constraint firstItem="JfJ-lY-KJM" firstAttribute="trailing" secondItem="QgD-cI-Gul" secondAttribute="trailing" id="RtW-Jb-mAE"/>
+                            <constraint firstItem="JfJ-lY-KJM" firstAttribute="leading" secondItem="QgD-cI-Gul" secondAttribute="leading" id="W1I-aL-YAv"/>
+                            <constraint firstItem="QgD-cI-Gul" firstAttribute="trailing" secondItem="E1n-5C-ipv" secondAttribute="trailing" id="Yr3-3L-IrA"/>
+                            <constraint firstItem="QgD-cI-Gul" firstAttribute="top" secondItem="E1n-5C-ipv" secondAttribute="bottom" constant="8" symbolic="YES" id="gwe-BF-obL"/>
+                            <constraint firstAttribute="bottom" secondItem="JfJ-lY-KJM" secondAttribute="bottom" constant="20" symbolic="YES" id="hWp-Fb-mvM"/>
+                            <constraint firstItem="JfJ-lY-KJM" firstAttribute="top" secondItem="QgD-cI-Gul" secondAttribute="bottom" constant="8" symbolic="YES" id="tai-lm-m5v"/>
+                            <constraint firstItem="fIJ-VD-jnW" firstAttribute="top" secondItem="QgD-cI-Gul" secondAttribute="bottom" constant="470" id="uVJ-NC-7ad"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="PageViewFrame" destination="JfJ-lY-KJM" id="6Ug-Nu-688"/>
                         <outlet property="TafseerContent" destination="QgD-cI-Gul" id="ISp-ty-aau"/>
                         <outlet property="TafseerTitle" destination="E1n-5C-ipv" id="Aus-QV-KOM"/>
                     </connections>
@@ -148,6 +157,48 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hZJ-hz-xoF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1300" y="-358.4707646176912"/>
+        </scene>
+        <!--Tafseer Aya View-->
+        <scene sceneID="yw5-hV-mil">
+            <objects>
+                <viewController storyboardIdentifier="TafseerAyaView" id="EjG-LK-2vR" customClass="TafseerAyaView" customModule="quran_hafiz" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EUJ-Np-nOp"/>
+                        <viewControllerLayoutGuide type="bottom" id="tSP-Rx-ah4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dre-Ck-b63">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJL-UH-Zd9">
+                                <rect key="frame" x="16" y="20" width="343" height="627"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Loading Tafseer...">
+                                        <attributes>
+                                            <font key="NSFont" metaFont="system" size="14"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="MJL-UH-Zd9" firstAttribute="top" secondItem="EUJ-Np-nOp" secondAttribute="bottom" id="96c-W8-VEy"/>
+                            <constraint firstItem="MJL-UH-Zd9" firstAttribute="leading" secondItem="Dre-Ck-b63" secondAttribute="leadingMargin" id="Fb0-Oj-xga"/>
+                            <constraint firstAttribute="bottom" secondItem="MJL-UH-Zd9" secondAttribute="bottom" constant="20" symbolic="YES" id="gZs-rl-fGt"/>
+                            <constraint firstItem="MJL-UH-Zd9" firstAttribute="trailing" secondItem="Dre-Ck-b63" secondAttribute="trailingMargin" id="ggX-9d-0CS"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="AyaView" destination="MJL-UH-Zd9" id="V6j-cf-xqM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7jb-2c-PgT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1952.8" y="-196.55172413793105"/>
         </scene>
         <!--Page View-->
         <scene sceneID="snT-py-3hH">

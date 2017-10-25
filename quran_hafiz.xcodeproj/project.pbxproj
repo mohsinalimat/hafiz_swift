@@ -24,6 +24,7 @@
 		2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */; };
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
 		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
+		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		2DCEFDA31F33FD0D00EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ar-EG"; path = "ar-EG.lproj/SuraNames.plist"; sourceTree = "<group>"; };
 		2DCEFDA41F3498E800EAC321 /* qdata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = qdata.json; sourceTree = "<group>"; };
 		2DCEFDA61F34AA6000EAC321 /* QData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QData.swift; sourceTree = "<group>"; };
+		2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TafseerAyaView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,14 +65,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2D48D3591F52E7E80058552F /* controller */ = {
+		2D48D3591F52E7E80058552F /* sub views */ = {
 			isa = PBXGroup;
 			children = (
+				2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */,
+				2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */,
 				2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */,
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
-				2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */,
 			);
-			name = controller;
+			name = "sub views";
 			sourceTree = "<group>";
 		};
 		2D48D35A1F52E7FD0058552F /* model */ = {
@@ -91,15 +94,15 @@
 			name = data;
 			sourceTree = "<group>";
 		};
-		2D48D35C1F5308AF0058552F /* controller.main */ = {
+		2D48D35C1F5308AF0058552F /* main views */ = {
 			isa = PBXGroup;
 			children = (
-				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
 				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
-				2D159E831F7F5B5F00AFE7E2 /* TafseerViewController.swift */,
 				2D48D3551F40D9720058552F /* HomeViewController.swift */,
+				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
+				2D159E831F7F5B5F00AFE7E2 /* TafseerViewController.swift */,
 			);
-			name = controller.main;
+			name = "main views";
 			sourceTree = "<group>";
 		};
 		2D7F5F571F04BDA40076316B = {
@@ -121,14 +124,14 @@
 		2D7F5F621F04BDA40076316B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2D48D35C1F5308AF0058552F /* controller.main */,
+				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
+				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
+				2D48D35C1F5308AF0058552F /* main views */,
+				2D48D3591F52E7E80058552F /* sub views */,
 				2D48D35B1F52ED6C0058552F /* data */,
 				2D48D35A1F52E7FD0058552F /* model */,
-				2D48D3591F52E7E80058552F /* controller */,
 				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
 				2DCEFD961F32EC8700EAC321 /* Localizable.strings */,
-				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
-				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
 				2D7F5F6E1F04BDA50076316B /* Assets.xcassets */,
 				2D7F5F701F04BDA50076316B /* LaunchScreen.storyboard */,
 				2D7F5F731F04BDA50076316B /* Info.plist */,
@@ -212,6 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */,
 				2D41B2391F9BC0A800199BAD /* QPagesBrowser.swift in Sources */,
 				2D41B23A1F9BC0A800199BAD /* QPagesDataSource.swift in Sources */,
 				2D41B23B1F9BC0A800199BAD /* QPageView.swift in Sources */,

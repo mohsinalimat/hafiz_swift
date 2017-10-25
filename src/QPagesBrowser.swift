@@ -73,7 +73,7 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
         
         self.pageViewController!.view.frame = pageViewRect
 
-        self.pageViewController!.didMove(toParentViewController: self)
+        self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
         
         self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         

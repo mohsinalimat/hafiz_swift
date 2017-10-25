@@ -5,29 +5,29 @@
     <key>1</key><string>Al-Fatihah</string>
     <key>2</key><string>Al-Baqarah</string>
     <key>3</key><string>Aal-E-Imran</string>
-    <key>4</key><string>An-Nisa\'</string>
-    <key>5</key><string>Al-Ma\'idah</string>
-    <key>6</key><string>Al-An\'am</string>
-    <key>7</key><string>Al-A\'raf</string>
+    <key>4</key><string>An-Nisa </string>
+    <key>5</key><string>Al-Ma'idah</string>
+    <key>6</key><string>Al-An'am</string>
+    <key>7</key><string>Al-A'raf</string>
     <key>8</key><string>Al-Anfal</string>
     <key>9</key><string>At-Tawbah</string>
     <key>10</key><string>Yunus</string>
     <key>11</key><string>Hud</string>
     <key>12</key><string>Yusuf</string>
-    <key>13</key><string>Ar-Ra\'d</string>
+    <key>13</key><string>Ar-Ra'd</string>
     <key>14</key><string>Ibrahim</string>
     <key>15</key><string>Al-Hijr</string>
     <key>16</key><string>An-Nahl</string>
-    <key>17</key><string>Al-Isra\'</string>
+    <key>17</key><string>Al-Isra'</string>
     <key>18</key><string>Al-Kahf</string>
     <key>19</key><string>Maryam</string>
     <key>20</key><string>Ta-Ha</string>
-    <key>21</key><string>Al-Anbiya\'</string>
+    <key>21</key><string>Al-Anbiya'</string>
     <key>22</key><string>Al-Hajj</string>
-    <key>23</key><string>Al-Mu\'minun</string>
+    <key>23</key><string>Al-Mu'minun</string>
     <key>24</key><string>An-Nur</string>
     <key>25</key><string>Al-Furqan</string>
-    <key>26</key><string>Ash-Shu\'ara</string>
+    <key>26</key><string>Ash-Shu'ara</string>
     <key>27</key><string>An-Naml</string>
     <key>28</key><string>Al-Qasas</string>
     <key>29</key><string>Al-Ankabut</string>
@@ -35,7 +35,7 @@
     <key>31</key><string>Luqman</string>
     <key>32</key><string>As-Sajdah</string>
     <key>33</key><string>Al-Ahzab</string>
-    <key>34</key><string>Saba\'</string>
+    <key>34</key><string>Saba'</string>
     <key>35</key><string>Fatir</string>
     <key>36</key><string>Ya-Seen</string>
     <key>37</key><string>As-Saaffat</string>
@@ -57,13 +57,13 @@
     <key>53</key><string>An-Najm</string>
     <key>54</key><string>Al-Qamar</string>
     <key>55</key><string>Ar-Rahman</string>
-    <key>56</key><string>Al-Waqi\'ah</string>
+    <key>56</key><string>Al-Waqi'ah</string>
     <key>57</key><string>Al-Hadid</string>
     <key>58</key><string>Al-Mujadila</string>
     <key>59</key><string>Al-Hashr</string>
     <key>60</key><string>Al-Mumtahana</string>
     <key>61</key><string>As-Saf</string>
-    <key>62</key><string>Al-Jumu\'ah</string>
+    <key>62</key><string>Al-Jumu'ah</string>
     <key>63</key><string>Al-Munafiqun</string>
     <key>64</key><string>At-Taghabun</string>
     <key>65</key><string>At-Talaq</string>
@@ -71,7 +71,7 @@
     <key>67</key><string>Al-Mulk</string>
     <key>68</key><string>Al-Qalam</string>
     <key>69</key><string>Al-Haqqah</string>
-    <key>70</key><string>Al-Ma\'arij</string>
+    <key>70</key><string>Al-Ma'arij</string>
     <key>71</key><string>Nuh</string>
     <key>72</key><string>Al-Jinn</string>
     <key>73</key><string>Al-Muzzammil</string>
@@ -79,16 +79,16 @@
     <key>75</key><string>Al-Qiyamah</string>
     <key>76</key><string>Al-Insan</string>
     <key>77</key><string>Al-Mursalat</string>
-    <key>78</key><string>An-Naba\'</string>
-    <key>79</key><string>An-Nazi\'at</string>
-    <key>80</key><string>\'Abasa</string>
+    <key>78</key><string>An-Naba'</string>
+    <key>79</key><string>An-Nazi'at</string>
+    <key>80</key><string>'Abasa</string>
     <key>81</key><string>At-Takwir</string>
     <key>82</key><string>Al-Infitar</string>
     <key>83</key><string>Al-Mutaffifin</string>
     <key>84</key><string>Al-Inshiqaq</string>
     <key>85</key><string>Al-Buruj</string>
     <key>86</key><string>At-Tariq</string>
-    <key>87</key><string>Al-A\'la</string>
+    <key>87</key><string>Al-A'la</string>
     <key>88</key><string>Al-Ghashiyah</string>
     <key>89</key><string>Al-Fajr</string>
     <key>90</key><string>Al-Balad</string>
@@ -102,13 +102,13 @@
     <key>98</key><string>Al-Bayyinah</string>
     <key>99</key><string>Az-Zalzalah</string>
     <key>100</key><string>Al-Adiyat</string>
-    <key>101</key><string>Al-Qari\'ah</string>
+    <key>101</key><string>Al-Qari'ah</string>
     <key>102</key><string>At-Takathur</string>
     <key>103</key><string>Al-Asr</string>
     <key>104</key><string>Al-Humazah</string>
     <key>105</key><string>Al-Fil</string>
     <key>106</key><string>Quraysh</string>
-    <key>107</key><string>Al-Ma\'un</string>
+    <key>107</key><string>Al-Ma'un</string>
     <key>108</key><string>Al-Kawthar</string>
     <key>109</key><string>Al-Kafirun</string>
     <key>110</key><string>An-Nasr</string>
