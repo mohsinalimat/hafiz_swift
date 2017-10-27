@@ -42,6 +42,16 @@ class QData{
         
     }
     
+    static var qData: QData?
+    
+    static func instance()->QData{
+        if let inst = qData {
+            return inst
+        }
+        qData = QData()
+        return qData!
+    }
+    
     static func pageMap(_ pageIndex:Int)->[[String:String]]{
         do{
             if let path = Bundle.main.url(forResource: "pg_map/pm_\(pageIndex+1)", withExtension: "json")
@@ -63,6 +73,29 @@ class QData{
         }
 
         return []
+    }
+    func ayaPosition( sura:Int, aya:Int )->Int{
+        var index = 0
+        for suraIndex in 0..<sura{
+            if let suraInfo = self.suraInfo(suraIndex:suraIndex) {
+                index += suraInfo["ac"]!
+            }
+        }
+        return index+aya
+    }
+
+    func ayaLocation(_ index:Int )->(sura:Int,aya:Int){
+        var suraStartIndex = 0
+        if let suras = self.suraInfo {
+            for suraIndex in 0..<114{
+                let suraInfo = suras[suraIndex]
+                if suraStartIndex + suraInfo["ac"]! > index {
+                    return (suraIndex, index-suraStartIndex)
+                }
+                suraStartIndex+=suraInfo["ac"]!
+            }
+        }
+        return (0,0)
     }
     
     static func encodeAya(sura:Int?,aya:Int?)->Int{
@@ -176,6 +209,13 @@ class QData{
             if(suraIndex<suras.count){
                 return suras[suraIndex]
             }
+        }
+        return nil
+    }
+    
+    func ayaCount( suraIndex: Int ) -> Int?{
+        if let suraInfo = suraInfo(suraIndex:suraIndex) {
+            return suraInfo["ac"]
         }
         return nil
     }

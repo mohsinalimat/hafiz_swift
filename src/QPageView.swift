@@ -29,17 +29,18 @@ class QPageView: UIViewController{
     func createAyaButtons(){
         if let uwPageNumber = pageNumber{
             pageMap = QData.pageMap( uwPageNumber-1 )
+            let qData = QData.instance()
             if let uwPageMap = pageMap {
                 for(var button) in uwPageMap{
                     let btn = UIView()
                     btn.semanticContentAttribute = .forceRightToLeft
                     btn.alpha = 0.3
-                    let ayaId = button["sura"]! + "_" + button["aya"]!
-                    btn.restorationIdentifier = "aya_\(ayaId)"
+//                    let ayaId = button["sura"]! + "_" + button["aya"]!
+//                    btn.restorationIdentifier = "aya_\(ayaId)"
                     btn.backgroundColor = .brown
                     btn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickAyaButton)))
                     btn.isUserInteractionEnabled = true
-                    btn.tag = QData.encodeAya(sura: Int(button["sura"]!)!-1, aya: Int(button["aya"]!)!-1)
+                    btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)!-1, aya: Int(button["aya"]!)!-1)
                     self.pageImage.addSubview(btn)
                 }
             }
@@ -142,7 +143,7 @@ class QPageView: UIViewController{
         if let ayaButton = sender as? UIView,
             let tafseerView = segue.destination as? TafseerViewController {
             
-            tafseerView.ayaLocation = ayaButton.tag
+            tafseerView.ayaPosition = ayaButton.tag
         }
     }
     override func didReceiveMemoryWarning() {

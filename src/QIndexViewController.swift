@@ -22,8 +22,10 @@ class QIndexViewController: UITableViewController{
 
         let rowIndex = indexPath.row;
         
-        if let urData = qData, let suraName = urData.suraName(suraIndex: rowIndex) {
-            if let sInfo = urData.suraInfo?[rowIndex], let page = sInfo["sp"]{
+        let qData = QData.instance()
+        
+        if let suraName = qData.suraName(suraIndex: rowIndex) {
+            if let sInfo = qData.suraInfo?[rowIndex], let page = sInfo["sp"]{
                 let pagePrompt = NSLocalizedString("Pg", comment: "")
                 
                 cell.tag = page;

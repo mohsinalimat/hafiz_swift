@@ -106,12 +106,10 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
     func updateTitle(){
         //reference the first QPageView
         let pageIndex = currentPageIndx()
-        
-        if let uwData = qData  {
-            //get suraName from pageIndex
-            self.title = uwData.suraName(pageIndex: pageIndex)
-            self.pageNumberLabel.text = "\(pageIndex+1)"
-        }
+        let qData = QData.instance()
+        //get suraName from pageIndex
+        self.title = qData.suraName(pageIndex: pageIndex)
+        self.pageNumberLabel.text = "\(pageIndex+1)"
     }
     
     func currentPageIndx()->Int{
@@ -129,16 +127,11 @@ class QPagesBrowser: UIViewController, UIPageViewControllerDelegate {
     }
     
     @IBAction func gotoNextSura(_ sender: Any) {
-        if let uwData = qData {
-            gotoPage( uwData.suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
-        }
-        
+        gotoPage( QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
     }
     
     @IBAction func gotoPrevSura(_ sender: Any) {
-        if let uwData = qData {
-            gotoPage( uwData.suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
-        }
+        gotoPage( QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
     }
     
 //    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
