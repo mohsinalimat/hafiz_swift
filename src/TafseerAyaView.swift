@@ -11,7 +11,8 @@ import UIKit
 class TafseerAyaView: UIViewController {
 
     @IBOutlet weak var AyaView: UITextView!
-    var AyaIndex:Int?
+    var AyaPosition:Int?
+    var selectedTafseer = "KATHEER"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,14 +22,15 @@ class TafseerAyaView: UIViewController {
         // Do any additional setup after loading the view.
         if let uQData=qData {
             //let (suraIndex,ayaIndex) = QData.decodeAya(uAyaLocation)
-            let (suraIndex,ayaIndex) = uQData.ayaLocation( AyaIndex! )
+            let (suraIndex,ayaIndex) = uQData.ayaLocation( AyaPosition! )
+            
             //let suraName = uQData.suraName(suraIndex:suraIndex)!
             //TafseerTitle.text = "Tafseer: \(suraName), Aya: \(ayaIndex+1)"
             
             
             let sSura = String(format: "%03d", suraIndex+1)
             let sAya = String(format: "%03d", ayaIndex+1)
-            let tafseerUrl = URL(string:"http://www.egylist.com/quran/get_taf_utf8.pl?/quran/tafseer/KATHEER/\(sSura)\(sAya).html")!
+            let tafseerUrl = URL(string:"http://www.egylist.com/quran/get_taf_utf8.pl?/quran/tafseer/\(selectedTafseer)/\(sSura)\(sAya).html")!
             //let tafseerUrl = URL(string:"http://www.egylist.com/quran/get_db_taf.pl?src=en_yusufali&s=\(suraIndex+1)&a=\(ayaIndex+1)")!
             
             let downloadTask = URLSession.shared.dataTask(with: tafseerUrl){ (data, response, error) in
