@@ -12,6 +12,8 @@ class QData{
     var suraInfo:[[String:Int]]?
     var partInfo:[[String:Int]]?
     
+    static let totalAyat = 6236
+    
     enum Direction {
         case forward
         case backward
@@ -74,6 +76,7 @@ class QData{
 
         return []
     }
+    
     func ayaPosition( sura:Int, aya:Int )->Int{
         var index = 0
         for suraIndex in 0..<sura{
@@ -83,7 +86,7 @@ class QData{
         }
         return index+aya
     }
-
+    
     func ayaLocation(_ index:Int )->(sura:Int,aya:Int){
         var suraStartIndex = 0
         if let suras = self.suraInfo {
@@ -98,12 +101,12 @@ class QData{
         return (0,0)
     }
     
-    static func encodeAya(sura:Int?,aya:Int?)->Int{
-        return sura! * 1000 + aya!
-    }
-    static func decodeAya(_ aya:Int)->(sura:Int,aya:Int){
-        return (aya/1000,aya%1000)
-    }
+//    static func encodeAya(sura:Int?,aya:Int?)->Int{
+//        return sura! * 1000 + aya!
+//    }
+//    static func decodeAya(_ aya:Int)->(sura:Int,aya:Int){
+//        return (aya/1000,aya%1000)
+//    }
     
     func suraIndex( pageIndex: Int, direction: Direction = .forward )->Int{
         if let suraInfoList = self.suraInfo {

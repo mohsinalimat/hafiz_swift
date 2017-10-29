@@ -79,10 +79,9 @@
 			isa = PBXGroup;
 			children = (
 				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
-				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
-				2DF881F91FA380CB0045EFCF /* HomeView */,
-				2DF881FA1FA380FC0045EFCF /* PagesView */,
-				2DF881F81FA3801A0045EFCF /* Tafseer */,
+				2DF881F91FA380CB0045EFCF /* HomeScreen */,
+				2DF881FA1FA380FC0045EFCF /* PagesBrowser */,
+				2DF881F81FA3801A0045EFCF /* TafseerBrowser */,
 				2D48D35B1F52ED6C0058552F /* data */,
 				2D7F5F621F04BDA40076316B /* src */,
 				2D7F5F611F04BDA40076316B /* Products */,
@@ -100,6 +99,7 @@
 		2D7F5F621F04BDA40076316B /* src */ = {
 			isa = PBXGroup;
 			children = (
+				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
 				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
 				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
@@ -111,35 +111,35 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		2DF881F81FA3801A0045EFCF /* Tafseer */ = {
+		2DF881F81FA3801A0045EFCF /* TafseerBrowser */ = {
 			isa = PBXGroup;
 			children = (
 				2D159E831F7F5B5F00AFE7E2 /* TafseerViewController.swift */,
 				2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */,
 			);
-			name = Tafseer;
+			name = TafseerBrowser;
 			path = src;
 			sourceTree = "<group>";
 		};
-		2DF881F91FA380CB0045EFCF /* HomeView */ = {
+		2DF881F91FA380CB0045EFCF /* HomeScreen */ = {
 			isa = PBXGroup;
 			children = (
 				2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */,
 				2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */,
 				2D48D3551F40D9720058552F /* HomeViewController.swift */,
 			);
-			name = HomeView;
+			name = HomeScreen;
 			path = src;
 			sourceTree = "<group>";
 		};
-		2DF881FA1FA380FC0045EFCF /* PagesView */ = {
+		2DF881FA1FA380FC0045EFCF /* PagesBrowser */ = {
 			isa = PBXGroup;
 			children = (
 				2D7F5F691F04BDA40076316B /* QPagesDataSource.swift */,
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
 				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
 			);
-			name = PagesView;
+			name = PagesBrowser;
 			path = src;
 			sourceTree = "<group>";
 		};

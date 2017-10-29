@@ -75,9 +75,9 @@ extension String {
     
     func convertHtml() -> NSAttributedString{
         guard let data = data(using: .utf8)
-            else {
-                return NSAttributedString()
-            }
+        else {
+            return NSAttributedString()
+        }
         
         do{
             return try NSAttributedString(

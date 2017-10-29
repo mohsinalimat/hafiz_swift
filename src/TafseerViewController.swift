@@ -8,23 +8,35 @@
 
 import UIKit
 
+let TafseerSources = [
+    "KORTOBY",
+    "TABARY",
+    "GALALEEN",
+    "KATHEER",
+    "en_yusufali",
+    "tr_ozturk",
+    "fr_hamidullah",
+    "de_bubenheim",
+    "id_muntakhab",
+    "ms_basmeih"
+]
+
 class TafseerViewController: UIViewController,
     UIPageViewControllerDelegate,
     UIPageViewControllerDataSource,
     UIPickerViewDelegate,
     UIPickerViewDataSource
 {
-    var tafseerSources = ["KATHEER","KORTOBY","TABARY","GALALEEN"]
+
     static var selectedTafseer = 0
-    
     
     @IBOutlet weak var PageViewFrame: UIView!
     @IBOutlet weak var tafseerSourceSelector: UIPickerView!
 
     var firstAya = 0
-    var lastAya = 10000
+    var lastAya = 6236
     var pageViewController:UIPageViewController?
-    var ayaPosition:Int?
+    var ayaPosition:Int = 0
 
     // MARK: UIViewController delegate methods
 
@@ -40,16 +52,16 @@ class TafseerViewController: UIViewController,
         pageViewController!.dataSource = self
         
         //make it child of the current controller ?? Not sure why
-        self.addChildViewController(pageViewController!)
+        //self.addChildViewController(pageViewController!)
 
         //locate the pager inside a dedicated frame
         PageViewFrame.addSubview(pageViewController!.view)
         pageViewController!.view.frame = PageViewFrame!.bounds
+        pageViewController!.view.semanticContentAttribute = .forceRightToLeft
+
 
         //Show initial pager pager
-        if let ayaPosition = self.ayaPosition {
-            gotoAya(ayaPosition)
-        }
+        gotoAya(ayaPosition)
     }
 
     // MARK: Class methods
@@ -59,9 +71,12 @@ class TafseerViewController: UIViewController,
         
         pageViewController!.setViewControllers(
            viewControllers,
-           direction: .forward,
+           direction: (self.ayaPosition >= ayaPosition) ? .forward : .reverse,
+            //direction: .forward
            animated: true,
            completion: nil)
+        
+        self.ayaPosition = ayaPosition
         
         updatePicker()
     }
@@ -69,7 +84,7 @@ class TafseerViewController: UIViewController,
     func createAyaView(_ ayaIndex: Int)->TafseerAyaView{
         let tafseerAyaView = self.storyboard?.instantiateViewController(withIdentifier: "TafseerAyaView") as! TafseerAyaView
         tafseerAyaView.AyaPosition = ayaIndex
-        tafseerAyaView.selectedTafseer = tafseerSources[ TafseerViewController.selectedTafseer ]
+        tafseerAyaView.selectedTafseer = TafseerViewController.selectedTafseer
         return tafseerAyaView
     }
 
@@ -77,9 +92,9 @@ class TafseerViewController: UIViewController,
         tafseerSourceSelector!.selectRow(TafseerViewController.selectedTafseer, inComponent: 0, animated: true)
         let qData = QData.instance()
         if let tafseerView = self.pageViewController!.viewControllers![0] as? TafseerAyaView{
-            let (cSuraIndex, _) = qData.ayaLocation( ayaPosition! )
+            let (cSuraIndex, _) = qData.ayaLocation( ayaPosition )
             ayaPosition = tafseerView.AyaPosition!
-            let (suraIndex,ayaIndex) = qData.ayaLocation( ayaPosition! )
+            let (suraIndex,ayaIndex) = qData.ayaLocation( ayaPosition )
             tafseerSourceSelector!.selectRow(suraIndex, inComponent: 1, animated: true)
             if cSuraIndex != suraIndex {
                 tafseerSourceSelector!.reloadComponent(2)
@@ -90,16 +105,29 @@ class TafseerViewController: UIViewController,
 
     func updateAyaPosition( sura:Int ){
         let qData = QData.instance()
-        self.ayaPosition = qData.ayaPosition(sura: sura, aya: 0)
+        let ayaPosition = qData.ayaPosition(sura: sura, aya: 0)
+        gotoAya(ayaPosition)
         tafseerSourceSelector!.reloadComponent(2)//refresh Ayat
-        gotoAya(self.ayaPosition!)
     }
     
     func updateAyaPosition( aya:Int){
         let qData = QData.instance()
-        let (sIndex,_) = qData.ayaLocation(self.ayaPosition!)
-        self.ayaPosition = qData.ayaPosition(sura: sIndex, aya: aya)
-        gotoAya(self.ayaPosition!)
+        let (sIndex,_) = qData.ayaLocation(self.ayaPosition) //read current sura
+        let ayaPosition = qData.ayaPosition(sura: sIndex, aya: aya)//create new position
+        gotoAya(ayaPosition)//update current position
+    }
+
+    // MARK: Action handlers
+    
+    @IBAction func clickNext(_ sender: Any) {
+        if ayaPosition+1 < lastAya {
+            gotoAya( ayaPosition + 1 )
+        }
+    }
+    @IBAction func clickPrevious(_ sender: Any) {
+        if ayaPosition > 0 {
+            gotoAya( ayaPosition - 1 )
+        }
     }
 
     // MARK: pageViewController delegate methods
@@ -142,24 +170,20 @@ class TafseerViewController: UIViewController,
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch component{
         case 0:
-            return tafseerSources.count
+            return TafseerSources.count
         case 1:
             return 114
         default:
             let qData = QData.instance()
-            if let ayaLocation = ayaPosition{
-                let (suraIndex, _) = qData.ayaLocation( ayaLocation )
-                return qData.ayaCount(suraIndex: suraIndex)!
-            }
+            let (suraIndex, _) = qData.ayaLocation( ayaPosition )
+            return qData.ayaCount(suraIndex: suraIndex)!
         }
-        
-        return 0
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch component{
         case 0:
-            return tafseerSources[row]
+            return TafseerSources[row]
         case 1:
             return QData.instance().suraName(suraIndex: row)
         default:
@@ -173,7 +197,7 @@ class TafseerViewController: UIViewController,
         switch component{
         case 0:// tafseer
             TafseerViewController.selectedTafseer = row
-            gotoAya( ayaPosition! )
+            gotoAya( ayaPosition )
         case 1://sura
             updateAyaPosition( sura: row )
         default://aya
