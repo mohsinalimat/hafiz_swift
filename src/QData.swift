@@ -11,8 +11,10 @@ import Foundation
 class QData{
     var suraInfo:[[String:Int]]?
     var partInfo:[[String:Int]]?
+    var pagesInfo:[[String:Int]]?
     
     static let totalAyat = 6236
+    let lastPage = 603
     
     enum Direction {
         case forward
@@ -34,6 +36,9 @@ class QData{
                     }
                     if let partInfo = object["parts"]{
                         self.partInfo = partInfo as? [[String : Int]]
+                    }
+                    if let pagesInfo = object["pagesInfo"]{
+                        self.pagesInfo = pagesInfo as? [[String : Int]]
                     }
                 }
             }
@@ -101,12 +106,6 @@ class QData{
         return (0,0)
     }
     
-//    static func encodeAya(sura:Int?,aya:Int?)->Int{
-//        return sura! * 1000 + aya!
-//    }
-//    static func decodeAya(_ aya:Int)->(sura:Int,aya:Int){
-//        return (aya/1000,aya%1000)
-//    }
     
     func suraIndex( pageIndex: Int, direction: Direction = .forward )->Int{
         if let suraInfoList = self.suraInfo {
@@ -135,6 +134,11 @@ class QData{
             return partInfo["s"]! - 1
         }
         return 0
+    }
+    
+    func suraIndex( ayaPosition: Int )-> Int{
+        let (suraIndex, _) = ayaLocation(ayaPosition)
+        return suraIndex
     }
     
     func suraFirstPageIndex( prevSuraPageIndex: Int ) -> Int{
@@ -196,6 +200,18 @@ class QData{
             return suraInfo["sp"]! - 1
         }
         return 0
+    }
+    
+    func pageIndex( ayaPosition: Int )->Int{
+        let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
+        let pageIndex = self.pageIndex(suraIndex: suraIndex)
+        for p in pageIndex...lastPage {
+            let pageInfo = pagesInfo![p]
+            if pageInfo["s"]! > (suraIndex+1) || pageInfo["a"]! > (ayaIndex+1) {
+                return p-1
+            }
+        }
+        return lastPage
     }
     
     func partInfo( partIndex: Int ) -> [String:Int]?{

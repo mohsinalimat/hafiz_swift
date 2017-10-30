@@ -101,7 +101,6 @@
 		2D7F5F621F04BDA40076316B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
 				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
 				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
@@ -141,6 +140,7 @@
 			children = (
 				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
+				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 			);
 			name = PagesBrowser;
 			path = src;

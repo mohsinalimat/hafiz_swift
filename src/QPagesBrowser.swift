@@ -158,6 +158,7 @@ class QPagesBrowser: UIViewController
     
     //Handle Navigation Bar actions
     @IBAction func clickedActions(_ sender: Any ) {
+        print (sender)
     }
 
     @IBAction func gotoNextSura(_ sender: Any) {

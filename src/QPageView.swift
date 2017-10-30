@@ -10,6 +10,7 @@ import UIKit
 
 class QPageView: UIViewController{
 
+    static var maskStart = -1
     
     var pageNumber: Int? //will be set by the ModelController that creates this controller
     var pageMap: [[String:String]]?
@@ -21,7 +22,9 @@ class QPageView: UIViewController{
     @IBAction func tabQuranImage(_ sender: Any) {
         print("Tabbed Image")
     }
-
+    @IBOutlet weak var lineMask: UIView!
+    @IBOutlet weak var ayaMask: UIView!
+    
     // MARK: - selector functions
     
     @objc func ayaTafseer(){
@@ -29,7 +32,12 @@ class QPageView: UIViewController{
     }
     
     @objc func reviewAtAya(){
-        print("Recite")
+        let ayaPosition = clickedAya!.tag
+        let qData = QData.instance()
+        QPageView.maskStart = QPageView.maskStart == -1 ? ayaPosition : -1
+        positionMask()
+        
+        //TODO: notify controller to call poistionMask() for all created QPageView instances
     }
     
     @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
@@ -59,6 +67,7 @@ class QPageView: UIViewController{
 
     
     // MARK: - UIViewController overrides
+    
     override var canBecomeFirstResponder: Bool {
         get {
             return true
@@ -140,15 +149,16 @@ class QPageView: UIViewController{
             }
         }
     }
-   
+    
     func positionAyatButtons(){
+        let imageRect = pageImage.frame
+        let line_height = Float(imageRect.size.height / 15)
+        let line_width = Float(imageRect.size.width)
+
         if let pageMap = self.pageMap{
-            let imageRect = pageImage.frame
-            let line_height = Float(imageRect.size.height / 15)
-            let line_width = Float(imageRect.size.width)
             let button_width = Float(line_width/9.6)
             
-            pageImage.removeConstraints(pageImage.constraints)//remove all constraints
+            pageImage.removeConstraints(pageImage.constraints)//remove existing constraints
             
             for(index, btn) in self.pageImage.subviews.enumerated(){
                 let button = pageMap[index]
@@ -161,9 +171,34 @@ class QPageView: UIViewController{
                 pageImage.addSimpleConstraints("V:|-\(ypos)-[v0(\(Int(line_height)))]", views: btn)
             }
         }
+        
+        positionMask()
     }
-
-
     
+    func positionMask(){
+        let maskAyaPosition = QPageView.maskStart
+        ayaMask.isHidden = true
+        lineMask.isHidden = true
+
+        if maskAyaPosition != -1 {
+            let qData = QData.instance()
+            let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
+            let currPageIndex = self.pageNumber! - 1
+            if  currPageIndex < maskStartPage {
+                return // before masked page
+            }
+            ayaMask.isHidden = false
+            lineMask.isHidden = false
+            let imageRect = pageImage.frame
+            let line_height = Float(imageRect.size.height / 15)
+            let line_width = Float(imageRect.size.width)
+            if( currPageIndex > maskStartPage ){
+                lineMask.isHidden = true
+                ayaMask.frame = imageRect
+                return
+            }
+
+        }
+    }
 
 }

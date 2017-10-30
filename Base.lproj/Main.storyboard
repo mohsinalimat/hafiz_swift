@@ -186,7 +186,6 @@
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LUI-ly-wq7">
                                 <rect key="frame" x="16" y="64" width="343" height="583"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eR7-k8-gaa">
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
@@ -230,16 +229,38 @@
                                 <accessibility key="accessibilityConfiguration" identifier="quranPage"/>
                                 <gestureRecognizers/>
                             </imageView>
+                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="lineMask">
+                                <rect key="frame" x="10" y="547" width="100" height="39"/>
+                                <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="AgW-KI-1tc"/>
+                                    <constraint firstAttribute="width" constant="100" id="gR9-ja-aTb"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="lineMask" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="ayaMask">
+                                <rect key="frame" x="10" y="589" width="355" height="78"/>
+                                <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="78" id="CZv-FN-46a"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="foT-G9-mTN" firstAttribute="bottom" secondItem="EPS-s9-h4K" secondAttribute="top" id="1t1-gH-wSF"/>
+                            <constraint firstItem="twD-Hm-5Yj" firstAttribute="leading" secondItem="foT-G9-mTN" secondAttribute="leading" id="CVd-EC-2js"/>
                             <constraint firstItem="foT-G9-mTN" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="Ifb-xV-BcI"/>
+                            <constraint firstItem="bhi-gQ-9oN" firstAttribute="width" secondItem="foT-G9-mTN" secondAttribute="width" id="Q5y-og-7dR"/>
+                            <constraint firstItem="bhi-gQ-9oN" firstAttribute="leading" secondItem="foT-G9-mTN" secondAttribute="leading" id="h2f-ax-dG6"/>
+                            <constraint firstItem="twD-Hm-5Yj" firstAttribute="bottom" secondItem="bhi-gQ-9oN" secondAttribute="top" id="nbI-QG-KMA"/>
                             <constraint firstItem="foT-G9-mTN" firstAttribute="left" secondItem="ZwX-cT-FIQ" secondAttribute="left" constant="10" id="otL-VJ-1ss"/>
+                            <constraint firstItem="bhi-gQ-9oN" firstAttribute="bottom" secondItem="foT-G9-mTN" secondAttribute="bottom" id="pfb-oU-4zi"/>
                             <constraint firstItem="foT-G9-mTN" firstAttribute="top" secondItem="fXf-Jd-eTc" secondAttribute="bottom" id="tLE-ke-rdZ"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="ayaMask" destination="bhi-gQ-9oN" id="mgt-pf-yHs"/>
+                        <outlet property="lineMask" destination="twD-Hm-5Yj" id="Xi6-K6-Ai2"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
                         <segue destination="im7-xJ-McY" kind="show" identifier="ShowTafseer" id="HRS-Tn-Sfr"/>
                     </connections>
@@ -252,7 +273,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="561" y="388"/>
+            <point key="canvasLocation" x="560.79999999999995" y="387.25637181409297"/>
         </scene>
         <!--Home-->
         <scene sceneID="QlN-bz-lYQ">
