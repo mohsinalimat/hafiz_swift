@@ -95,7 +95,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q3h-pU-vEd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="562" y="-555"/>
+            <point key="canvasLocation" x="561" y="-359"/>
         </scene>
         <!--Tafseer View Controller-->
         <scene sceneID="IVQ-cT-Ipg">
@@ -118,16 +118,16 @@
                                     <view contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fYZ-fC-Vdg" userLabel="Navigator">
                                         <rect key="frame" x="0.0" y="490" width="375" height="35"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N6s-jL-Je1">
-                                                <rect key="frame" x="8" y="-4" width="73" height="43"/>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N6s-jL-Je1">
+                                                <rect key="frame" x="8" y="-4" width="168" height="43"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="&lt;&lt; Next"/>
                                                 <connections>
                                                     <action selector="clickNext:" destination="im7-xJ-McY" eventType="touchUpInside" id="Cjd-sz-ggS"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gNU-SZ-zXv">
-                                                <rect key="frame" x="285" y="-4" width="82" height="43"/>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gNU-SZ-zXv">
+                                                <rect key="frame" x="207" y="-4" width="160" height="43"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Previous &gt;&gt;"/>
                                                 <connections>
@@ -170,7 +170,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hZJ-hz-xoF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1300" y="-358.4707646176912"/>
+            <point key="canvasLocation" x="1332" y="-183"/>
         </scene>
         <!--Tafseer Aya View-->
         <scene sceneID="yw5-hV-mil">
@@ -210,7 +210,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7jb-2c-PgT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1952.8" y="-196.55172413793105"/>
+            <point key="canvasLocation" x="1332" y="560"/>
         </scene>
         <!--Page View-->
         <scene sceneID="snT-py-3hH">
@@ -252,7 +252,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="560.79999999999995" y="145.27736131934034"/>
+            <point key="canvasLocation" x="561" y="388"/>
         </scene>
         <!--Home-->
         <scene sceneID="QlN-bz-lYQ">
@@ -277,7 +277,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vha-Qr-Sff" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1343" y="-243"/>
+            <point key="canvasLocation" x="-1100" y="-244"/>
         </scene>
         <!--Bookmarks-->
         <scene sceneID="3Oq-FL-zAM">
@@ -424,7 +424,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R7v-Zz-9cv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2233" y="-243"/>
+            <point key="canvasLocation" x="-1548" y="-245"/>
         </scene>
     </scenes>
     <resources>
