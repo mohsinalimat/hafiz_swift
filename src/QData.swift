@@ -64,9 +64,8 @@ class QData{
             if let path = Bundle.main.url(forResource: "pg_map/pm_\(pageIndex+1)", withExtension: "json")
             {
                 let jsonData = try Data(contentsOf: path)
-                
                 let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
-                
+
                 if let object = json as? [String: Any] {
                     // json is a dictionary
                     if let suraInfo = object["child_list"] {
@@ -78,8 +77,23 @@ class QData{
         catch{
             print ("JSON load error")
         }
-
         return []
+    }
+    
+    func ayaMapInfo(_ ayaPosition:Int, pageMap: [[String:String]])->[String:String]?{
+        let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
+        for ayaInfo in pageMap{
+            let (s,a) = ( Int(ayaInfo["sura"]!)! - 1, Int(ayaInfo["aya"]!)! - 1 )
+            if s == suraIndex  && a == ayaIndex {
+                return ayaInfo
+            }
+        }
+        return nil
+    }
+    
+    func ayaMapInfo(_ ayaPosition:Int, pageIndex: Int )->[String:String]?{
+        let pageMap = QData.pageMap( pageIndex )
+        return ayaMapInfo(ayaPosition, pageMap: pageMap)
     }
     
     func ayaPosition( sura:Int, aya:Int )->Int{

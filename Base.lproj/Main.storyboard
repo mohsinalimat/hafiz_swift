@@ -229,20 +229,34 @@
                                 <accessibility key="accessibilityConfiguration" identifier="quranPage"/>
                                 <gestureRecognizers/>
                             </imageView>
-                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="lineMask">
-                                <rect key="frame" x="10" y="547" width="100" height="39"/>
+                            <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="lineMask">
+                                <rect key="frame" x="10" y="550" width="100" height="39"/>
                                 <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <accessibility key="accessibilityConfiguration" identifier="LineMask">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="AgW-KI-1tc"/>
+                                    <constraint firstAttribute="height" constant="39" id="AgW-KI-1tc"/>
                                     <constraint firstAttribute="width" constant="100" id="gR9-ja-aTb"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="coi-4s-OWi" appends="YES" id="9uv-rr-3g7"/>
+                                </connections>
                             </view>
-                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="lineMask" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="ayaMask">
+                            <view hidden="YES" alpha="0.5" contentMode="scaleToFill" restorationIdentifier="lineMask" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="ayaMask">
                                 <rect key="frame" x="10" y="589" width="355" height="78"/>
                                 <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <accessibility key="accessibilityConfiguration" identifier="AyaMask">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="78" id="CZv-FN-46a"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="knn-RY-dRG" appends="YES" id="dfj-Gy-Zet"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -260,16 +274,23 @@
                     </view>
                     <connections>
                         <outlet property="ayaMask" destination="bhi-gQ-9oN" id="mgt-pf-yHs"/>
+                        <outlet property="ayaMaskHeight" destination="CZv-FN-46a" id="i3i-sD-AEa"/>
                         <outlet property="lineMask" destination="twD-Hm-5Yj" id="Xi6-K6-Ai2"/>
+                        <outlet property="lineMaskHeight" destination="AgW-KI-1tc" id="HyS-yD-4sZ"/>
+                        <outlet property="lineMaskWidth" destination="gR9-ja-aTb" id="9fx-qb-hwN"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
                         <segue destination="im7-xJ-McY" kind="show" identifier="ShowTafseer" id="HRS-Tn-Sfr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmD-Rr-ZGN" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="coi-4s-OWi">
+                <tapGestureRecognizer id="coi-4s-OWi" userLabel="LineMaskTabGesture">
                     <connections>
-                        <action selector="tabQuranImage:" destination="S4R-Ja-viH" id="mki-Fp-f4T"/>
-                        <outlet property="delegate" destination="ZwX-cT-FIQ" id="E5T-sW-4cM"/>
+                        <action selector="LineMaskTabbed:" destination="S4R-Ja-viH" id="lya-PX-GsH"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="knn-RY-dRG" userLabel="AyaMaskTabGesture">
+                    <connections>
+                        <action selector="AyaMaskTabbed:" destination="S4R-Ja-viH" id="Ht1-4r-14w"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

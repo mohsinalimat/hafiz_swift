@@ -24,6 +24,18 @@ class QPageView: UIViewController{
     }
     @IBOutlet weak var lineMask: UIView!
     @IBOutlet weak var ayaMask: UIView!
+    @IBOutlet weak var lineMaskWidth: NSLayoutConstraint!
+    @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
+    @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
+    @IBAction func LineMaskTabbed(_ sender: UITapGestureRecognizer) {
+        QPageView.maskStart = -1
+        positionMask()
+
+    }
+    @IBAction func AyaMaskTabbed(_ sender: Any) {
+        QPageView.maskStart = -1
+        positionMask()
+    }
     
     // MARK: - selector functions
     
@@ -33,8 +45,8 @@ class QPageView: UIViewController{
     
     @objc func reviewAtAya(){
         let ayaPosition = clickedAya!.tag
-        let qData = QData.instance()
-        QPageView.maskStart = QPageView.maskStart == -1 ? ayaPosition : -1
+        //let qData = QData.instance()
+        QPageView.maskStart = ayaPosition
         positionMask()
         
         //TODO: notify controller to call poistionMask() for all created QPageView instances
@@ -190,12 +202,21 @@ class QPageView: UIViewController{
             ayaMask.isHidden = false
             lineMask.isHidden = false
             let imageRect = pageImage.frame
-            let line_height = Float(imageRect.size.height / 15)
-            let line_width = Float(imageRect.size.width)
             if( currPageIndex > maskStartPage ){
                 lineMask.isHidden = true
                 ayaMask.frame = imageRect
                 return
+            }
+            
+            if let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: self.pageMap!){
+                let pageHeight = imageRect.size.height
+                let lineHeight = CGFloat(pageHeight / 15)
+                let lineWidth = CGFloat(imageRect.size.width)
+                lineMaskHeight.constant = lineHeight
+                lineMaskWidth.constant = CGFloat(1000 - Int(ayaMapInfo["spos"]!)!) * lineWidth / 1000
+                let coveredLines = 15 - 1 - Int(ayaMapInfo["sline"]!)!
+                //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
+                ayaMaskHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
             }
 
         }
