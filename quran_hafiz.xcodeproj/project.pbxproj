@@ -71,7 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				2D48D35F1F530CF40058552F /* pg_map */,
-				2DCEFDA41F3498E800EAC321 /* qdata.json */,
 			);
 			name = data;
 			path = src;
@@ -141,6 +140,7 @@
 				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
 				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
+				2DCEFDA41F3498E800EAC321 /* qdata.json */,
 			);
 			name = PagesBrowser;
 			path = src;

@@ -19,24 +19,25 @@ class QPageView: UIViewController{
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
 
-    @IBAction func tabQuranImage(_ sender: Any) {
-        print("Tabbed Image")
+    @IBAction func tapPageImage(_ sender: UIGestureRecognizer) {
+        let location = sender.location(in: sender.view!)
+        print (location)
+        retreatMask()
     }
+    
     @IBOutlet weak var lineMask: UIView!
     @IBOutlet weak var ayaMask: UIView!
     @IBOutlet weak var lineMaskWidth: NSLayoutConstraint!
     @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
     @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
-    @IBAction func LineMaskTabbed(_ sender: UITapGestureRecognizer) {
-        QPageView.maskStart = -1
-        positionMask()
 
-    }
-    @IBAction func AyaMaskTabbed(_ sender: Any) {
-        QPageView.maskStart = -1
-        positionMask()
+    @IBAction func AyaMaskTapped(_ sender: Any) {
+        advanceMask()
     }
     
+    @IBAction func MaskLongPressed(_ sender: Any) {
+        self.hideMask()
+    }
     // MARK: - selector functions
     
     @objc func ayaTafseer(){
@@ -221,5 +222,45 @@ class QPageView: UIViewController{
 
         }
     }
-
+    func advanceMask(){
+        moveMaskToCurrentPage()
+        switch QPageView.maskStart {
+            case -1, QData.totalAyat-1:
+                return
+            
+            default:
+                QPageView.maskStart += 1
+                positionMask()
+                self.updateViewConstraints()
+        }
+    }
+    func retreatMask(){
+        moveMaskToCurrentPage()
+        if QPageView.maskStart != -1 && QPageView.maskStart > 0{
+            QPageView.maskStart -= 1
+            positionMask()
+            self.updateViewConstraints()
+        }
+    }
+    func hideMask(){
+        if QPageView.maskStart != -1 {
+            QPageView.maskStart = -1
+            positionMask()
+        }
+    }
+    func moveMaskToCurrentPage(){
+        if QPageView.maskStart == -1 {
+            return
+        }
+        let qData = QData.instance()
+        let maskPageIndex = qData.pageIndex(ayaPosition:QPageView.maskStart)
+        let currPageIndex = self.pageNumber! - 1
+        if maskPageIndex > currPageIndex {
+            //backward, mark top of next page
+            QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex+1)
+        }else if maskPageIndex < currPageIndex {
+            //forward, mark top of current page
+            QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex)
+        }
+    }
 }

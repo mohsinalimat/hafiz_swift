@@ -228,6 +228,9 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration" identifier="quranPage"/>
                                 <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="9UD-nN-0xo" appends="YES" id="OQi-KQ-iKD"/>
+                                </connections>
                             </imageView>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="lineMask">
                                 <rect key="frame" x="10" y="550" width="100" height="39"/>
@@ -241,7 +244,8 @@
                                     <constraint firstAttribute="width" constant="100" id="gR9-ja-aTb"/>
                                 </constraints>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="coi-4s-OWi" appends="YES" id="9uv-rr-3g7"/>
+                                    <outletCollection property="gestureRecognizers" destination="zHy-gF-oWb" appends="YES" id="pJK-q8-5Mv"/>
+                                    <outletCollection property="gestureRecognizers" destination="M2J-5l-Y1e" appends="YES" id="oVc-Gk-PeI"/>
                                 </connections>
                             </view>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" restorationIdentifier="lineMask" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="ayaMask">
@@ -256,6 +260,7 @@
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="knn-RY-dRG" appends="YES" id="dfj-Gy-Zet"/>
+                                    <outletCollection property="gestureRecognizers" destination="6i4-wg-D7g" appends="YES" id="gZ2-4R-YJS"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -283,16 +288,31 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmD-Rr-ZGN" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="coi-4s-OWi" userLabel="LineMaskTabGesture">
+                <tapGestureRecognizer id="9UD-nN-0xo" userLabel="PageTap">
                     <connections>
-                        <action selector="LineMaskTabbed:" destination="S4R-Ja-viH" id="lya-PX-GsH"/>
+                        <action selector="tapPageImage:" destination="S4R-Ja-viH" id="G4H-8Y-drK"/>
                     </connections>
                 </tapGestureRecognizer>
-                <tapGestureRecognizer id="knn-RY-dRG" userLabel="AyaMaskTabGesture">
+                <tapGestureRecognizer id="knn-RY-dRG" userLabel="AyaMaskTap">
                     <connections>
-                        <action selector="AyaMaskTabbed:" destination="S4R-Ja-viH" id="Ht1-4r-14w"/>
+                        <action selector="AyaMaskTapped:" destination="S4R-Ja-viH" id="Ht1-4r-14w"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer id="zHy-gF-oWb" userLabel="LineMaskTap">
+                    <connections>
+                        <action selector="AyaMaskTapped:" destination="S4R-Ja-viH" id="Q73-xB-XPX"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="6i4-wg-D7g" userLabel="AyaMaskLongPress">
+                    <connections>
+                        <action selector="MaskLongPressed:" destination="S4R-Ja-viH" id="fWd-Hg-KOo"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="M2J-5l-Y1e" userLabel="LineMaskLongPress">
+                    <connections>
+                        <action selector="MaskLongPressed:" destination="S4R-Ja-viH" id="voI-0r-EYu"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="560.79999999999995" y="387.25637181409297"/>
         </scene>

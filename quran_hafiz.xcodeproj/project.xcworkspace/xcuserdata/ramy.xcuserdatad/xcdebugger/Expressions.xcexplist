@@ -20,20 +20,6 @@
          contextName = "QPagesBrowser.pageViewController(UIPageViewController, didFinishAnimating : Bool, previousViewControllers : [UIViewController], transitionCompleted : Bool) -&gt; ():QPagesBrowser.swift">
       </ContextState>
       <ContextState
-         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "actionsLabel.customView">
-            </PersistentString>
-            <PersistentString
-               value = "self.view">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.onClickAyaButton(tapGestureRecognizer:):QPageView.swift">
-      </ContextState>
-      <ContextState
          contextName = "QPagesBrowser.viewDidLoad() -&gt; ():QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
@@ -45,15 +31,26 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "QPageView.onClickAyaButton(tapGestureRecognizer:):QPageView.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "actionsLabel.customView">
+            </PersistentString>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
          <PersistentStrings>
             <PersistentString
                value = "UIMenuController.shared">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
       </ContextState>
       <ContextState
          contextName = "String.extract(_:):HomeViewController.swift">
@@ -68,6 +65,9 @@
                value = "s.utf8.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
       </ContextState>
       <ContextState
          contextName = "QPageView.tabQuranImage(Any) -&gt; ():QPageView.swift">
@@ -85,6 +85,17 @@
             </PersistentString>
             <PersistentString
                value = "String(format:pagePrompt, String(pageNum))">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.positionMask():QPageView.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QData.pageIndex(ayaPosition:):QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "pageInfo[&quot;s&quot;]! == (suraIndex+1)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

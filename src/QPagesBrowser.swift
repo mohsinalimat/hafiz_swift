@@ -253,6 +253,15 @@ class QPagesBrowser: UIViewController
         return .mid //using two view controllers with middle spine
     }
     
+    func pageViewController(_ pageViewController: UIPageViewController,
+        willTransitionTo pendingViewControllers: [UIViewController]) {
+        for viewController in pendingViewControllers{
+            if let qPageView = viewController as? QPageView {
+                qPageView.positionMask()
+                //print ("Positioned page\(qPageView.pageNumber!)")
+            }
+        }
+    }
     func pageViewController(_
         pageViewController: UIPageViewController,
         didFinishAnimating finished: Bool,

@@ -96,6 +96,11 @@ class QData{
         return ayaMapInfo(ayaPosition, pageMap: pageMap)
     }
     
+    func ayaPosition( pageIndex: Int )->Int{
+        let pageInfo = self.pagesInfo![pageIndex]
+        return ayaPosition(sura: pageInfo["s"]!-1, aya: pageInfo["a"]!-1)
+    }
+    
     func ayaPosition( sura:Int, aya:Int )->Int{
         var index = 0
         for suraIndex in 0..<sura{
@@ -221,7 +226,11 @@ class QData{
         let pageIndex = self.pageIndex(suraIndex: suraIndex)
         for p in pageIndex...lastPage {
             let pageInfo = pagesInfo![p]
-            if pageInfo["s"]! > (suraIndex+1) || pageInfo["a"]! > (ayaIndex+1) {
+            let pageSuraIndex = pageInfo["s"]! - 1
+            let pageStartAyaIndex = pageInfo["a"]! - 1
+            if ( pageSuraIndex > suraIndex )
+                || ( pageSuraIndex == suraIndex && pageStartAyaIndex > ayaIndex )
+            {
                 return p-1
             }
         }
