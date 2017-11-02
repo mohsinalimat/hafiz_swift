@@ -18,21 +18,48 @@ class QPageView: UIViewController{
 
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
-
-    @IBAction func tapPageImage(_ sender: UIGestureRecognizer) {
-        let location = sender.location(in: sender.view!)
-        print (location)
-        retreatMask()
-    }
-    
     @IBOutlet weak var lineMask: UIView!
     @IBOutlet weak var ayaMask: UIView!
     @IBOutlet weak var lineMaskWidth: NSLayoutConstraint!
     @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
     @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
+    
+    @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
+        //retreatMask()
+        
+        if QPageView.maskStart != -1 {
+            let qData = QData.instance()
+            let pageImageView = sender.view!
+            let location = sender.location(in: pageImageView)
+            let imageFrame = pageImageView.frame
+            if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
+                QPageView.maskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
+                positionMask()
+            }
 
+        }
+    }
+    
     @IBAction func AyaMaskTapped(_ sender: Any) {
         advanceMask()
+    }
+
+    @IBAction func PageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            return
+        }
+        let qData = QData.instance()
+        let pageImageView = sender.view!
+        let location = sender.location(in: pageImageView)
+        let imageFrame = pageImageView.frame
+        if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
+            let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
+            if let ayaButton = pageImageView.viewWithTag(ayaPosition) {
+                showAyaMenu(ayaView: ayaButton)
+            }
+        }
+        
+        //print ("Clicked Aya \(ayaPosition!)")
     }
     
     @IBAction func MaskLongPressed(_ sender: Any) {
@@ -40,42 +67,20 @@ class QPageView: UIViewController{
     }
     // MARK: - selector functions
     
-    @objc func ayaTafseer(){
+    @objc func showTafseer(){
         performSegue(withIdentifier: "ShowTafseer", sender: clickedAya)
     }
     
-    @objc func reviewAtAya(){
+    @objc func maskSelectedAya(){
         let ayaPosition = clickedAya!.tag
-        //let qData = QData.instance()
         QPageView.maskStart = ayaPosition
         positionMask()
-        
-        //TODO: notify controller to call poistionMask() for all created QPageView instances
     }
     
     @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
-        becomeFirstResponder()
         clickedAya = tapGestureRecognizer.view
         clickedAya!.backgroundColor = .blue
-        let mnuController = UIMenuController.shared
-        let menuRect = CGRect(x:0, y:0, width:clickedAya!.frame.size.width, height:clickedAya!.frame.size.height)
-        mnuController.setTargetRect(menuRect, in: clickedAya!)
-        
-        mnuController.menuItems = [
-            UIMenuItem(title: "Tafseer", action: #selector(ayaTafseer)),
-            UIMenuItem(title: "Review", action: #selector(reviewAtAya))
-        ]
-        
-        // This makes the menu item visible.
-        mnuController.setMenuVisible(true, animated: true)
-        
-        var hideMenuObserver:Any?
-        
-        hideMenuObserver = NotificationCenter.default.addObserver(forName: .UIMenuControllerDidHideMenu, object: nil, queue: nil){_ in
-            //print( "onHideMenu" )
-            self.clickedAya!.backgroundColor = .brown
-            NotificationCenter.default.removeObserver( hideMenuObserver! )
-        }
+        showAyaMenu(ayaView: clickedAya!)
     }
 
     
@@ -101,7 +106,7 @@ class QPageView: UIViewController{
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if( action == #selector(ayaTafseer) || action == #selector(reviewAtAya) ){
+        if( action == #selector(showTafseer) || action == #selector(maskSelectedAya) ){
             return true
         }
         return false
@@ -262,5 +267,29 @@ class QPageView: UIViewController{
             //forward, mark top of current page
             QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex)
         }
+    }
+    func showAyaMenu(ayaView:UIView){
+        becomeFirstResponder()
+        clickedAya = ayaView
+        let menuRect = CGRect(x:0, y:0, width:ayaView.frame.size.width, height:ayaView.frame.size.height)
+        let mnuController = UIMenuController.shared
+        mnuController.setTargetRect(menuRect, in: ayaView)
+        
+        mnuController.menuItems = [
+            UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
+            UIMenuItem(title: "Review", action: #selector(maskSelectedAya))
+        ]
+        
+        // This makes the menu item visible.
+        mnuController.setMenuVisible(true, animated: true)
+        
+        var hideMenuObserver:Any?
+        
+        hideMenuObserver = NotificationCenter.default.addObserver(forName: .UIMenuControllerDidHideMenu, object: nil, queue: nil){_ in
+            //print( "onHideMenu" )
+            ayaView.backgroundColor = .brown
+            NotificationCenter.default.removeObserver( hideMenuObserver! )
+        }
+
     }
 }

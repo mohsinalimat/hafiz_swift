@@ -6,7 +6,9 @@
 //  Copyright © 2017 Ramy Eldesoky. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:Int, eline:Int, epos:Int)
 
 class QData{
     var suraInfo:[[String:Int]]?
@@ -124,7 +126,6 @@ class QData{
         }
         return (0,0)
     }
-    
     
     func suraIndex( pageIndex: Int, direction: Direction = .forward )->Int{
         if let suraInfoList = self.suraInfo {
@@ -261,5 +262,34 @@ class QData{
         }
         return nil
     }
+
+    func locateAya( pageMap:[[String:String]], pageSize: CGSize, location: CGPoint )->AyaFullInfo?{
+        let line = Int(location.y * 15 / pageSize.height)
+        //print("Clicked Line \(line)")
+        let line_pos = 1000 - Int(location.x * 1000 / pageSize.width)
+        //print("Clicked Line Position \(line_pos)")
+        for ayaMap in pageMap {
+            let ayaInfo = QData.ayaFullInfo(ayaMap)
+            
+            if ayaInfo.eline > line || ayaInfo.eline == line && ayaInfo.epos >= line_pos {
+                return ayaInfo
+            }
+        }
+        return nil
+        
+    }
     
+    static func ayaFullInfo(_ pageMapItem: [String:String] )-> AyaFullInfo{
+        let ayaInfo : AyaFullInfo = (
+            eline: Int(pageMapItem["eline"]!)!,
+            epos: Int(pageMapItem["epos"]!)!,
+            sura: Int(pageMapItem["sura"]!)! - 1,
+            aya: Int(pageMapItem["aya"]!)! - 1,
+            sline:Int(pageMapItem["eline"]!)!,
+            spos: Int(pageMapItem["spos"]!)!,
+            page: Int(pageMapItem["page"]!)!-1
+        )
+        
+        return ayaInfo
+    }
 }

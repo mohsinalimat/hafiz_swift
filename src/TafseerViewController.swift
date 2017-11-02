@@ -1,6 +1,6 @@
 //
 //  TafseerViewController.swift
-//  test
+//  quran_hafiz
 //
 //  Created by Ramy Eldesoky on 9/29/17.
 //  Copyright © 2017 Ramy Eldesoky. All rights reserved.
@@ -27,7 +27,6 @@ class TafseerViewController: UIViewController,
     UIPickerViewDelegate,
     UIPickerViewDataSource
 {
-
     static var selectedTafseer = 0
     
     @IBOutlet weak var PageViewFrame: UIView!

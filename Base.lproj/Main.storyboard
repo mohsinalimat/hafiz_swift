@@ -230,6 +230,7 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="9UD-nN-0xo" appends="YES" id="OQi-KQ-iKD"/>
+                                    <outletCollection property="gestureRecognizers" destination="hFe-yq-J2k" appends="YES" id="nnH-DU-eTN"/>
                                 </connections>
                             </imageView>
                             <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="lineMask">
@@ -288,9 +289,14 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmD-Rr-ZGN" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="hFe-yq-J2k" userLabel="PageLongPress">
+                    <connections>
+                        <action selector="PageLongPressed:" destination="S4R-Ja-viH" id="zqH-FK-bFW"/>
+                    </connections>
+                </pongPressGestureRecognizer>
                 <tapGestureRecognizer id="9UD-nN-0xo" userLabel="PageTap">
                     <connections>
-                        <action selector="tapPageImage:" destination="S4R-Ja-viH" id="G4H-8Y-drK"/>
+                        <action selector="pageImageTapped:" destination="S4R-Ja-viH" id="G4H-8Y-drK"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="knn-RY-dRG" userLabel="AyaMaskTap">
