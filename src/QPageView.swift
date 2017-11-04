@@ -15,6 +15,14 @@ class QPageView: UIViewController{
     var pageNumber: Int? //will be set by the ModelController that creates this controller
     var pageMap: [[String:String]]?
     var clickedAya : UIView?
+    var pageIndex:Int {
+        get{
+            if pageNumber != nil {
+                return pageNumber! - 1
+            }
+            return -1
+        }
+    }
 
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
@@ -34,14 +42,14 @@ class QPageView: UIViewController{
             let imageFrame = pageImageView.frame
             if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
                 QPageView.maskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
-                positionMask()
+                positionMask(false)
             }
         }
     }
     
     @IBAction func AyaMaskTapped(_ sender: Any) {
         moveMaskToCurrentPage()
-        advanceMask()
+        advanceMask(false)
     }
 
     @IBAction func PageLongPressed(_ sender: UILongPressGestureRecognizer) {
@@ -72,7 +80,7 @@ class QPageView: UIViewController{
     @objc func maskSelectedAya(){
         let ayaPosition = clickedAya!.tag
         QPageView.maskStart = ayaPosition
-        positionMask()
+        positionMask(false)
     }
     
     @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
@@ -187,10 +195,19 @@ class QPageView: UIViewController{
             }
         }
         
-        positionMask()
+        positionMask(false)
     }
     
-    func positionMask(){
+    func positionMask(_ followPage: Bool ){
+        let maskPageIndex = positionMask()
+        if followPage && maskPageIndex != self.pageIndex {
+            gotoPage(maskPageIndex)
+        }else{
+            self.updateViewConstraints()
+        }
+    }
+    
+    func positionMask()->Int{
         let maskAyaPosition = QPageView.maskStart
         ayaMask.isHidden = true
         lineMask.isHidden = true
@@ -198,9 +215,9 @@ class QPageView: UIViewController{
         if maskAyaPosition != -1 {
             let qData = QData.instance()
             let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
-            let currPageIndex = self.pageNumber! - 1
+            let currPageIndex = self.pageIndex
             if  currPageIndex < maskStartPage {
-                return // before masked page
+                return maskStartPage// before masked page
             }
             ayaMask.isHidden = false
             lineMask.isHidden = false
@@ -208,7 +225,7 @@ class QPageView: UIViewController{
             if( currPageIndex > maskStartPage ){
                 lineMask.isHidden = true
                 ayaMask.frame = imageRect
-                return
+                return maskStartPage
             }
             
             if let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: self.pageMap!){
@@ -221,8 +238,9 @@ class QPageView: UIViewController{
                 //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
                 ayaMaskHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
             }
-
+            return maskStartPage
         }
+        return -1
     }
 
     func parentBrowserView()->QPagesBrowser?{
@@ -232,7 +250,18 @@ class QPageView: UIViewController{
         return nil
     }
     
-    func advanceMask(){
+    func gotoPage(_ pageIndex: Int ){
+        if pageIndex == self.pageIndex{
+            return
+        }
+        
+        if let parent = parentBrowserView(){
+            parent.gotoPage( pageIndex+1 )
+            return
+        }
+    }
+    
+    func advanceMask(_ followPage: Bool){
         
         switch QPageView.maskStart {
             case -1, QData.totalAyat-1:
@@ -240,41 +269,44 @@ class QPageView: UIViewController{
             
             default:
                 let qData = QData.instance()
-                //TODO: if maskStart is at first Aya of a page different than current page, goto that page and return
-                let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
-                if pageLocation.position == .first && pageLocation.page != self.pageNumber!-1 {
-                    if let parent = parentBrowserView(){
-                        parent.gotoPage( pageLocation.page+1 )
-                        return
+                if followPage {
+                    //if maskStart is at first Aya of a page different than current page, goto that page and return
+                    let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+                    let currPageIndex = self.pageIndex
+                    
+                    gotoPage(pageLocation.page)
+
+                    if pageLocation.position == .first && pageLocation.page != currPageIndex {
+                        return// no need to advance the mask
                     }
                 }
                 QPageView.maskStart += 1
-                positionMask()
-                self.updateViewConstraints()
+                positionMask(false)
         }
     }
     
-    func retreatMask(){
+    func retreatMask(_ followPage: Bool){
         if QPageView.maskStart != -1 && QPageView.maskStart > 0{
             let qData = QData.instance()
-            //if maskStart is at first Aya that is not the prior page, goto prior page and return
-            let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
-            if pageLocation.position == .first && pageLocation.page-1 != self.pageNumber!-1 {
-                if let parent = parentBrowserView(){
-                    parent.gotoPage( pageLocation.page )
+            if followPage {
+                //if maskStart is at first Aya that is not the prior page, goto prior page and return
+                let currPageIndex = self.pageIndex
+                let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+                
+                if pageLocation.position == .first && pageLocation.page-1 != currPageIndex {
+                    gotoPage(pageLocation.page-1)
                     return
                 }
             }
             QPageView.maskStart -= 1
-            positionMask()
-            self.updateViewConstraints()
+            positionMask( followPage )
         }
     }
     
     func hideMask(){
         if QPageView.maskStart != -1 {
             QPageView.maskStart = -1
-            positionMask()
+            positionMask(false)
         }
     }
     
@@ -284,7 +316,7 @@ class QPageView: UIViewController{
         }
         let qData = QData.instance()
         let maskPageIndex = qData.pageIndex(ayaPosition:QPageView.maskStart)
-        let currPageIndex = self.pageNumber! - 1
+        let currPageIndex = self.pageIndex
         if maskPageIndex > currPageIndex {
             //backward, mark top of next page
             QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex+1)

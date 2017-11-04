@@ -183,7 +183,7 @@ class QPagesBrowser: UIViewController
     @IBAction func gotoNextSura(_ sender: Any) {
         if QPageView.maskStart != -1 {
             if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
-                qPageView.advanceMask()
+                qPageView.advanceMask(true)
             }
         }else{
             gotoPage( QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
@@ -193,7 +193,7 @@ class QPagesBrowser: UIViewController
     @IBAction func gotoPrevSura(_ sender: Any) {
         if QPageView.maskStart != -1 {
             if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
-                qPageView.retreatMask()
+                qPageView.retreatMask( true )
             }
         }else{
             gotoPage( QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
@@ -288,7 +288,7 @@ class QPagesBrowser: UIViewController
         willTransitionTo pendingViewControllers: [UIViewController]) {
         for viewController in pendingViewControllers{
             if let qPageView = viewController as? QPageView {
-                qPageView.positionMask()
+                qPageView.positionMask(false)
                 //print ("Positioned page\(qPageView.pageNumber!)")
             }
         }
