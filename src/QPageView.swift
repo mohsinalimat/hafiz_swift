@@ -36,11 +36,11 @@ class QPageView: UIViewController{
                 QPageView.maskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
                 positionMask()
             }
-
         }
     }
     
     @IBAction func AyaMaskTapped(_ sender: Any) {
+        moveMaskToCurrentPage()
         advanceMask()
     }
 
@@ -58,8 +58,6 @@ class QPageView: UIViewController{
                 showAyaMenu(ayaView: ayaButton)
             }
         }
-        
-        //print ("Clicked Aya \(ayaPosition!)")
     }
     
     @IBAction func MaskLongPressed(_ sender: Any) {
@@ -83,7 +81,6 @@ class QPageView: UIViewController{
         showAyaMenu(ayaView: clickedAya!)
     }
 
-    
     // MARK: - UIViewController overrides
     
     override var canBecomeFirstResponder: Bool {
@@ -227,32 +224,60 @@ class QPageView: UIViewController{
 
         }
     }
+
+    func parentBrowserView()->QPagesBrowser?{
+        if let parent = self.parent, let pagesBrowser = parent.parent as? QPagesBrowser {
+            return pagesBrowser
+        }
+        return nil
+    }
+    
     func advanceMask(){
-        moveMaskToCurrentPage()
+        
         switch QPageView.maskStart {
             case -1, QData.totalAyat-1:
                 return
             
             default:
+                let qData = QData.instance()
+                //TODO: if maskStart is at first Aya of a page different than current page, goto that page and return
+                let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+                if pageLocation.position == .first && pageLocation.page != self.pageNumber!-1 {
+                    if let parent = parentBrowserView(){
+                        parent.gotoPage( pageLocation.page+1 )
+                        return
+                    }
+                }
                 QPageView.maskStart += 1
                 positionMask()
                 self.updateViewConstraints()
         }
     }
+    
     func retreatMask(){
-        moveMaskToCurrentPage()
         if QPageView.maskStart != -1 && QPageView.maskStart > 0{
+            let qData = QData.instance()
+            //if maskStart is at first Aya that is not the prior page, goto prior page and return
+            let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+            if pageLocation.position == .first && pageLocation.page-1 != self.pageNumber!-1 {
+                if let parent = parentBrowserView(){
+                    parent.gotoPage( pageLocation.page )
+                    return
+                }
+            }
             QPageView.maskStart -= 1
             positionMask()
             self.updateViewConstraints()
         }
     }
+    
     func hideMask(){
         if QPageView.maskStart != -1 {
             QPageView.maskStart = -1
             positionMask()
         }
     }
+    
     func moveMaskToCurrentPage(){
         if QPageView.maskStart == -1 {
             return
@@ -268,6 +293,7 @@ class QPageView: UIViewController{
             QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex)
         }
     }
+    
     func showAyaMenu(ayaView:UIView){
         becomeFirstResponder()
         clickedAya = ayaView
@@ -290,6 +316,5 @@ class QPageView: UIViewController{
             ayaView.backgroundColor = .brown
             NotificationCenter.default.removeObserver( hideMenuObserver! )
         }
-
     }
 }

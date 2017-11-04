@@ -22,7 +22,14 @@ class QData{
         case forward
         case backward
     }
-    
+    enum Position {
+        case first
+        case inside
+        case last
+    }
+
+    typealias AyaPagePosition = (page:Int, position:Position)
+
     init(){
         do{
             if let path = Bundle.main.url(forResource: "qdata", withExtension: "json")
@@ -265,9 +272,7 @@ class QData{
 
     func locateAya( pageMap:[[String:String]], pageSize: CGSize, location: CGPoint )->AyaFullInfo?{
         let line = Int(location.y * 15 / pageSize.height)
-        //print("Clicked Line \(line)")
         let line_pos = 1000 - Int(location.x * 1000 / pageSize.width)
-        //print("Clicked Line Position \(line_pos)")
         for ayaMap in pageMap {
             let ayaInfo = QData.ayaFullInfo(ayaMap)
             
@@ -276,7 +281,6 @@ class QData{
             }
         }
         return nil
-        
     }
     
     static func ayaFullInfo(_ pageMapItem: [String:String] )-> AyaFullInfo{
@@ -291,5 +295,37 @@ class QData{
         )
         
         return ayaInfo
+    }
+    
+    func pageAya( at: Position, pageMap: [[String:String]] ) -> Int {
+        var ayaMapInfo:[String:String]?
+        
+        if at == .first {
+            ayaMapInfo = pageMap.first
+        }
+        if at == .last {
+            ayaMapInfo = pageMap.last
+        }
+        if let ayaMapInfo = ayaMapInfo {
+            return self.ayaPosition(sura: Int(ayaMapInfo["sura"]!)!-1, aya: Int(ayaMapInfo["aya"]!)!-1)
+        }
+        return -1
+    }
+    
+    func ayaPagePosition(_ ayaPosition : Int )-> AyaPagePosition{
+        let (sura,aya) = self.ayaLocation(ayaPosition)
+        let pageIndex = self.pageIndex(ayaPosition: ayaPosition)
+        let pageMap = QData.pageMap(pageIndex)
+        let firstPageAya = pageMap.first!
+        
+        if sura == Int(firstPageAya["sura"]!)!-1 && aya == Int(firstPageAya["aya"]!)!-1 {
+            return (page: pageIndex, position: .first)
+        }
+
+        let lastPageAya = pageMap.last!
+        if sura == Int(lastPageAya["sura"]!)!-1 && aya == Int(lastPageAya["aya"]!)!-1 {
+            return (page: pageIndex, position: .last)
+        }
+        return (page: pageIndex, position: .inside)
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class QPagesBrowser: UIViewController
     ,UIPageViewControllerDelegate
@@ -63,12 +64,30 @@ class QPagesBrowser: UIViewController
         
         self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         
+        let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 40, width: 300, height: 30))
+        self.view?.addSubview(volumeView)
+
+// Doesn't work
+//        NotificationCenter.default.addObserver(
+//            forName: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"),
+//            object: nil,
+//            queue: nil)
+//        {_ in
+//            print( "volume changed" )
+//        }
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+//    override var canBecomeFirstResponder: Bool {
+//        get {
+//            return true
+//        }
+//    }
 
 //    var _modelController: QPagesDataSource? = nil
 //    var modelController: QPagesDataSource {
@@ -96,7 +115,7 @@ class QPagesBrowser: UIViewController
         
         self.pageViewController!.setViewControllers(
             viewControllers,
-            direction: pageNum < currPage ? .forward : .reverse,
+            direction: pageNum <= currPage ? .forward : .reverse,
             animated: true,
             completion: {done in}
         )
@@ -162,11 +181,23 @@ class QPagesBrowser: UIViewController
     }
 
     @IBAction func gotoNextSura(_ sender: Any) {
-        gotoPage( QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
+        if QPageView.maskStart != -1 {
+            if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
+                qPageView.advanceMask()
+            }
+        }else{
+            gotoPage( QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
+        }
     }
     
     @IBAction func gotoPrevSura(_ sender: Any) {
-        gotoPage( QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
+        if QPageView.maskStart != -1 {
+            if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
+                qPageView.retreatMask()
+            }
+        }else{
+            gotoPage( QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
+        }
     }
     
     // MARK: - pageViewController data source methods
