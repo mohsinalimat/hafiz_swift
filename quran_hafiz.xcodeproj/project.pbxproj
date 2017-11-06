@@ -23,6 +23,7 @@
 		2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */; };
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
 		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
+		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
 		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
@@ -35,6 +36,7 @@
 		2D48D3551F40D9720058552F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
+		2D64CEB41FAFB48800348A34 /* LayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
 		2D7F5F631F04BDA40076316B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPagesBrowser.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		2D7F5F671F04BDA40076316B /* QPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageView.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
+				2D64CEB41FAFB48800348A34 /* LayerView.swift */,
 				2DF881F91FA380CB0045EFCF /* HomeScreen */,
 				2DF881FA1FA380FC0045EFCF /* PagesBrowser */,
 				2DF881F81FA3801A0045EFCF /* TafseerBrowser */,
@@ -227,6 +230,7 @@
 				2D41B23B1F9BC0A800199BAD /* QPageView.swift in Sources */,
 				2D41B23C1F9BC0A800199BAD /* QData.swift in Sources */,
 				2D41B23D1F9BC0A800199BAD /* TafseerViewController.swift in Sources */,
+				2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */,
 				2D41B23E1F9BC0A800199BAD /* AppDelegate.swift in Sources */,
 				2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */,
 				2D41B23F1F9BC0A800199BAD /* HomeViewController.swift in Sources */,

@@ -9,6 +9,10 @@
 import UIKit
 import MediaPlayer
 
+var MaskStart = -1
+var SelectStart = -1
+var SelectEnd = -1
+
 class QPagesBrowser: UIViewController
     ,UIPageViewControllerDelegate
     ,UIPageViewControllerDataSource
@@ -181,7 +185,7 @@ class QPagesBrowser: UIViewController
     }
 
     @IBAction func gotoNextSura(_ sender: Any) {
-        if QPageView.maskStart != -1 {
+        if MaskStart != -1 {
             if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
                 qPageView.advanceMask(true)
             }
@@ -191,7 +195,7 @@ class QPagesBrowser: UIViewController
     }
     
     @IBAction func gotoPrevSura(_ sender: Any) {
-        if QPageView.maskStart != -1 {
+        if MaskStart != -1 {
             if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
                 qPageView.retreatMask( true )
             }

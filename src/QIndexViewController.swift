@@ -48,8 +48,12 @@ class QIndexViewController: UITableViewController{
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         //let qPagesBrowser = segue.destination as! QPagesBrowser
-        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser {
+        if let viewCell = sender as? UITableViewCell,
+            let qPagesBrowser = segue.destination as? QPagesBrowser {
             qPagesBrowser.startingPage = viewCell.tag
+            MaskStart = -1
+            SelectStart = -1
+            SelectEnd = -1
         }
         
     }

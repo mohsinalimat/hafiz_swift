@@ -10,8 +10,6 @@ import UIKit
 
 class QPageView: UIViewController{
 
-    static var maskStart = -1
-    
     var pageNumber: Int? //will be set by the ModelController that creates this controller
     var pageMap: [[String:String]]?
     var clickedAya : UIView?
@@ -31,17 +29,18 @@ class QPageView: UIViewController{
     @IBOutlet weak var lineMaskWidth: NSLayoutConstraint!
     @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
     @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
+    @IBOutlet weak var buttonsView: UIView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
         
-        if QPageView.maskStart != -1 {
+        if MaskStart != -1 {
             let qData = QData.instance()
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
             let imageFrame = pageImageView.frame
             if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
-                QPageView.maskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
+                MaskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
                 positionMask(false)
             }
         }
@@ -62,7 +61,7 @@ class QPageView: UIViewController{
         let imageFrame = pageImageView.frame
         if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
             let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
-            if let ayaButton = pageImageView.viewWithTag(ayaPosition) {
+            if let ayaButton = self.view.viewWithTag(ayaPosition) {
                 showAyaMenu(ayaView: ayaButton)
             }
         }
@@ -79,13 +78,17 @@ class QPageView: UIViewController{
     
     @objc func maskSelectedAya(){
         let ayaPosition = clickedAya!.tag
-        QPageView.maskStart = ayaPosition
+        MaskStart = ayaPosition
         positionMask(false)
     }
     
     @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
         clickedAya = tapGestureRecognizer.view
-        clickedAya!.backgroundColor = .blue
+        if MaskStart != -1 {
+            MaskStart = clickedAya!.tag
+            positionMask(false)
+            return
+        }
         showAyaMenu(ayaView: clickedAya!)
     }
 
@@ -101,6 +104,7 @@ class QPageView: UIViewController{
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
+        buttonsView.isHidden = false
         loadPageImage()
         createAyatButtons()
         becomeFirstResponder()
@@ -167,31 +171,32 @@ class QPageView: UIViewController{
                     btn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickAyaButton)))
                     btn.isUserInteractionEnabled = true
                     btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)!-1, aya: Int(button["aya"]!)!-1)
-                    self.pageImage.addSubview(btn)
+                    self.buttonsView.addSubview(btn)
                 }
             }
         }
     }
     
     func positionAyatButtons(){
-        let imageRect = pageImage.frame
+        let containerView = self.buttonsView!
+        let imageRect = containerView.frame
         let line_height = Float(imageRect.size.height / 15)
         let line_width = Float(imageRect.size.width)
 
         if let pageMap = self.pageMap{
             let button_width = Float(line_width/9.6)
             
-            pageImage.removeConstraints(pageImage.constraints)//remove existing constraints
+            containerView.removeConstraints(containerView.constraints)//remove existing constraints
             
-            for(index, btn) in self.pageImage.subviews.enumerated(){
+            for(index, btn) in containerView.subviews.enumerated(){
                 let button = pageMap[index]
                 let eline = Float(button["eline"]!)!
                 let epos = Float(button["epos"]!)!
                 let xpos = Int( epos * line_width / 1000 - button_width )
                 let ypos = Int( eline * Float(imageRect.size.height) / 15 )
                 
-                pageImage.addSimpleConstraints("H:|-\(xpos)-[v0(\(Int(button_width)))]", views: btn)
-                pageImage.addSimpleConstraints("V:|-\(ypos)-[v0(\(Int(line_height)))]", views: btn)
+                containerView.addSimpleConstraints("H:|-\(xpos)-[v0(\(Int(button_width)))]", views: btn)
+                containerView.addSimpleConstraints("V:|-\(ypos)-[v0(\(Int(line_height)))]", views: btn)
             }
         }
         
@@ -208,7 +213,7 @@ class QPageView: UIViewController{
     }
     
     func positionMask()->Int{
-        let maskAyaPosition = QPageView.maskStart
+        let maskAyaPosition = MaskStart
         ayaMask.isHidden = true
         lineMask.isHidden = true
 
@@ -263,7 +268,7 @@ class QPageView: UIViewController{
     
     func advanceMask(_ followPage: Bool){
         
-        switch QPageView.maskStart {
+        switch MaskStart {
             case -1, QData.totalAyat-1:
                 return
             
@@ -271,7 +276,7 @@ class QPageView: UIViewController{
                 let qData = QData.instance()
                 if followPage {
                     //if maskStart is at first Aya of a page different than current page, goto that page and return
-                    let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+                    let pageLocation = qData.ayaPagePosition(MaskStart)
                     let currPageIndex = self.pageIndex
                     
                     gotoPage(pageLocation.page)
@@ -280,55 +285,56 @@ class QPageView: UIViewController{
                         return// no need to advance the mask
                     }
                 }
-                QPageView.maskStart += 1
+                MaskStart += 1
                 positionMask(false)
         }
     }
     
     func retreatMask(_ followPage: Bool){
-        if QPageView.maskStart != -1 && QPageView.maskStart > 0{
+        if MaskStart != -1 && MaskStart > 0{
             let qData = QData.instance()
             if followPage {
                 //if maskStart is at first Aya that is not the prior page, goto prior page and return
                 let currPageIndex = self.pageIndex
-                let pageLocation = qData.ayaPagePosition(QPageView.maskStart)
+                let pageLocation = qData.ayaPagePosition(MaskStart)
                 
                 if pageLocation.position == .first && pageLocation.page-1 != currPageIndex {
                     gotoPage(pageLocation.page-1)
                     return
                 }
             }
-            QPageView.maskStart -= 1
+            MaskStart -= 1
             positionMask( followPage )
         }
     }
     
     func hideMask(){
-        if QPageView.maskStart != -1 {
-            QPageView.maskStart = -1
+        if MaskStart != -1 {
+            MaskStart = -1
             positionMask(false)
         }
     }
     
     func moveMaskToCurrentPage(){
-        if QPageView.maskStart == -1 {
+        if MaskStart == -1 {
             return
         }
         let qData = QData.instance()
-        let maskPageIndex = qData.pageIndex(ayaPosition:QPageView.maskStart)
+        let maskPageIndex = qData.pageIndex(ayaPosition:MaskStart)
         let currPageIndex = self.pageIndex
         if maskPageIndex > currPageIndex {
             //backward, mark top of next page
-            QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex+1)
+            MaskStart = qData.ayaPosition(pageIndex: currPageIndex+1)
         }else if maskPageIndex < currPageIndex {
             //forward, mark top of current page
-            QPageView.maskStart = qData.ayaPosition(pageIndex: currPageIndex)
+            MaskStart = qData.ayaPosition(pageIndex: currPageIndex)
         }
     }
     
     func showAyaMenu(ayaView:UIView){
         becomeFirstResponder()
         clickedAya = ayaView
+        clickedAya!.backgroundColor = .blue
         let menuRect = CGRect(x:0, y:0, width:ayaView.frame.size.width, height:ayaView.frame.size.height)
         let mnuController = UIMenuController.shared
         mnuController.setTargetRect(menuRect, in: ayaView)
@@ -348,5 +354,14 @@ class QPageView: UIViewController{
             ayaView.backgroundColor = .brown
             NotificationCenter.default.removeObserver( hideMenuObserver! )
         }
+    }
+    
+    func select( aya: Int ){
+        SelectStart = aya
+        SelectEnd = aya
+    }
+    
+    func positionSelection(){
+        
     }
 }
