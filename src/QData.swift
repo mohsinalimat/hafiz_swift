@@ -15,7 +15,7 @@ class QData{
     var partInfo:[[String:Int]]?
     var pagesInfo:[[String:Int]]?
     
-    static let totalAyat = 6236
+    let totalAyat = 6236
     let lastPage = 603
     
     enum Direction {
@@ -28,6 +28,7 @@ class QData{
         case last
     }
 
+    typealias PageInfo = (suraIndex:Int, ayaIndex:Int, ayaPos:Int, ayaCount:Int)
     typealias AyaPagePosition = (page:Int, position:Position)
 
     init(){
@@ -89,18 +90,36 @@ class QData{
         return []
     }
     
-    func ayaMapInfo(_ ayaPosition:Int, pageMap: [[String:String]])->[String:String]?{
+    func ayaMapInfo(_ ayaPosition:Int, pageMap: [[String:String]])->AyaFullInfo?{
         let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
         for ayaInfo in pageMap{
             let (s,a) = ( Int(ayaInfo["sura"]!)! - 1, Int(ayaInfo["aya"]!)! - 1 )
             if s == suraIndex  && a == ayaIndex {
-                return ayaInfo
+                return QData.ayaFullInfo(ayaInfo)
             }
         }
         return nil
     }
     
-    func ayaMapInfo(_ ayaPosition:Int, pageIndex: Int )->[String:String]?{
+    func pageInfo(_ pageIndex: Int )->QData.PageInfo? {
+        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > self.lastPage{
+            return nil
+        }
+        let info = self.pagesInfo![pageIndex]
+        let suraIndex = info["s"]! - 1
+        let ayaIndex = info["a"]! - 1
+        let startAya = ayaPosition(sura: suraIndex, aya: ayaIndex)
+        let nextPageStartAya = pageIndex < self.lastPage ? ayaPosition(pageIndex: pageIndex+1) : self.totalAyat
+
+        return (
+            suraIndex:suraIndex,
+            ayaIndex:ayaIndex,
+            ayaPos:startAya,
+            ayaCount:nextPageStartAya-startAya
+        )
+    }
+    
+    func ayaMapInfo(_ ayaPosition:Int, pageIndex: Int )->AyaFullInfo?{
         let pageMap = QData.pageMap( pageIndex )
         return ayaMapInfo(ayaPosition, pageMap: pageMap)
     }
@@ -289,7 +308,7 @@ class QData{
             epos: Int(pageMapItem["epos"]!)!,
             sura: Int(pageMapItem["sura"]!)! - 1,
             aya: Int(pageMapItem["aya"]!)! - 1,
-            sline:Int(pageMapItem["eline"]!)!,
+            sline:Int(pageMapItem["sline"]!)!,
             spos: Int(pageMapItem["spos"]!)!,
             page: Int(pageMapItem["page"]!)!-1
         )
