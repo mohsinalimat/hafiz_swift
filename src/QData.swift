@@ -8,7 +8,7 @@
 
 import UIKit
 
-typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:Int, eline:Int, epos:Int)
+typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
 
 class QData{
     var suraInfo:[[String:Int]]?
@@ -61,7 +61,7 @@ class QData{
     
     static var qData: QData?
     
-    static func instance()->QData{
+    class func instance()->QData{
         if let inst = qData {
             return inst
         }
@@ -69,7 +69,7 @@ class QData{
         return qData!
     }
     
-    static func pageMap(_ pageIndex:Int)->[[String:String]]{
+    class func pageMap(_ pageIndex:Int)->[[String:String]]{
         do{
             if let path = Bundle.main.url(forResource: "pg_map/pm_\(pageIndex+1)", withExtension: "json")
             {
@@ -291,7 +291,7 @@ class QData{
 
     func locateAya( pageMap:[[String:String]], pageSize: CGSize, location: CGPoint )->AyaFullInfo?{
         let line = Int(location.y * 15 / pageSize.height)
-        let line_pos = 1000 - Int(location.x * 1000 / pageSize.width)
+        let line_pos = 1000 - (location.x * 1000) / pageSize.width
         for ayaMap in pageMap {
             let ayaInfo = QData.ayaFullInfo(ayaMap)
             
@@ -305,11 +305,11 @@ class QData{
     static func ayaFullInfo(_ pageMapItem: [String:String] )-> AyaFullInfo{
         let ayaInfo : AyaFullInfo = (
             eline: Int(pageMapItem["eline"]!)!,
-            epos: Int(pageMapItem["epos"]!)!,
+            epos: CGFloat(Float(pageMapItem["epos"]!)!),
             sura: Int(pageMapItem["sura"]!)! - 1,
             aya: Int(pageMapItem["aya"]!)! - 1,
             sline:Int(pageMapItem["sline"]!)!,
-            spos: Int(pageMapItem["spos"]!)!,
+            spos: CGFloat(Float(pageMapItem["spos"]!)!),
             page: Int(pageMapItem["page"]!)!-1
         )
         

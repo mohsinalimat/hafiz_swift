@@ -47,7 +47,8 @@ class QPageView: UIViewController{
     @IBOutlet weak var selectHeadY: NSLayoutConstraint!
     @IBOutlet weak var selectHeadSartX: NSLayoutConstraint!
     @IBOutlet weak var selectHeadEndX: NSLayoutConstraint!
-    @IBOutlet weak var selectBodyHeight: NSLayoutConstraint!
+
+    @IBOutlet weak var selectBodyBottomY: NSLayoutConstraint!
     @IBOutlet weak var selectEndHeight: NSLayoutConstraint!
     @IBOutlet weak var selectEndX: NSLayoutConstraint!
     
@@ -60,8 +61,7 @@ class QPageView: UIViewController{
             let location = sender.location(in: pageImageView)
             let imageFrame = pageImageView.frame
             if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
-                MaskStart = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
-                positionMask(false)
+                setMaskStart( qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya ) )
             }
         }
     }
@@ -82,6 +82,7 @@ class QPageView: UIViewController{
         if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
             let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
             if let ayaButton = self.view.viewWithTag(ayaPosition) {
+                selectAya( aya: ayaPosition )
                 showAyaMenu(ayaView: ayaButton)
             }
         }
@@ -97,9 +98,7 @@ class QPageView: UIViewController{
     }
     
     @objc func maskSelectedAya(){
-        let ayaPosition = clickedAya!.tag
-        MaskStart = ayaPosition
-        positionMask(false)
+        setMaskStart( clickedAya!.tag )
     }
     
     @objc func shareAya(){
@@ -108,13 +107,15 @@ class QPageView: UIViewController{
     
     @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
         clickedAya = tapGestureRecognizer.view
-        if MaskStart != -1 {
-            MaskStart = clickedAya!.tag
-            positionMask(false)
-            return
+        if let clickedAya = clickedAya {
+            let ayaId = clickedAya.tag
+            if MaskStart != -1 {
+                setMaskStart(ayaId)
+                return
+            }
+            selectAya( aya: ayaId )
+            showAyaMenu(ayaView: clickedAya)
         }
-        selectAya( aya: clickedAya!.tag )
-        showAyaMenu(ayaView: clickedAya!)
     }
 
     // MARK: - UIViewController overrides
@@ -137,6 +138,7 @@ class QPageView: UIViewController{
 
     override func viewDidLayoutSubviews() {
         positionAyatButtons()
+        positionSelection()
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -185,6 +187,14 @@ class QPageView: UIViewController{
             }
         }
     }
+    
+    func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
+        MaskStart = ayaId
+        SelectStart = ayaId
+        SelectEnd = ayaId
+        positionMask(followPage)
+        positionSelection()
+    }
 
     func createAyatButtons(){
         if let pageNumber = self.pageNumber{
@@ -220,8 +230,14 @@ class QPageView: UIViewController{
                 let button = pageMap[index]
                 let eline = Float(button["eline"]!)!
                 let epos = Float(button["epos"]!)!
-                let xpos = Int( epos * line_width / 1000 - button_width )
-                let ypos = Int( eline * Float(imageRect.size.height) / 15 )
+                var xpos = Int( epos * line_width / 1000 - button_width )
+                var ypos = Int( eline * Float(imageRect.size.height) / 15 )
+                if xpos < 0 {
+                    xpos = 0
+                }
+                if ypos < 0 {
+                    ypos = 0
+                }
                 
                 containerView.addSimpleConstraints("H:|-\(xpos)-[v0(\(Int(button_width)))]", views: btn)
                 containerView.addSimpleConstraints("V:|-\(ypos)-[v0(\(Int(line_height)))]", views: btn)
@@ -313,8 +329,8 @@ class QPageView: UIViewController{
                         return// no need to advance the mask
                     }
                 }
-                MaskStart += 1
-                positionMask(false)
+                setMaskStart(MaskStart + 1, followPage: false)
+                //positionMask(false)
         }
     }
     
@@ -331,15 +347,15 @@ class QPageView: UIViewController{
                     return
                 }
             }
-            MaskStart -= 1
-            positionMask( followPage )
+            setMaskStart(MaskStart-1, followPage: followPage)
+//            MaskStart -= 1
+//            positionMask( followPage )
         }
     }
     
     func hideMask(){
         if MaskStart != -1 {
-            MaskStart = -1
-            positionMask(false)
+            setMaskStart(-1)
         }
     }
     
@@ -352,37 +368,56 @@ class QPageView: UIViewController{
         let currPageIndex = self.pageIndex
         if maskPageIndex > currPageIndex {
             //backward, mark top of next page
-            MaskStart = qData.ayaPosition(pageIndex: currPageIndex+1)
+            setMaskStart( qData.ayaPosition(pageIndex: currPageIndex+1) )
         }else if maskPageIndex < currPageIndex {
             //forward, mark top of current page
-            MaskStart = qData.ayaPosition(pageIndex: currPageIndex)
+            setMaskStart( qData.ayaPosition(pageIndex: currPageIndex) )
         }
     }
     
     func showAyaMenu(ayaView:UIView){
         becomeFirstResponder()
         clickedAya = ayaView
-        clickedAya!.backgroundColor = .blue
-        let menuRect = CGRect(x:0, y:0, width:ayaView.frame.size.width, height:ayaView.frame.size.height)
-        let mnuController = UIMenuController.shared
-        mnuController.setTargetRect(menuRect, in: ayaView)
-        
-        mnuController.menuItems = [
-            UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
-            UIMenuItem(title: "Review", action: #selector(maskSelectedAya)),
-            UIMenuItem(title: "Share", action: #selector(shareAya))
-        ]
-        
-        // This makes the menu item visible.
-        mnuController.setMenuVisible(true, animated: true)
-        
-        var hideMenuObserver:Any?
-        
-        hideMenuObserver = NotificationCenter.default.addObserver(forName: .UIMenuControllerDidHideMenu, object: nil, queue: nil){_ in
-            //print( "onHideMenu" )
-            ayaView.backgroundColor = .brown
-            NotificationCenter.default.removeObserver( hideMenuObserver! )
+        //let menuRect = CGRect(x:0, y:0, width:ayaView.frame.size.width, height:ayaView.frame.size.height)
+        if let menuRect = self.ayaStartPoint(ayaView.tag){
+            let mnuController = UIMenuController.shared
+            mnuController.setTargetRect(menuRect, in: self.pageImage)
+            
+            mnuController.menuItems = [
+                UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
+                UIMenuItem(title: "Review", action: #selector(maskSelectedAya)),
+                UIMenuItem(title: "Share", action: #selector(shareAya))
+            ]
+            
+            // This makes the menu item visible.
+            mnuController.setMenuVisible(true, animated: true)
         }
+        
+        //clickedAya!.backgroundColor = .blue
+//        var hideMenuObserver:Any?
+//        hideMenuObserver = NotificationCenter.default.addObserver(forName: .UIMenuControllerDidHideMenu, object: nil, queue: nil){_ in
+//            //ayaView.backgroundColor = .brown
+//            NotificationCenter.default.removeObserver( hideMenuObserver! )
+//        }
+    }
+    
+    func ayaStartPoint(_ ayaId:Int )->CGRect?{
+        let qData = QData.instance()
+        if let pageMap = self.pageMap,
+            let ayaMapInfo = qData.ayaMapInfo(ayaId, pageMap: pageMap),
+            let pageImage = self.pageImage
+        {
+            let pageHeight = pageImage.frame.height
+            let pageWidth = pageImage.frame.width
+            let lineHeight = pageHeight / 15
+            return CGRect(
+                x: pageWidth - (ayaMapInfo.spos * pageWidth)/1000,
+                y: (CGFloat(ayaMapInfo.sline) * pageHeight)/15,
+                width: 1,
+                height: lineHeight
+            )
+        }
+        return nil
     }
     
     func selectAya( aya: Int ){
@@ -392,39 +427,59 @@ class QPageView: UIViewController{
     }
     
     func positionSelection(){
-//        selectHead.isHidden = true
-//        selectBody.isHidden = true
-//        selectEnd.isHidden = true
+        selectHead.isHidden = true
+        selectBody.isHidden = true
+        selectEnd.isHidden = true
         if SelectStart == -1 {
             return
         }
-        if let pageInfo = self.pageInfo {
-            if SelectStart > pageInfo.ayaPos + pageInfo.ayaCount{
-                return // beyond this
+        if let pageInfo = self.pageInfo, let pageMap = self.pageMap {
+            if (SelectStart >= pageInfo.ayaPos + pageInfo.ayaCount) // beyond this page
+                || (SelectEnd < pageInfo.ayaPos) // ended before this page
+            {
+                self.updateViewConstraints()
+                return
             }
-            if SelectEnd < pageInfo.ayaPos{
-                return // ended before this page
-            }
+
             let imageRect = pageImage.frame
             let qData = QData.instance()
-//            var startLine = 0
-//            var endLine = 0
             let lineHeight = imageRect.height/15
             let pageWidth = imageRect.width
+            let pageHeight = imageRect.height
             selectHead.isHidden = false
             if SelectStart < pageInfo.ayaPos{
                 selectHeadHeight.constant = 0
             }else{
                 selectHeadHeight.constant = lineHeight
-                let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: self.pageMap!)!
-                let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: self.pageMap!)!
-                let ypos = imageRect.height * CGFloat(selectStartInfo.sline) / 15
+                //print( lineHeight )
+                let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: pageMap)!
+                let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: pageMap)!
+                let ypos = pageHeight * CGFloat(selectStartInfo.sline) / 15
                 selectHeadY.constant = ypos
                 let startX = (CGFloat(selectStartInfo.spos) * pageWidth) / 1000
                 selectHeadSartX.constant = startX
                 let endX = selectStartInfo.sline == selectEndInfo.eline && selectStartInfo.page == selectEndInfo.page ?
                     (CGFloat(1000 - selectEndInfo.epos) * pageWidth) / 1000 : 0
                 selectHeadEndX.constant = endX
+                if selectEndInfo.page > self.pageIndex{// end next page
+                    //selection body will cover the rest of the page
+                    selectBody.isHidden = false
+                    selectBodyBottomY.constant = 0
+                }else if selectEndInfo.eline != selectStartInfo.sline{
+                    //lower part of the page has uncovered lines
+                    selectEnd.isHidden=false
+                    selectBody.isHidden = false
+                    let unselectedBottomLines = 15 - selectEndInfo.eline
+                    let bodyBottomY = (pageHeight * CGFloat(unselectedBottomLines)) / 15
+                    selectBodyBottomY.constant = bodyBottomY
+                    selectEndHeight.constant = lineHeight
+                    selectEndX.constant = (CGFloat(1000-selectEndInfo.epos) * pageWidth)/1000
+                }else{//only selection head is required
+                    //To avoid height constraints conflicts
+                    selectBodyBottomY.constant = 0
+                    selectEndHeight.constant = 0
+                    selectEndX.constant = 0
+                }
                 
             }
             self.updateViewConstraints()

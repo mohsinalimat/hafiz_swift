@@ -293,6 +293,7 @@ class QPagesBrowser: UIViewController
         for viewController in pendingViewControllers{
             if let qPageView = viewController as? QPageView {
                 qPageView.positionMask(false)
+                qPageView.positionSelection()
                 //print ("Positioned page\(qPageView.pageNumber!)")
             }
         }
