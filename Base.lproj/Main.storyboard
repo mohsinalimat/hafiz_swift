@@ -233,14 +233,13 @@
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="maskHead">
                                 <rect key="frame" x="10" y="451" width="100" height="39"/>
-                                <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="AgW-KI-1tc" userLabel="maskHead Height"/>
-                                    <constraint firstAttribute="width" constant="100" id="gR9-ja-aTb" userLabel="maskHead Width"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="zHy-gF-oWb" appends="YES" id="pJK-q8-5Mv"/>
@@ -249,7 +248,7 @@
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="maskBody">
                                 <rect key="frame" x="10" y="490" width="300" height="78"/>
-                                <color key="backgroundColor" red="0.50196081400000003" green="0.25098040700000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
@@ -318,6 +317,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="foT-G9-mTN" firstAttribute="bottom" secondItem="EPS-s9-h4K" secondAttribute="top" id="1t1-gH-wSF"/>
+                            <constraint firstItem="foT-G9-mTN" firstAttribute="trailing" secondItem="twD-Hm-5Yj" secondAttribute="trailing" constant="200" id="BzJ-gk-x68" userLabel="maskHeadStartX"/>
                             <constraint firstItem="twD-Hm-5Yj" firstAttribute="leading" secondItem="foT-G9-mTN" secondAttribute="leading" id="CVd-EC-2js"/>
                             <constraint firstItem="7jv-Tt-otI" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="D7d-jf-m37"/>
                             <constraint firstItem="CTD-Pf-l6U" firstAttribute="leading" secondItem="ZwX-cT-FIQ" secondAttribute="leading" constant="10" id="GBB-W8-LUL"/>
@@ -343,7 +343,7 @@
                         <outlet property="buttonsView" destination="CTD-Pf-l6U" id="tAX-SP-3lP"/>
                         <outlet property="lineMask" destination="twD-Hm-5Yj" id="Xi6-K6-Ai2"/>
                         <outlet property="lineMaskHeight" destination="AgW-KI-1tc" id="HyS-yD-4sZ"/>
-                        <outlet property="lineMaskWidth" destination="gR9-ja-aTb" id="9fx-qb-hwN"/>
+                        <outlet property="maskHeadStartX" destination="BzJ-gk-x68" id="HzU-MD-Sbf"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
                         <outlet property="selectBody" destination="BvU-Ff-ETA" id="Vkx-PG-rB0"/>
                         <outlet property="selectBodyBottomY" destination="bZG-Z0-jlx" id="M4v-fu-soa"/>

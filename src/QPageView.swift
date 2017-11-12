@@ -30,12 +30,14 @@ class QPageView: UIViewController{
             return -1
         }
     }
+    var sneekViewWidth : CGFloat = 0
 
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
     @IBOutlet weak var lineMask: UIView!
     @IBOutlet weak var ayaMask: UIView!
-    @IBOutlet weak var lineMaskWidth: NSLayoutConstraint!
+
+    @IBOutlet weak var maskHeadStartX: NSLayoutConstraint!
     @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
     @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
     @IBOutlet weak var buttonsView: UIView!
@@ -105,16 +107,38 @@ class QPageView: UIViewController{
         
     }
     
-    @objc func onClickAyaButton(tapGestureRecognizer: UITapGestureRecognizer){
-        clickedAya = tapGestureRecognizer.view
-        if let clickedAya = clickedAya {
-            let ayaId = clickedAya.tag
-            if MaskStart != -1 {
-                setMaskStart(ayaId)
-                return
+    @objc func onClickAyaButton(sender: UITapGestureRecognizer){
+        clickedAya = sender.view
+        if sender.state == .began {
+            if let clickedAya = clickedAya {
+                if MaskStart == clickedAya.tag {
+                    self.sneekViewWidth = 60
+                    maskHeadStartX.constant = maskHeadStartX.constant + 1
+                    self.updateViewConstraints()
+                    return
+                }
             }
-            selectAya( aya: ayaId )
-            showAyaMenu(ayaView: clickedAya)
+        }else if sender.state == .ended{
+            if let clickedAya = clickedAya {
+                let ayaId = clickedAya.tag
+                if MaskStart == ayaId {
+                    maskHeadStartX.constant = maskHeadStartX.constant - 1
+                    self.sneekViewWidth = 0
+                    self.updateViewConstraints()
+                    return
+                }
+                if MaskStart != -1 {
+                    if MaskStart < ayaId {//touching inside the mask
+                        moveMaskToCurrentPage()
+                        advanceMask(false)
+                    }else{//touching above the mask
+                        setMaskStart(ayaId)
+                    }
+                    return
+                }
+                selectAya( aya: ayaId )
+                showAyaMenu(ayaView: clickedAya)
+            }
         }
     }
 
@@ -203,10 +227,15 @@ class QPageView: UIViewController{
             if let pageMap = self.pageMap {
                 for(var button) in pageMap{
                     let btn = UIView()
-                    btn.semanticContentAttribute = .forceRightToLeft
-                    btn.alpha = 0.3
+                    //let btn = UITextView()
+//                    btn.textAlignment = .center
+//                    btn.text = button["aya"]
                     btn.backgroundColor = .brown
-                    btn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickAyaButton)))
+                    btn.alpha = 0.25
+                    btn.layer.cornerRadius = 5
+                    let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
+                    btn.addGestureRecognizer(tap)
+                    tap.minimumPressDuration = 0
                     btn.isUserInteractionEnabled = true
                     btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)!-1, aya: Int(button["aya"]!)!-1)
                     self.buttonsView.addSubview(btn)
@@ -218,29 +247,25 @@ class QPageView: UIViewController{
     func positionAyatButtons(){
         let containerView = self.buttonsView!
         let imageRect = containerView.frame
-        let line_height = Float(imageRect.size.height / 15)
-        let line_width = Float(imageRect.size.width)
+        let line_height = CGFloat(imageRect.size.height / 15)
+        let line_width = CGFloat(imageRect.size.width)
 
         if let pageMap = self.pageMap{
-            let button_width = Float(line_width/9.6)
+            let button_width = CGFloat(line_width/9.65)
             
             containerView.removeConstraints(containerView.constraints)//remove existing constraints
             
             for(index, btn) in containerView.subviews.enumerated(){
                 let button = pageMap[index]
-                let eline = Float(button["eline"]!)!
-                let epos = Float(button["epos"]!)!
-                var xpos = Int( epos * line_width / 1000 - button_width )
-                var ypos = Int( eline * Float(imageRect.size.height) / 15 )
-                if xpos < 0 {
-                    xpos = 0
-                }
-                if ypos < 0 {
-                    ypos = 0
-                }
+                let eline = CGFloat(Float(button["eline"]!)!)
+                let epos = CGFloat(Float(button["epos"]!)!)
+                let xpos = CGFloat( epos * line_width / 1000 - button_width )
+                let ypos = CGFloat( eline * CGFloat(imageRect.size.height) / 15 )
+                var rect = CGRect(x: xpos, y: ypos, width: button_width, height: line_height)
+                rect = rect.insetBy(dx: 3, dy: 3)
                 
-                containerView.addSimpleConstraints("H:|-\(xpos)-[v0(\(Int(button_width)))]", views: btn)
-                containerView.addSimpleConstraints("V:|-\(ypos)-[v0(\(Int(line_height)))]", views: btn)
+                containerView.addSimpleConstraints("H:|-\(rect.origin.x)-[v0(\(rect.size.width))]", views: btn)
+                containerView.addSimpleConstraints("V:|-\(rect.origin.y)-[v0(\(rect.size.height))]", views: btn)
             }
         }
         
@@ -260,6 +285,16 @@ class QPageView: UIViewController{
         let maskAyaPosition = MaskStart
         ayaMask.isHidden = true
         lineMask.isHidden = true
+
+        if let buttonsView = self.buttonsView{
+            for(_, btn) in buttonsView.subviews.enumerated(){
+                let ayaId = btn.tag
+                btn.alpha = ayaId == MaskStart ? 1 : 0.25
+                if let txtBtn = btn as? UITextView{
+                    txtBtn.textColor = ayaId == MaskStart ? .white : .brown
+                }
+            }
+        }
 
         if maskAyaPosition != -1 {
             let qData = QData.instance()
@@ -282,13 +317,25 @@ class QPageView: UIViewController{
                 let lineHeight = CGFloat(pageHeight / 15)
                 let lineWidth = CGFloat(imageRect.size.width)
                 lineMaskHeight.constant = lineHeight
-                lineMaskWidth.constant = CGFloat(1000 - ayaMapInfo.spos) * lineWidth / 1000
+                
+                let headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
+               
+                //Extend the mask .3 of the button width, if sneekView is not ON
+                let extendedMask = (sneekViewWidth==0) ? (headStartX > lineWidth/9.65/3 ? lineWidth/9.65/3 : 0) : 0
+                
+                var sneekViewAdjustedWidth = sneekViewWidth
+                if headStartX + sneekViewAdjustedWidth > lineWidth {
+                    sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
+                }
+                maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
+                //print("PositionMaskHead \(headStartX)")
                 let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
                 //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
                 ayaMaskHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
             }
             return maskStartPage
         }
+        
         return -1
     }
 
@@ -385,7 +432,7 @@ class QPageView: UIViewController{
             
             mnuController.menuItems = [
                 UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
-                UIMenuItem(title: "Review", action: #selector(maskSelectedAya)),
+                UIMenuItem(title: "Revise", action: #selector(maskSelectedAya)),
                 UIMenuItem(title: "Share", action: #selector(shareAya))
             ]
             
