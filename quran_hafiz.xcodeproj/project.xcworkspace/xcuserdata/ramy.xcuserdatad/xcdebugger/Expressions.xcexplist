@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "QPageView.hideMask():QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.parent.parent.navigationItem.rightBarButtonItems">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QData.init() -&gt; QData:QData.swift">
          <PersistentStrings>
             <PersistentString
@@ -34,15 +42,7 @@
          contextName = "QPageView.onClickAyaButton(tapGestureRecognizer:):QPageView.swift">
       </ContextState>
       <ContextState
-         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "actionsLabel.customView">
-            </PersistentString>
-            <PersistentString
-               value = "self.view">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "QPageView.positionMask():QPageView.swift">
       </ContextState>
       <ContextState
          contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
@@ -67,7 +67,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
+         contextName = "QData.pageIndex(ayaPosition:):QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "pageInfo[&quot;s&quot;]! == (suraIndex+1)">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "QPageView.tabQuranImage(Any) -&gt; ():QPageView.swift">
@@ -89,13 +94,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "QPageView.positionMask():QPageView.swift">
+         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
       </ContextState>
       <ContextState
-         contextName = "QData.pageIndex(ayaPosition:):QData.swift">
+         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
-               value = "pageInfo[&quot;s&quot;]! == (suraIndex+1)">
+               value = "actionsLabel.customView">
+            </PersistentString>
+            <PersistentString
+               value = "self.view">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -104,6 +112,17 @@
       </ContextState>
       <ContextState
          contextName = "QPagesDataSource.viewControllerAtIndex(Int, storyboard : UIStoryboard) -&gt; QPageView?:QPagesDataSource.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.setMaskStart(_:followPage:):QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationController?.navigationBar.topItem?.title">
+            </PersistentString>
+            <PersistentString
+               value = "self.navigationItem.title">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">

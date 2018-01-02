@@ -24,6 +24,7 @@
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
 		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
 		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
+		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
 		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
@@ -44,6 +45,7 @@
 		2D7F5F6E1F04BDA50076316B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
 		2DCEFD831F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
 		2DCEFD841F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
 				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 				2DCEFDA41F3498E800EAC321 /* qdata.json */,
+				2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */,
 			);
 			name = PagesBrowser;
 			path = src;
@@ -180,6 +183,7 @@
 				ORGANIZATIONNAME = "Ramy Eldesoky";
 				TargetAttributes = {
 					2D41B2361F9BC0A800199BAD = {
+						DevelopmentTeam = PTHW63WY46;
 						LastSwiftMigration = 0900;
 					};
 				};
@@ -232,6 +236,7 @@
 				2D41B23D1F9BC0A800199BAD /* TafseerViewController.swift in Sources */,
 				2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */,
 				2D41B23E1F9BC0A800199BAD /* AppDelegate.swift in Sources */,
+				2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */,
 				2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */,
 				2D41B23F1F9BC0A800199BAD /* HomeViewController.swift in Sources */,
 				2D41B2401F9BC0A800199BAD /* QIndexViewController.swift in Sources */,
@@ -287,7 +292,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = PTHW63WY46;
 				INFOPLIST_FILE = "$(SRCROOT)/src/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muslim-web.hafiz";
@@ -301,7 +306,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = PTHW63WY46;
 				INFOPLIST_FILE = "$(SRCROOT)/src/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muslim-web.hafiz";
@@ -343,6 +348,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PTHW63WY46;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -401,6 +407,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PTHW63WY46;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

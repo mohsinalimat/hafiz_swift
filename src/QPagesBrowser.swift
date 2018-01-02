@@ -22,88 +22,63 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var pageNumberLabel: UILabel!
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
-
+    @IBOutlet weak var pagesContainer: UIView!
+    
+    //@IBOutlet weak var pageViewController2: UIPageViewController?
+    
     let firstPage = 1
     let lastPage = 604
     
     var pageViewController: UIPageViewController?
     var startingPage:Int?
+    var closeBtn: UIBarButtonItem?
 
 
     // MARK: - UIViewController delegate methods
-    override func viewWillAppear(_ animated: Bool) {
-        //self.navigationController?.navigationBar.backgroundColor = .green
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        menuItems.addGestureRecognizer(UITapGestureRecognizer(target:self,action:#selector(hideMenu)))
+        menuItems.frame = self.view.frame
+
+        closeBtn = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(hideMask))
+
         // Configure the page view controller and add it as a child view controller.
-        self.pageViewController = UIPageViewController(transitionStyle: .scroll,
-                                                       navigationOrientation: .horizontal,
-                                                       options: nil)
+//        self.pageViewController = UIPageViewController(transitionStyle: .scroll,
+//                                                       navigationOrientation: .horizontal,
+//                                                       options: nil)
         // set this object as a delegate
+        self.pageViewController = self.childViewControllers[0] as? UIPageViewController
         self.pageViewController!.delegate = self
         self.pageViewController!.dataSource = self
         
-        gotoPage(self.startingPage ?? 1)
-        
-        self.addChildViewController(self.pageViewController!)//TODO: required?
-        
-        self.view.addSubview(self.pageViewController!.view)
-
-        // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
-        var pageViewRect = self.view.bounds
-        
-        pageViewRect.size.height = pageViewRect.height - 30
-        
-        //If IPad, add 40 pixel padding around the view
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
-        }
-        
-        self.pageViewController!.view.frame = pageViewRect
-
-        self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
-        
-        self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
-        
-        let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 40, width: 300, height: 30))
-        self.view?.addSubview(volumeView)
-
-// Doesn't work
-//        NotificationCenter.default.addObserver(
-//            forName: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"),
-//            object: nil,
-//            queue: nil)
-//        {_ in
-//            print( "volume changed" )
+//
+//
+//        self.addChildViewController(self.pageViewController!)//TODO: required?
+//        self.view.addSubview(self.pageViewController!.view)
+//        // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
+//        var pageViewRect = self.view.bounds
+//        pageViewRect.size.height = pageViewRect.height - 30
+//
+//        //If IPad, add 40 pixel padding around the view
+//        if UIDevice.current.userInterfaceIdiom == .pad {
+//            pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
 //        }
+       
+//        self.pageViewController!.view.frame = pageViewRect
+//        self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
+//        self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         
+        gotoPage(self.startingPage ?? 1)
+
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-//    override var canBecomeFirstResponder: Bool {
-//        get {
-//            return true
-//        }
-//    }
-
-//    var _modelController: QPagesDataSource? = nil
-//    var modelController: QPagesDataSource {
-//        // Return the model controller object, creating it if necessary.
-//        // In more complex implementations, the model controller may be passed to the view controller.
-//        if _modelController == nil {
-//            _modelController = QPagesDataSource()
-//        }
-//        return _modelController!
-//    }
-//
-
     
     // MARK: - New class methods
 
@@ -162,28 +137,104 @@ class QPagesBrowser: UIViewController
     }
     
     func currentPageIndx()->Int{
+        if let qPageView = currentPageView(), let pageNumber = qPageView.pageNumber{
+            return pageNumber - 1
+        }
+        return 0
+    }
+    func currentPageView()->QPageView?{
         if  let pageViewController = self.pageViewController,
             let viewControllers = pageViewController.viewControllers
         {
             if viewControllers.count>0 {
                 
-                if let qPageView = viewControllers[0] as? QPageView,
-                    let pageNumber = qPageView.pageNumber
-                {
-                    return pageNumber - 1
+                if let qPageView = viewControllers[0] as? QPageView{
+                    return qPageView
                 }
             }
         }
-        return 0
+        return nil
     }
 
     // MARK: - Event Hanlders
     
     //Handle Navigation Bar actions
-    @IBAction func clickedActions(_ sender: Any ) {
-        print (sender)
-    }
+    @IBOutlet var menuItems: UIView!
+    
+    @IBAction func showMenu(_ sender: Any) {
+//        if let menuItems = self.menuItems{
+//            if menuItems.superview == nil {
+//                self.view.addSubview(menuItems)
+//                menuItems.frame = self.view.frame
+//            }else{
+//                hideMenu()
+//            }
+//        }
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let addToHifz = UIAlertAction(title: "Add to Hifz", style: .default) { (action) in
+            print(action)
+        }
+        let bookmark = UIAlertAction(title: "Bookmark", style: .default) { (action) in
+            print(action)
+        }
+        let search = UIAlertAction(title: "Search", style: .default) { (action) in
+            print(action)
+        }
 
+        let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
+            print(action)
+        }
+        alert.addAction(addToHifz)
+        alert.addAction(bookmark)
+        alert.addAction(search)
+        alert.addAction(close)
+        self.present(alert, animated: true) {
+            print( "Alert Dismissed" )
+        }
+    }
+    
+    @objc func hideMenu(){
+        menuItems.removeFromSuperview()
+    }
+    // MARK: - Mask methods
+    @objc func hideMask(){
+        if MaskStart != -1 {
+            setMaskStart(-1)
+        }
+    }
+    
+    func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
+        MaskStart = ayaId
+        SelectStart = ayaId
+        SelectEnd = ayaId
+        positionMask(followPage)
+        
+        if let currPageView = currentPageView(){
+            currPageView.positionSelection()
+        }
+        
+        if let rightBarItems = self.navigationItem.rightBarButtonItems{
+            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button
+                self.navigationItem.rightBarButtonItems = [rightBarItems[0], closeBtn!]
+            }else if( MaskStart == -1 && rightBarItems.count > 1){//hide the cancel button
+                self.navigationItem.rightBarButtonItems = [rightBarItems[0]]
+            }
+        }
+    }
+    
+    func positionMask(_ followPage: Bool ){
+        if let currPageView = currentPageView(){
+            let maskPageIndex = currPageView.positionMask()
+            if followPage && maskPageIndex != currentPageIndx() {
+                gotoPage(maskPageIndex)
+            }else{
+                currPageView.updateViewConstraints()
+            }
+        }
+    }
+    
+    
     @IBAction func gotoNextSura(_ sender: Any) {
         if MaskStart != -1 {
             if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {

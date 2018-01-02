@@ -50,8 +50,8 @@ class TafseerViewController: UIViewController,
         pageViewController!.delegate = self
         pageViewController!.dataSource = self
         
-        //make it child of the current controller ?? Not sure why
-        //self.addChildViewController(pageViewController!)
+        //make it child of the current controller for UIViewController.parent to work
+        self.addChildViewController(pageViewController!)
 
         //locate the pager inside a dedicated frame
         PageViewFrame.addSubview(pageViewController!.view)

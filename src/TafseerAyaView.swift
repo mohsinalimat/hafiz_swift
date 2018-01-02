@@ -10,6 +10,7 @@ import UIKit
 
 class TafseerAyaView: UIViewController, UIWebViewDelegate {
 
+    @IBOutlet weak var AyaView: UITextView!
     @IBOutlet weak var AyaWebView: UIWebView!
     @IBOutlet weak var LoadingIndicator: UIActivityIndicatorView!
     
@@ -38,19 +39,17 @@ class TafseerAyaView: UIViewController, UIWebViewDelegate {
         
 //        let downloadTask = URLSession.shared.dataTask(with: tafseerUrl){ (data, response, error) in
 //            if error == nil {
-//                if let str = String(data: data!, encoding: .utf8) {
+//                if let str = String(data: data!, encoding: .utf8) { // build a string from utf8 encoded data
 //                    let str = str.replacingOccurrences(of: "=100%", with: "=\"100%\"")
-//                    let matches = str.extract("<body.*?>(.*)<\\/body>")
+//                    let matches = str.extract("<body.*?>(.*)<\\/body>")//custom string extension that extracts regex placeholders
 //                    let body = matches[0]
 //                    //TODO: too slow with large string, move it outside UI thread to avoid blocking
 //                    //let attrText = "<style>*{font-size:20px; direction:rtl}</style>\(body)".convertHtml()
-//                    //let attrText = body.convertHtml()
+//                    let attrText = body.convertHtml()
 //                    DispatchQueue.main.async(){
-//                        //self.AyaWebView.loadHTMLString(body, baseURL: tafseerUrl)
-//
 //                        //Also slow
-//                        //self.AyaView.attributedText = attrText
-//                        //self.AyaView.text = body
+//                        self.AyaView.attributedText = attrText
+//                        self.LoadingIndicator.stopAnimating()
 //                    }
 //                }
 //            }

@@ -8,6 +8,7 @@
 
 import UIKit
 
+// a special UIView that would bypass the hits to background views and only process hits on its child views
 class LayerView : UIView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let view = super.hitTest( point, with: event )

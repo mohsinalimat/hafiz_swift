@@ -26,13 +26,36 @@ class HomeViewController: UITabBarController, UITabBarControllerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: - UITabBarController delegates
+    
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if let title = item.title{
             print (title)
         }
     }
     
+    @IBAction func openActions(_ sender: Any) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let login = UIAlertAction(title: "Login", style: .default) { (action) in
+            print(action)
+        }
+        let changeLanguage = UIAlertAction(title: "Change Language", style: .default) { (action) in
+            print(action)
+        }
 
+        let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
+            print(action)
+        }
+
+        alert.addAction(login)
+        alert.addAction(changeLanguage)
+        alert.addAction(close)
+        self.present(alert, animated: true) {
+            print( "Alert Show animation completed" )
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -32,6 +32,7 @@ class QPageView: UIViewController{
     }
     var sneekViewWidth : CGFloat = 0
 
+
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
     @IBOutlet weak var lineMask: UIView!
@@ -212,12 +213,16 @@ class QPageView: UIViewController{
         }
     }
     
+    //TODO: parent controller has the same implementation
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
-        MaskStart = ayaId
-        SelectStart = ayaId
-        SelectEnd = ayaId
-        positionMask(followPage)
-        positionSelection()
+        if let pageBrowser = self.parentBrowserView(){
+            pageBrowser.setMaskStart( ayaId, followPage: followPage )
+        }
+//        MaskStart = ayaId
+//        SelectStart = ayaId
+//        SelectEnd = ayaId
+//        positionMask(followPage)
+//        positionSelection()
     }
 
     func createAyatButtons(){
@@ -272,15 +277,17 @@ class QPageView: UIViewController{
         positionMask(false)
     }
     
+    //TODO: parent controller has similar method doing the same thing
     func positionMask(_ followPage: Bool ){
         let maskPageIndex = positionMask()
         if followPage && maskPageIndex != self.pageIndex {
             gotoPage(maskPageIndex)
         }else{
-            self.updateViewConstraints()
+            self.updateViewConstraints()//force refreshing the current page
         }
     }
-    
+
+    //Rearrange the mask and aya buttons views and return the mask start page
     func positionMask()->Int{
         let maskAyaPosition = MaskStart
         ayaMask.isHidden = true
@@ -400,7 +407,7 @@ class QPageView: UIViewController{
         }
     }
     
-    func hideMask(){
+    @objc func hideMask(){
         if MaskStart != -1 {
             setMaskStart(-1)
         }

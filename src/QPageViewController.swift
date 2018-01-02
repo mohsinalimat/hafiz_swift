@@ -1,21 +1,21 @@
 //
-//  MainViewController.swift
-//  test
+//  QPageViewController.swift
+//  quran_hafiz
 //
-//  Created by Ramy Eldesoky on 8/27/17.
+//  Created by Ramy Eldesoky on 11/12/17.
 //  Copyright © 2017 Ramy Eldesoky. All rights reserved.
 //
 
 import UIKit
 
-class MainViewController: UINavigationController {
+class QPageViewController: UIPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-//        self.navigationController?.navigationBar.backgroundColor = .red
-//        self.view.backgroundColor = nil
+        self.view.semanticContentAttribute = .forceLeftToRight
+
     }
 
     override func didReceiveMemoryWarning() {

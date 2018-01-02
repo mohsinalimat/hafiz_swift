@@ -51,6 +51,7 @@ class QIndexViewController: UITableViewController{
         if let viewCell = sender as? UITableViewCell,
             let qPagesBrowser = segue.destination as? QPagesBrowser {
             qPagesBrowser.startingPage = viewCell.tag
+            //Reset previous selections and mask
             MaskStart = -1
             SelectStart = -1
             SelectEnd = -1
