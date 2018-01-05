@@ -154,7 +154,7 @@
                     </constraints>
                 </view>
             </objects>
-            <point key="canvasLocation" x="560.625" y="-359.15492957746477"/>
+            <point key="canvasLocation" x="111" y="-377"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="dpE-c9-edA">
@@ -167,7 +167,7 @@
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vFo-WZ-NDv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1448" y="-557"/>
+            <point key="canvasLocation" x="988" y="-667"/>
         </scene>
         <!--Tafseer View Controller-->
         <scene sceneID="IVQ-cT-Ipg">
@@ -244,7 +244,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hZJ-hz-xoF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2432" y="130"/>
+            <point key="canvasLocation" x="1965" y="-698"/>
         </scene>
         <!--Tafseer Aya View-->
         <scene sceneID="yw5-hV-mil">
@@ -286,7 +286,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7jb-2c-PgT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2431.875" y="-558.80281690140851"/>
+            <point key="canvasLocation" x="1965" y="0.0"/>
         </scene>
         <!--Page View-->
         <scene sceneID="snT-py-3hH">
@@ -469,7 +469,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1448" y="130"/>
+            <point key="canvasLocation" x="986" y="-12"/>
         </scene>
         <!--Home-->
         <scene sceneID="QlN-bz-lYQ">
@@ -492,13 +492,13 @@
                     </tabBar>
                     <connections>
                         <segue destination="UuV-Ke-L9r" kind="relationship" relationship="viewControllers" id="KaB-Pf-7w8"/>
-                        <segue destination="BUi-sJ-PCq" kind="relationship" relationship="viewControllers" id="D7R-cr-iAM"/>
                         <segue destination="jHV-wq-GPS" kind="relationship" relationship="viewControllers" id="gzs-dl-DIh"/>
+                        <segue destination="BUi-sJ-PCq" kind="relationship" relationship="viewControllers" id="jCk-Sf-hUv"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vha-Qr-Sff" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1592" y="-244"/>
+            <point key="canvasLocation" x="-1828" y="-244"/>
         </scene>
         <!--Bookmarks-->
         <scene sceneID="3Oq-FL-zAM">
@@ -527,7 +527,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeK-gX-SeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-412" y="680"/>
+            <point key="canvasLocation" x="-774" y="498"/>
         </scene>
         <!--Parts Table-->
         <scene sceneID="RRa-g1-8g5">
@@ -538,7 +538,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Part Cell" textLabel="4S3-hC-imE" detailTextLabel="M4V-CY-IJd" style="IBUITableViewCellStyleSubtitle" id="3ub-tY-BQ2">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Part Cell" textLabel="4S3-hC-imE" detailTextLabel="M4V-CY-IJd" imageView="WiX-PG-9wu" style="IBUITableViewCellStyleSubtitle" id="3ub-tY-BQ2">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3ub-tY-BQ2" id="LEA-3A-sII">
@@ -546,21 +546,26 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4S3-hC-imE">
-                                            <rect key="frame" x="16" y="5" width="33.5" height="20.5"/>
+                                            <rect key="frame" x="56" y="5" width="33.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="M4V-CY-IJd">
-                                            <rect key="frame" x="16" y="25.5" width="44" height="14.5"/>
+                                            <rect key="frame" x="56" y="25.5" width="44" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icons8-Bookmark Ribbon" id="WiX-PG-9wu">
+                                            <rect key="frame" x="16" y="9" width="25" height="25"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <segue destination="703-4V-yAM" kind="show" id="FUA-q2-iz6"/>
                                 </connections>
@@ -575,7 +580,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnA-In-VyK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-413" y="-49"/>
+            <point key="canvasLocation" x="-774" y="-244"/>
         </scene>
         <!--Quran Index-->
         <scene sceneID="g14-Qx-qBK">
@@ -586,7 +591,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Sura Info" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sura Info" textLabel="oGq-2Z-yCC" detailTextLabel="t44-l6-cGh" style="IBUITableViewCellStyleValue1" id="WPr-2o-JMI">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Sura Info" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sura Info" textLabel="oGq-2Z-yCC" detailTextLabel="t44-l6-cGh" imageView="xUl-Yj-zkn" style="IBUITableViewCellStyleValue1" id="WPr-2o-JMI">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WPr-2o-JMI" id="Jyz-9c-Fdz">
@@ -594,7 +599,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" restorationIdentifier="suraName" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oGq-2Z-yCC">
-                                            <rect key="frame" x="16" y="12" width="99.5" height="20.5"/>
+                                            <rect key="frame" x="56" y="12" width="99.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -607,8 +612,13 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icons8-Bookmark" id="xUl-Yj-zkn">
+                                            <rect key="frame" x="16" y="9" width="25" height="25"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <segue destination="703-4V-yAM" kind="show" identifier="IndexOpenSura" id="ain-zt-Gaq"/>
                                 </connections>
@@ -625,7 +635,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Zs-PW-RVD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-412" y="-743"/>
+            <point key="canvasLocation" x="-774" y="-974"/>
         </scene>
         <!--AppNavigation-->
         <scene sceneID="DEj-K2-Mmj">
@@ -652,11 +662,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="icons8-Bookmark" width="25" height="25"/>
         <image name="icons8-Bookmark Ribbon" width="25" height="25"/>
         <image name="icons8-Heart" width="25" height="25"/>
         <image name="icons8-List Filled" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ain-zt-Gaq"/>
+        <segue reference="FUA-q2-iz6"/>
     </inferredMetricsTieBreakers>
 </document>

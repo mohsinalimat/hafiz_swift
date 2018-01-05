@@ -237,7 +237,7 @@ class QPagesBrowser: UIViewController
     
     @IBAction func gotoNextSura(_ sender: Any) {
         if MaskStart != -1 {
-            if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
+            if let qPageView = self.currentPageView() {
                 qPageView.advanceMask(true)
             }
         }else{
@@ -247,7 +247,7 @@ class QPagesBrowser: UIViewController
     
     @IBAction func gotoPrevSura(_ sender: Any) {
         if MaskStart != -1 {
-            if let qPageView = self.pageViewController!.viewControllers![0] as? QPageView {
+            if let qPageView = self.currentPageView() {
                 qPageView.retreatMask( true )
             }
         }else{
@@ -343,7 +343,7 @@ class QPagesBrowser: UIViewController
         willTransitionTo pendingViewControllers: [UIViewController]) {
         for viewController in pendingViewControllers{
             if let qPageView = viewController as? QPageView {
-                qPageView.positionMask(false)
+                qPageView.positionMask( followPage: false )
                 qPageView.positionSelection()
                 //print ("Positioned page\(qPageView.pageNumber!)")
             }

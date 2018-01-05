@@ -274,11 +274,11 @@ class QPageView: UIViewController{
             }
         }
         
-        positionMask(false)
+        positionMask(followPage: false)
     }
     
     //TODO: parent controller has similar method doing the same thing
-    func positionMask(_ followPage: Bool ){
+    func positionMask( followPage: Bool ){
         let maskPageIndex = positionMask()
         if followPage && maskPageIndex != self.pageIndex {
             gotoPage(maskPageIndex)
