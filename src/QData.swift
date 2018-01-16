@@ -14,6 +14,8 @@ class QData{
     var suraInfo:[[String:Int]]?
     var partInfo:[[String:Int]]?
     var pagesInfo:[[String:Int]]?
+    var suraNames:NSDictionary?
+    var quranData:NSArray?
     
     let totalAyat = 6236
     let lastPage = 603
@@ -218,14 +220,35 @@ class QData{
         return pgIndex
     }
     
-    
-    func suraName( suraIndex: Int ) -> String? {
-        if let path = Bundle.main.path(forResource: "SuraNames", ofType: "plist") {
-            if let suraNames = NSDictionary(contentsOfFile: path){
-                //return suraNames.value( forKey: String(suraIndex+1) ) as? String
-                return suraNames[String(suraIndex+1)] as? String
+    func ayaText( ayaPosition: Int ) -> String? {
+        if quranData == nil {
+            if let path = Bundle.main.path(forResource: "quran", ofType: "plist") {
+                quranData = NSArray(contentsOfFile: path) //cache quranData NSDictionary
             }
         }
+
+        if let quranData = quranData{
+            if let ayaInfo = quranData[ayaPosition] as? [String:String] {
+                return ayaInfo["aya_text"]
+            }
+        }
+
+        return nil
+    }
+    
+    func suraName( suraIndex: Int ) -> String? {
+        
+        if suraNames == nil {
+            if let path = Bundle.main.path(forResource: "SuraNames", ofType: "plist") {
+                suraNames = NSDictionary(contentsOfFile: path) //cache suraNames NSDictionary
+            }
+        }
+
+        if let suraNames = suraNames{
+            return suraNames[String(suraIndex+1)] as? String
+            //return suraNames.value( forKey: String(suraIndex+1) ) as? String
+        }
+
         return nil
     }
     

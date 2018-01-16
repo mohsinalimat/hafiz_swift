@@ -1,4 +1,4 @@
-//
+    //
 //  DataViewController.swift
 //  test
 //
@@ -105,7 +105,10 @@ class QPageView: UIViewController{
     }
     
     @objc func shareAya(){
-        
+        let qData = QData.instance()
+        if let ayaText = qData.ayaText(ayaPosition: clickedAya!.tag){
+            print (ayaText)
+        }
     }
     
     @objc func onClickAyaButton(sender: UITapGestureRecognizer){

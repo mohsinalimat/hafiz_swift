@@ -349,6 +349,7 @@ class QPagesBrowser: UIViewController
             }
         }
     }
+    
     func pageViewController(_
         pageViewController: UIPageViewController,
         didFinishAnimating finished: Bool,

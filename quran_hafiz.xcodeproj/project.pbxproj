@@ -24,6 +24,11 @@
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
 		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
 		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
+		2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8F4B20200730A500499A3F /* CoreData.framework */; };
+		2D8F4B24200730ED00499A3F /* quran.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */; };
+		2D8F4B2720088AEC00499A3F /* Aya+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */; };
+		2D8F4B2820088AEC00499A3F /* Aya+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */; };
+		2DC06CEB200DC075005F3306 /* quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DC06CE9200DC074005F3306 /* quran.plist */; };
 		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
@@ -45,6 +50,11 @@
 		2D7F5F6E1F04BDA50076316B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D8F4B20200730A500499A3F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2D8F4B23200730ED00499A3F /* quran.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = quran.xcdatamodel; sourceTree = "<group>"; };
+		2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataClass.swift"; sourceTree = "<group>"; };
+		2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2DC06CEA200DC074005F3306 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/quran.plist; sourceTree = "<group>"; };
 		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
 		2DCEFD831F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -65,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +94,9 @@
 		2D7F5F571F04BDA40076316B = {
 			isa = PBXGroup;
 			children = (
+				2DC06CEC200DD3B5005F3306 /* plists */,
+				2D8F4B2920088AF300499A3F /* CoreData */,
+				2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */,
 				2D7F5F6B1F04BDA40076316B /* Main.storyboard */,
 				2DF881F91FA380CB0045EFCF /* HomeScreen */,
 				2DF881FA1FA380FC0045EFCF /* PagesBrowser */,
@@ -90,6 +104,7 @@
 				2D48D35B1F52ED6C0058552F /* data */,
 				2D7F5F621F04BDA40076316B /* src */,
 				2D7F5F611F04BDA40076316B /* Products */,
+				2D8F4B1F200730A400499A3F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,18 +119,43 @@
 		2D7F5F621F04BDA40076316B /* src */ = {
 			isa = PBXGroup;
 			children = (
+				2D7F5F731F04BDA50076316B /* Info.plist */,
 				2D64CEB41FAFB48800348A34 /* LayerView.swift */,
 				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
 				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
-				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
 				2DCEFD961F32EC8700EAC321 /* Localizable.strings */,
 				2D7F5F6E1F04BDA50076316B /* Assets.xcassets */,
 				2D7F5F701F04BDA50076316B /* LaunchScreen.storyboard */,
-				2D7F5F731F04BDA50076316B /* Info.plist */,
 				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
 				2DD8D7601FA69F73008DD81D /* Utils.swift */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		2D8F4B1F200730A400499A3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2D8F4B20200730A500499A3F /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2D8F4B2920088AF300499A3F /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */,
+				2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		2DC06CEC200DD3B5005F3306 /* plists */ = {
+			isa = PBXGroup;
+			children = (
+				2DC06CE9200DC074005F3306 /* quran.plist */,
+				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
+			);
+			path = plists;
 			sourceTree = "<group>";
 		};
 		2DF881F81FA3801A0045EFCF /* TafseerBrowser */ = {
@@ -216,6 +256,7 @@
 				2D41B2451F9BC0A800199BAD /* pg_map in Resources */,
 				2D41B2461F9BC0A800199BAD /* Localizable.strings in Resources */,
 				2D41B2471F9BC0A800199BAD /* Assets.xcassets in Resources */,
+				2DC06CEB200DC075005F3306 /* quran.plist in Resources */,
 				2D41B2481F9BC0A800199BAD /* Main.storyboard in Resources */,
 				2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */,
 				2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */,
@@ -230,6 +271,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */,
+				2D8F4B2720088AEC00499A3F /* Aya+CoreDataClass.swift in Sources */,
+				2D8F4B24200730ED00499A3F /* quran.xcdatamodeld in Sources */,
 				2D41B2391F9BC0A800199BAD /* QPagesBrowser.swift in Sources */,
 				2D41B23B1F9BC0A800199BAD /* QPageView.swift in Sources */,
 				2D41B23C1F9BC0A800199BAD /* QData.swift in Sources */,
@@ -242,6 +285,7 @@
 				2D41B2401F9BC0A800199BAD /* QIndexViewController.swift in Sources */,
 				2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */,
 				2D41B2411F9BC0A800199BAD /* MainViewController.swift in Sources */,
+				2D8F4B2820088AEC00499A3F /* Aya+CoreDataProperties.swift in Sources */,
 				2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,6 +309,14 @@
 				2DCEFD841F305D7600EAC321 /* ar-EG */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2DC06CE9200DC074005F3306 /* quran.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DC06CEA200DC074005F3306 /* Base */,
+			);
+			name = quran.plist;
 			sourceTree = "<group>";
 		};
 		2DCEFD961F32EC8700EAC321 /* Localizable.strings */ = {
@@ -449,6 +501,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2D8F4B23200730ED00499A3F /* quran.xcdatamodel */,
+			);
+			currentVersion = 2D8F4B23200730ED00499A3F /* quran.xcdatamodel */;
+			path = quran.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2D7F5F581F04BDA40076316B /* Project object */;
 }
