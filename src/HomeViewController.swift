@@ -34,6 +34,10 @@ class HomeViewController: UITabBarController, UITabBarControllerDelegate {
         }
     }
     
+    @IBAction func openSearch(_ sender: UIBarButtonItem) {
+        //let search = UISearchController()
+    }
+    
     @IBAction func openActions(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         

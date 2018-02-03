@@ -179,7 +179,9 @@ class QPagesBrowser: UIViewController
             print(action)
         }
         let search = UIAlertAction(title: "Search", style: .default) { (action) in
-            print(action)
+            //print(action)
+            self.performSegue(withIdentifier: "PopupSearch", sender: self)
+
         }
 
         let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
