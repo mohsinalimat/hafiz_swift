@@ -84,6 +84,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D0C542F20621FA700FBEF8F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2D64CEB41FAFB48800348A34 /* LayerView.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		2D0C543020621FDA00FBEF8F /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				2DF0E099202634BC00B3C493 /* SearchViewController.swift */,
+			);
+			name = Search;
+			path = src;
+			sourceTree = "<group>";
+		};
 		2D48D35B1F52ED6C0058552F /* data */ = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +113,7 @@
 		2D7F5F571F04BDA40076316B = {
 			isa = PBXGroup;
 			children = (
+				2D0C542F20621FA700FBEF8F /* Utils */,
 				2DC06CEC200DD3B5005F3306 /* plists */,
 				2D8F4B2920088AF300499A3F /* CoreData */,
 				2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */,
@@ -103,6 +121,7 @@
 				2DF881F91FA380CB0045EFCF /* HomeScreen */,
 				2DF881FA1FA380FC0045EFCF /* PagesBrowser */,
 				2DF881F81FA3801A0045EFCF /* TafseerBrowser */,
+				2D0C543020621FDA00FBEF8F /* Search */,
 				2D48D35B1F52ED6C0058552F /* data */,
 				2D7F5F621F04BDA40076316B /* src */,
 				2D7F5F611F04BDA40076316B /* Products */,
@@ -121,9 +140,7 @@
 		2D7F5F621F04BDA40076316B /* src */ = {
 			isa = PBXGroup;
 			children = (
-				2DF0E099202634BC00B3C493 /* SearchViewController.swift */,
 				2D7F5F731F04BDA50076316B /* Info.plist */,
-				2D64CEB41FAFB48800348A34 /* LayerView.swift */,
 				2D7F5F631F04BDA40076316B /* AppDelegate.swift */,
 				2D48D35D1F530AAA0058552F /* MainViewController.swift */,
 				2DCEFD961F32EC8700EAC321 /* Localizable.strings */,

@@ -8,8 +8,11 @@
 
 import UIKit
 
-class SearchViewController: UIViewController, UISearchBarDelegate {
+class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
 
+    var searchText: String?
+    @IBOutlet weak var searchResultsTable: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -17,6 +20,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         searchBar.becomeFirstResponder();
         searchBar.delegate = self
     }
+    
 
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -28,9 +32,49 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     @IBAction func onTabOutsideSearchbar(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+
+    // MARK: - SearchBarDelegates methods
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         dismiss(animated: true, completion: nil)
     }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print( searchBar.text! )
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.searchText = ""
+        if( searchText.count > 0 ){
+            self.searchText = searchText
+        }
+        
+        searchResultsTable.reloadData()
+    }
+
+    // MARK: - TableViewDataSource methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let searchText = self.searchText{
+            return searchText.count
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SResult Item", for: indexPath)
+
+        if let textLabel = cell.textLabel{
+            textLabel.text = "Result Item \(indexPath.row)"
+            if let searchText = self.searchText {
+                if searchText.count > 0{
+                    textLabel.text = searchText
+                }
+            }
+        }
+        
+        return cell
+    }
+
     
     /*
     // MARK: - Navigation

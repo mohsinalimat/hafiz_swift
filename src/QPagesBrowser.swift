@@ -161,6 +161,9 @@ class QPagesBrowser: UIViewController
     //Handle Navigation Bar actions
     @IBOutlet var menuItems: UIView!
     
+    @IBAction func onSwipePageUp(_ sender: Any) {
+        showMenu(sender)
+    }
     @IBAction func showMenu(_ sender: Any) {
 //        if let menuItems = self.menuItems{
 //            if menuItems.superview == nil {
@@ -170,27 +173,31 @@ class QPagesBrowser: UIViewController
 //                hideMenu()
 //            }
 //        }
+        
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let addToHifz = UIAlertAction(title: "Add to Hifz", style: .default) { (action) in
             print(action)
         }
+
         let bookmark = UIAlertAction(title: "Bookmark", style: .default) { (action) in
             print(action)
         }
+        
         let search = UIAlertAction(title: "Search", style: .default) { (action) in
             //print(action)
             self.performSegue(withIdentifier: "PopupSearch", sender: self)
-
         }
 
         let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
             print(action)
         }
+        
         alert.addAction(addToHifz)
-        alert.addAction(bookmark)
+        	alert.addAction(bookmark)
         alert.addAction(search)
         alert.addAction(close)
+        
         self.present(alert, animated: true) {
             print( "Alert Dismissed" )
         }
