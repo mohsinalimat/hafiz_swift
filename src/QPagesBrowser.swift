@@ -74,7 +74,7 @@ class QPagesBrowser: UIViewController
 
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
-    
+
     override func viewWillAppear(_ animated: Bool) {
         print("QPagesBrowser willAppear")
         NotificationCenter.default.addObserver(
@@ -83,22 +83,23 @@ class QPagesBrowser: UIViewController
             name: searchOpenAyaNotification,
             object: nil
         )
+        navigationController?.navigationBar.isHidden = true
+
+        
+        // setting the hidesBarsOnSwift property to false
+        // since it doesn't make sense in this case,
+        // but is was set to true in the last VC
+        //navigationController?.hidesBarsOnSwipe = false
+        
+        // setting hidesBarsOnTap to true
+        //navigationController?.hidesBarsOnTap = true
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         print("QPagesBrowser willDisappear")
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func searchOpenAya(vc: SearchViewController){
-        print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
-        let qData = QData.instance()
-        let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
-        gotoPage(pageIndex+1)
-        if let currPageView = currentPageView(){
-            currPageView.positionSelection()
-        }
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -106,6 +107,7 @@ class QPagesBrowser: UIViewController
     }
     
     // MARK: - New class methods
+
 
     func gotoPage(_ pageNum: Int ){
         let currPageIndex = currentPageIndx()
@@ -192,8 +194,17 @@ class QPagesBrowser: UIViewController
     @IBOutlet var menuItems: UIView!
     
     @IBAction func onSwipePageUp(_ sender: Any) {
-        showMenu(sender)
+        if navigationController?.navigationBar.isHidden == false{
+            navigationController?.navigationBar.isHidden = true
+        }else{
+            showMenu(sender)
+        }
     }
+
+    @IBAction func onSwipePageDown(_ sender: Any) {
+        navigationController?.navigationBar.isHidden = false
+    }
+
     @IBAction func showMenu(_ sender: Any) {
 //        if let menuItems = self.menuItems{
 //            if menuItems.superview == nil {
@@ -232,7 +243,17 @@ class QPagesBrowser: UIViewController
             print( "Alert Dismissed" )
         }
     }
-    
+
+    @objc func searchOpenAya(vc: SearchViewController){
+        print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
+        let qData = QData.instance()
+        let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
+        gotoPage(pageIndex+1)
+        if let currPageView = currentPageView(){
+            currPageView.positionSelection()
+        }
+    }
+
     @objc func hideMenu(){
         menuItems.removeFromSuperview()
     }
@@ -387,6 +408,7 @@ class QPagesBrowser: UIViewController
                 //print ("Positioned page\(qPageView.pageNumber!)")
             }
         }
+        navigationController?.navigationBar.isHidden = true
     }
     
     func pageViewController(_

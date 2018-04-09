@@ -20,7 +20,7 @@ class HomeViewController: UITabBarController
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         print("HomeViewController Appear")
         NotificationCenter.default.addObserver(
            self,
@@ -28,9 +28,10 @@ class HomeViewController: UITabBarController
            name: searchOpenAyaNotification,
            object: nil
         )
+        //Show Navigation bar
+        navigationController?.navigationBar.isHidden = false
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         print("HomeViewController willDisappear")
         NotificationCenter.default.removeObserver(self)
     }

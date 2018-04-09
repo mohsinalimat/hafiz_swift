@@ -3,14 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "HomeViewController.prepare(for:sender:):HomeViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "vc.popoverPresentationController">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "QPageView.hideMask():QPageView.swift">
          <PersistentStrings>
             <PersistentString
@@ -45,6 +37,14 @@
       </ContextState>
       <ContextState
          contextName = "QData.searchQuran(_:):QData.swift">
+      </ContextState>
+      <ContextState
+         contextName = "HomeViewController.viewDidAppear(_:):HomeViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "navigationController?.navigationBar.isHidden">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "QPagesDataSource.viewControllerAtIndex(Int, storyboard : UIStoryboard) -&gt; QPageView?:QPagesDataSource.swift">

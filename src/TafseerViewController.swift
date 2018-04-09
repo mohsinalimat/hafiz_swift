@@ -62,6 +62,10 @@ class TafseerViewController: UIViewController,
         //Show initial pager pager
         gotoAya(ayaPosition)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+    }
 
     // MARK: Class methods
     func gotoAya(_ ayaPosition: Int ){
