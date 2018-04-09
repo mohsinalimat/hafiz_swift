@@ -8,17 +8,37 @@
 
 import UIKit
 
-class HomeViewController: UITabBarController, UITabBarControllerDelegate {
-
+class HomeViewController: UITabBarController
+    ,UITabBarControllerDelegate
+    ,UIPopoverPresentationControllerDelegate
+    {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
-        //self.navigationController?.hidesBarsOnSwipe = true
     }
     
+    let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
+
     override func viewWillAppear(_ animated: Bool) {
-        //self.navigationController?.navigationBar.backgroundColor = .green
+        print("HomeViewController Appear")
+        NotificationCenter.default.addObserver(
+           self,
+           selector: #selector(searchOpenAya),
+           name: searchOpenAyaNotification,
+           object: nil
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("HomeViewController willDisappear")
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc func searchOpenAya(vc: SearchViewController){
+        print("HomeViewController.searchOpenAya( \(SelectStart) )")
+        self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)
+        //self.navigationController?.pushViewController(QPagesBrowser(), animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,6 +90,15 @@ class HomeViewController: UITabBarController, UITabBarControllerDelegate {
     }
     */
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier! == "OpenPagesBrowser" {
+            if let vc = segue.destination as? QPagesBrowser{
+                let qData = QData.instance()
+                vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
+            }
+        }
+    }
+    
 }
 
 

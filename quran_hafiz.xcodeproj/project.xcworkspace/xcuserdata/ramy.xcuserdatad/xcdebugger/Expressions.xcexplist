@@ -3,10 +3,29 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "HomeViewController.prepare(for:sender:):HomeViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "vc.popoverPresentationController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPageView.hideMask():QPageView.swift">
          <PersistentStrings>
             <PersistentString
                value = "self.parent.parent.navigationItem.rightBarButtonItems">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPagesBrowser.pageViewController(UIPageViewController, didFinishAnimating : Bool, previousViewControllers : [UIViewController], transitionCompleted : Bool) -&gt; ():QPagesBrowser.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QData.readQuranData():QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "quranData![pos]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -25,7 +44,59 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "QPagesBrowser.pageViewController(UIPageViewController, didFinishAnimating : Bool, previousViewControllers : [UIViewController], transitionCompleted : Bool) -&gt; ():QPagesBrowser.swift">
+         contextName = "QData.searchQuran(_:):QData.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPagesDataSource.viewControllerAtIndex(Int, storyboard : UIStoryboard) -&gt; QPageView?:QPagesDataSource.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QData.pageIndex(ayaPosition:):QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "pageInfo[&quot;s&quot;]! == (suraIndex+1)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QData.suraName(suraIndex:):QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "suraNames[String(suraIndex+1)] as? String">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.tabQuranImage(Any) -&gt; ():QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.setMaskStart(_:followPage:):QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationController?.navigationBar.topItem?.title">
+            </PersistentString>
+            <PersistentString
+               value = "self.navigationItem.title">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "UIMenuController.shared">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "QPagesBrowser.viewDidLoad() -&gt; ():QPagesBrowser.swift">
@@ -42,15 +113,40 @@
          contextName = "QPageView.positionMask():QPageView.swift">
       </ContextState>
       <ContextState
-         contextName = "QPageView.onClickAyaButton(tapGestureRecognizer:):QPageView.swift">
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
+         contextName = "QIndexViewController.tableView(UITableView, cellForRowAt : IndexPath) -&gt; UITableViewCell:QIndexViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "UIMenuController.shared">
+               value = "indexPath.row">
+            </PersistentString>
+            <PersistentString
+               value = "String(format:pagePrompt, String(pageNum))">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPagesBrowser.currentPageIndx() -&gt; Int:QPagesBrowser.swift">
+      </ContextState>
+      <ContextState
+         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "actionsLabel.customView">
+            </PersistentString>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "SearchViewController.tableView(_:didHighlightRowAt:):SearchViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.onClickAyaButton(tapGestureRecognizer:):QPageView.swift">
       </ContextState>
       <ContextState
          contextName = "String.extract(_:):HomeViewController.swift">
@@ -65,75 +161,6 @@
                value = "s.utf8.count">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QData.pageIndex(ayaPosition:):QData.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "pageInfo[&quot;s&quot;]! == (suraIndex+1)">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.tabQuranImage(Any) -&gt; ():QPageView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.view">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QIndexViewController.tableView(UITableView, cellForRowAt : IndexPath) -&gt; UITableViewCell:QIndexViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "indexPath.row">
-            </PersistentString>
-            <PersistentString
-               value = "String(format:pagePrompt, String(pageNum))">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.onHideMenu(notification:):QPageView.swift">
-      </ContextState>
-      <ContextState
-         contextName = "QPagesBrowser.clickedActions(Any) -&gt; ():QPagesBrowser.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "actionsLabel.customView">
-            </PersistentString>
-            <PersistentString
-               value = "self.view">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QPagesBrowser.currentPageIndx() -&gt; Int:QPagesBrowser.swift">
-      </ContextState>
-      <ContextState
-         contextName = "QPagesDataSource.viewControllerAtIndex(Int, storyboard : UIStoryboard) -&gt; QPageView?:QPagesDataSource.swift">
-      </ContextState>
-      <ContextState
-         contextName = "QPageView.setMaskStart(_:followPage:):QPageView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.navigationController?.navigationBar.topItem?.title">
-            </PersistentString>
-            <PersistentString
-               value = "self.navigationItem.title">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "QData.suraName(suraIndex:):QData.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "suraNames[String(suraIndex+1)] as? String">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

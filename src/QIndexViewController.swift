@@ -47,9 +47,8 @@ class QIndexViewController: UITableViewController{
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        //let qPagesBrowser = segue.destination as! QPagesBrowser
-        if let viewCell = sender as? UITableViewCell,
-            let qPagesBrowser = segue.destination as? QPagesBrowser {
+        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser
+        {
             qPagesBrowser.startingPage = viewCell.tag
             //Reset previous selections and mask
             MaskStart = -1

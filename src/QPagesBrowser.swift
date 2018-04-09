@@ -23,9 +23,7 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
     @IBOutlet weak var pagesContainer: UIView!
-    
-    //@IBOutlet weak var pageViewController2: UIPageViewController?
-    
+
     let firstPage = 1
     let lastPage = 604
     
@@ -72,9 +70,36 @@ class QPagesBrowser: UIViewController
 //        self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         
         gotoPage(self.startingPage ?? 1)
+    }
 
+    
+    let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("QPagesBrowser willAppear")
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(searchOpenAya),
+            name: searchOpenAyaNotification,
+            object: nil
+        )
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("QPagesBrowser willDisappear")
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func searchOpenAya(vc: SearchViewController){
+        print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
+        let qData = QData.instance()
+        let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
+        gotoPage(pageIndex+1)
+        if let currPageView = currentPageView(){
+            currPageView.positionSelection()
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -83,7 +108,12 @@ class QPagesBrowser: UIViewController
     // MARK: - New class methods
 
     func gotoPage(_ pageNum: Int ){
-        let currPage = currentPageIndx()
+        let currPageIndex = currentPageIndx()
+        
+        if(currPageIndex+1==pageNum){
+            return
+        }
+        
         let startingViewController: QPageView = viewControllerAtIndex(
             pageNum,
             storyboard: self.storyboard!
@@ -94,7 +124,7 @@ class QPagesBrowser: UIViewController
         
         self.pageViewController!.setViewControllers(
             viewControllers,
-            direction: pageNum <= currPage ? .forward : .reverse,
+            direction: pageNum <= currPageIndex ? .forward : .reverse,
             animated: true,
             completion: {done in}
         )

@@ -8,7 +8,10 @@
 
 import UIKit
 
+typealias AyaInfo = (sura:Int, aya:Int, page:Int)
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
+typealias AyaRecord = (sura:String,aya: String, aya_text: String, page: String)
+
 
 class QData{
     var suraInfo:[[String:Int]]?
@@ -16,6 +19,8 @@ class QData{
     var pagesInfo:[[String:Int]]?
     var suraNames:NSDictionary?
     var quranData:NSArray?
+    var normalizedText:NSArray?
+    var quranText:NSArray?
     
     let totalAyat = 6236
     let lastPage = 603
@@ -220,16 +225,32 @@ class QData{
         return pgIndex
     }
     
-    func ayaText( ayaPosition: Int ) -> String? {
+    func readQuranData() -> NSArray? {
         if quranData == nil {
             if let path = Bundle.main.path(forResource: "quran", ofType: "plist") {
                 quranData = NSArray(contentsOfFile: path) //cache quranData NSDictionary
+//                for pos in 0..<quranData!.count{
+//                    if var ayaInfo = quranData![pos] as? [String:String]{
+//                        normalizedText.append(ayaInfo["aya_text"]!.normalizeAya())
+//                    }
+//                }
             }
         }
-
-        if let quranData = quranData{
-            if let ayaInfo = quranData[ayaPosition] as? [String:String] {
-                return ayaInfo["aya_text"]
+        return quranData
+    }
+    func readQuranText()->NSArray?{
+        if quranText == nil {
+            if let path = Bundle.main.path(forResource: "quran_text", ofType: "plist") {
+                quranText = NSArray(contentsOfFile: path) //cache quranData NSDictionary
+            }
+        }
+        return quranText
+    }
+    
+    func ayaText( ayaPosition: Int ) -> String? {
+        if let quranText = readQuranText() {
+            if let aya_text = quranText[ayaPosition] as? String {
+                return aya_text
             }
         }
 
@@ -250,6 +271,41 @@ class QData{
         }
 
         return nil
+    }
+    
+    func readNormalizedText()-> NSArray?{
+        if normalizedText == nil {
+            if let path = Bundle.main.path(forResource: "normalized_quran", ofType: "plist") {
+                normalizedText = NSArray(contentsOfFile: path) //cache quranData NSDictionary
+            }
+        }
+        return normalizedText
+    }
+    
+    func searchQuran(_ pattern: String, max: Int ) -> [Int] {
+        var results :[Int]  = []
+        
+        if pattern.count < 2 {
+            return results
+        }
+        
+        let search_term = pattern.normalizeAya()
+        
+        if let quranData = readNormalizedText(){
+            for pos in 0..<quranData.count{
+                if let ayaText = quranData[pos] as? String{
+                    if ayaText.range(of:search_term) != nil {
+                        results.append(pos)
+                        if results.count>=max{
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        return results
     }
     
     func suraName( pageIndex: Int ) -> String? {

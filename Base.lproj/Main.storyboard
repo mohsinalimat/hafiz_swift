@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="uE6-fb-nNK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="uE6-fb-nNK">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -476,7 +476,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="986" y="-12"/>
+            <point key="canvasLocation" x="986" y="108"/>
         </scene>
         <!--Home-->
         <scene sceneID="QlN-bz-lYQ">
@@ -492,7 +492,7 @@
                             </barButtonItem>
                             <barButtonItem systemItem="search" id="lff-0m-CAl">
                                 <connections>
-                                    <segue destination="g8R-0o-81q" kind="presentation" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="Po2-Nt-YPQ"/>
+                                    <segue destination="g8R-0o-81q" kind="presentation" identifier="SearchViewSg" id="Po2-Nt-YPQ"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -505,6 +505,7 @@
                         <segue destination="UuV-Ke-L9r" kind="relationship" relationship="viewControllers" id="KaB-Pf-7w8"/>
                         <segue destination="jHV-wq-GPS" kind="relationship" relationship="viewControllers" id="gzs-dl-DIh"/>
                         <segue destination="BUi-sJ-PCq" kind="relationship" relationship="viewControllers" id="jCk-Sf-hUv"/>
+                        <segue destination="703-4V-yAM" kind="show" identifier="OpenPagesBrowser" id="eSs-M1-dto"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vha-Qr-Sff" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -537,27 +538,31 @@
                                             <outlet property="delegate" destination="g8R-0o-81q" id="dl6-DU-2KV"/>
                                         </connections>
                                     </searchBar>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6jf-zj-AhH">
-                                        <rect key="frame" x="0.0" y="56" width="320" height="568"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6jf-zj-AhH">
+                                        <rect key="frame" x="0.0" y="56" width="320" height="492"/>
                                         <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="0.25366545376712329" colorSpace="calibratedRGB"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SResult Item" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SResult Item" textLabel="y6m-Vw-RfU" imageView="Mba-gB-kbt" style="IBUITableViewCellStyleDefault" id="53d-DZ-KFO" userLabel="SResult Item">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SResult Item" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SResult Item" textLabel="y6m-Vw-RfU" detailTextLabel="Gzp-9i-J0B" style="IBUITableViewCellStyleSubtitle" id="53d-DZ-KFO" userLabel="SResult Item">
                                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" semanticContentAttribute="forceRightToLeft" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="53d-DZ-KFO" id="ABo-PW-rLh">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="right" semanticContentAttribute="forceRightToLeft" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y6m-Vw-RfU">
-                                                            <rect key="frame" x="15" y="0.0" width="290" height="43.5"/>
+                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" semanticContentAttribute="forceRightToLeft" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y6m-Vw-RfU">
+                                                            <rect key="frame" x="15" y="6" width="30" height="18"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <nil key="textColor"/>
+                                                            <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="15"/>
+                                                            <color key="textColor" red="0.40000000000000002" green="0.20000000000000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Mba-gB-kbt">
+                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Gzp-9i-J0B">
+                                                            <rect key="frame" x="15" y="24" width="33" height="14.5"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                        </imageView>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <color key="textColor" red="0.0" green="0.40000000000000002" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -571,25 +576,21 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstItem="6jf-zj-AhH" firstAttribute="trailing" secondItem="PqC-id-iya" secondAttribute="trailing" id="9KU-zS-oxk"/>
+                                    <constraint firstItem="PqC-id-iya" firstAttribute="leading" secondItem="g8b-3z-mhx" secondAttribute="leading" id="4zh-pU-0kq"/>
                                     <constraint firstItem="6jf-zj-AhH" firstAttribute="leading" secondItem="g8b-3z-mhx" secondAttribute="leading" id="DDV-8n-Qsj"/>
                                     <constraint firstItem="6jf-zj-AhH" firstAttribute="top" secondItem="PqC-id-iya" secondAttribute="bottom" id="GbF-XB-Sqg"/>
                                     <constraint firstItem="PqC-id-iya" firstAttribute="top" secondItem="g8b-3z-mhx" secondAttribute="top" id="KqN-IM-3po"/>
+                                    <constraint firstAttribute="bottom" secondItem="6jf-zj-AhH" secondAttribute="bottom" id="Rlv-iz-yXV"/>
+                                    <constraint firstAttribute="trailing" secondItem="PqC-id-iya" secondAttribute="trailing" id="Zdh-ih-Cni"/>
                                     <constraint firstAttribute="trailing" secondItem="6jf-zj-AhH" secondAttribute="trailing" id="dos-gj-kv3"/>
-                                    <constraint firstItem="6jf-zj-AhH" firstAttribute="top" secondItem="PqC-id-iya" secondAttribute="bottom" id="raj-h9-Mz4"/>
-                                    <constraint firstItem="6jf-zj-AhH" firstAttribute="leading" secondItem="PqC-id-iya" secondAttribute="leading" id="v70-Rp-T8c"/>
                                 </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="pso-FL-o5Q" appends="YES" id="hqT-XO-eBL"/>
-                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.25" alpha="0.24935787671232876" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="6jf-zj-AhH" firstAttribute="height" secondItem="mYG-fN-pSp" secondAttribute="height" id="6Ed-NM-dSR"/>
                             <constraint firstItem="g8b-3z-mhx" firstAttribute="top" secondItem="9Y1-Ls-JCa" secondAttribute="bottom" id="giG-mq-vJQ"/>
                             <constraint firstAttribute="trailing" secondItem="g8b-3z-mhx" secondAttribute="trailing" id="uqG-rb-0h2"/>
-                            <constraint firstItem="qUm-SN-bDJ" firstAttribute="top" secondItem="g8b-3z-mhx" secondAttribute="bottom" id="wMT-yM-nU3"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="g8b-3z-mhx" secondAttribute="bottomMargin" id="wMT-yM-nU3"/>
                             <constraint firstItem="g8b-3z-mhx" firstAttribute="leading" secondItem="mYG-fN-pSp" secondAttribute="leading" id="yRm-sb-4Rv"/>
                         </constraints>
                     </view>
@@ -607,13 +608,9 @@
                         <outlet property="searchResultsDelegate" destination="g8R-0o-81q" id="Cjx-8e-iWq"/>
                     </connections>
                 </searchDisplayController>
-                <tapGestureRecognizer id="pso-FL-o5Q">
-                    <connections>
-                        <action selector="onTabOutsideSearchbar:" destination="g8R-0o-81q" id="bel-UD-9tO"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="pso-FL-o5Q"/>
             </objects>
-            <point key="canvasLocation" x="-1828.125" y="-1006.6901408450705"/>
+            <point key="canvasLocation" x="111" y="-1443"/>
         </scene>
         <!--Bookmarks-->
         <scene sceneID="3Oq-FL-zAM">
@@ -682,7 +679,7 @@
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
-                                    <segue destination="703-4V-yAM" kind="show" id="FUA-q2-iz6"/>
+                                    <segue destination="703-4V-yAM" kind="show" identifier="" id="FUA-q2-iz6"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -784,6 +781,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Po2-Nt-YPQ"/>
-        <segue reference="ain-zt-Gaq"/>
+        <segue reference="eSs-M1-dto"/>
     </inferredMetricsTieBreakers>
 </document>

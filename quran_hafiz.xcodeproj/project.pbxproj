@@ -24,11 +24,12 @@
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
 		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
 		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
+		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
+		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
 		2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8F4B20200730A500499A3F /* CoreData.framework */; };
 		2D8F4B24200730ED00499A3F /* quran.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */; };
 		2D8F4B2720088AEC00499A3F /* Aya+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */; };
 		2D8F4B2820088AEC00499A3F /* Aya+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */; };
-		2DC06CEB200DC075005F3306 /* quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DC06CE9200DC074005F3306 /* quran.plist */; };
 		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
@@ -44,6 +45,8 @@
 		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
 		2D64CEB41FAFB48800348A34 /* LayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
+		2D7B728E2079D7DC002273A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/normalized_quran.plist; sourceTree = "<group>"; };
+		2D7B72912079DD0C002273A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/quran_text.plist; sourceTree = "<group>"; };
 		2D7F5F631F04BDA40076316B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPagesBrowser.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		2D7F5F671F04BDA40076316B /* QPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageView.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -55,7 +58,6 @@
 		2D8F4B23200730ED00499A3F /* quran.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = quran.xcdatamodel; sourceTree = "<group>"; };
 		2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		2DC06CEA200DC074005F3306 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/quran.plist; sourceTree = "<group>"; };
 		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
 		2DCEFD831F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -95,7 +97,9 @@
 		2D0C543020621FDA00FBEF8F /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 				2DF0E099202634BC00B3C493 /* SearchViewController.swift */,
+				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
 			);
 			name = Search;
 			path = src;
@@ -146,7 +150,6 @@
 				2DCEFD961F32EC8700EAC321 /* Localizable.strings */,
 				2D7F5F6E1F04BDA50076316B /* Assets.xcassets */,
 				2D7F5F701F04BDA50076316B /* LaunchScreen.storyboard */,
-				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
 				2DD8D7601FA69F73008DD81D /* Utils.swift */,
 			);
 			path = src;
@@ -172,7 +175,8 @@
 		2DC06CEC200DD3B5005F3306 /* plists */ = {
 			isa = PBXGroup;
 			children = (
-				2DC06CE9200DC074005F3306 /* quran.plist */,
+				2D7B72902079DD0C002273A6 /* quran_text.plist */,
+				2D7B728D2079D7DC002273A6 /* normalized_quran.plist */,
 				2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */,
 			);
 			path = plists;
@@ -204,7 +208,6 @@
 			children = (
 				2D7F5F651F04BDA40076316B /* QPagesBrowser.swift */,
 				2D7F5F671F04BDA40076316B /* QPageView.swift */,
-				2DCEFDA61F34AA6000EAC321 /* QData.swift */,
 				2DCEFDA41F3498E800EAC321 /* qdata.json */,
 				2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */,
 			);
@@ -275,8 +278,9 @@
 				2D41B2441F9BC0A800199BAD /* LaunchScreen.storyboard in Resources */,
 				2D41B2451F9BC0A800199BAD /* pg_map in Resources */,
 				2D41B2461F9BC0A800199BAD /* Localizable.strings in Resources */,
+				2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */,
 				2D41B2471F9BC0A800199BAD /* Assets.xcassets in Resources */,
-				2DC06CEB200DC075005F3306 /* quran.plist in Resources */,
+				2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */,
 				2D41B2481F9BC0A800199BAD /* Main.storyboard in Resources */,
 				2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */,
 				2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */,
@@ -314,6 +318,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		2D7B728D2079D7DC002273A6 /* normalized_quran.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2D7B728E2079D7DC002273A6 /* Base */,
+			);
+			name = normalized_quran.plist;
+			sourceTree = "<group>";
+		};
+		2D7B72902079DD0C002273A6 /* quran_text.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2D7B72912079DD0C002273A6 /* Base */,
+			);
+			name = quran_text.plist;
+			sourceTree = "<group>";
+		};
 		2D7F5F6B1F04BDA40076316B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -330,14 +350,6 @@
 				2DCEFD841F305D7600EAC321 /* ar-EG */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		2DC06CE9200DC074005F3306 /* quran.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2DC06CEA200DC074005F3306 /* Base */,
-			);
-			name = quran.plist;
 			sourceTree = "<group>";
 		};
 		2DCEFD961F32EC8700EAC321 /* Localizable.strings */ = {
