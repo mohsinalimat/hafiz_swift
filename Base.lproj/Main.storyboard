@@ -28,6 +28,7 @@
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="4ZR-hv-zdW" appends="YES" id="Sb7-sD-IGd"/>
                                     <outletCollection property="gestureRecognizers" destination="PAd-eb-2LZ" appends="YES" id="hvo-bN-FbK"/>
+                                    <outletCollection property="gestureRecognizers" destination="30P-NL-g5R" appends="YES" id="ahC-Wv-XIf"/>
                                     <segue destination="8z2-Lz-Slq" kind="embed" id="yyw-sB-Hdu"/>
                                 </connections>
                             </containerView>
@@ -89,11 +90,18 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Sura Name" id="cuz-mW-wfp">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="67N-qd-rDO">
-                            <connections>
-                                <action selector="showMenu:" destination="703-4V-yAM" id="2iF-pZ-iVA"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="67N-qd-rDO" userLabel="Open Menu">
+                                <connections>
+                                    <action selector="showMenu:" destination="703-4V-yAM" id="2iF-pZ-iVA"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="search" id="NDG-Ac-eYf" userLabel="Search">
+                                <connections>
+                                    <action selector="showSearch:" destination="703-4V-yAM" id="rlk-XD-AXR"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -156,16 +164,13 @@
                         <constraint firstItem="khb-Zf-CFy" firstAttribute="top" secondItem="1wn-2t-Y1I" secondAttribute="topMargin" id="ad8-d3-mEx"/>
                     </constraints>
                 </view>
-                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="up" id="4ZR-hv-zdW" userLabel="Swipe Up">
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="up" id="4ZR-hv-zdW" userLabel="Swipe Up"/>
+                <swipeGestureRecognizer direction="down" id="PAd-eb-2LZ" userLabel="Swipe Down"/>
+                <tapGestureRecognizer id="30P-NL-g5R" userLabel="Tab Down">
                     <connections>
-                        <action selector="onSwipePageUp:" destination="703-4V-yAM" id="bJX-ns-0uF"/>
+                        <action selector="onPageTap:" destination="703-4V-yAM" id="FE5-eU-jRg"/>
                     </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="down" id="PAd-eb-2LZ" userLabel="Swipe Down">
-                    <connections>
-                        <action selector="onSwipePageDown:" destination="703-4V-yAM" id="sCH-V9-8e2"/>
-                    </connections>
-                </swipeGestureRecognizer>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="218" y="-1050"/>
         </scene>
@@ -357,7 +362,7 @@
                                 <rect key="frame" x="10" y="20" width="300" height="548"/>
                                 <subviews>
                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectHead" translatesAutoresizingMaskIntoConstraints="NO" id="LIx-yL-LpY" userLabel="selectHead">
-                                        <rect key="frame" x="105" y="100" width="90" height="39"/>
+                                        <rect key="frame" x="105" y="20" width="90" height="39"/>
                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="YES"/>
@@ -368,7 +373,7 @@
                                         </constraints>
                                     </view>
                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectBody" translatesAutoresizingMaskIntoConstraints="NO" id="BvU-Ff-ETA" userLabel="selectBody">
-                                        <rect key="frame" x="0.0" y="139" width="300" height="89"/>
+                                        <rect key="frame" x="0.0" y="59" width="300" height="69"/>
                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="YES"/>
@@ -376,7 +381,7 @@
                                         <gestureRecognizers/>
                                     </view>
                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectEnd" translatesAutoresizingMaskIntoConstraints="NO" id="GKv-Ol-aZG" userLabel="selectEnd">
-                                        <rect key="frame" x="200" y="228" width="100" height="39"/>
+                                        <rect key="frame" x="200" y="128" width="100" height="39"/>
                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="YES"/>
@@ -393,11 +398,11 @@
                                     <constraint firstItem="BvU-Ff-ETA" firstAttribute="width" secondItem="7jv-Tt-otI" secondAttribute="width" id="Mmd-U6-UUv"/>
                                     <constraint firstItem="LIx-yL-LpY" firstAttribute="leading" secondItem="7jv-Tt-otI" secondAttribute="leading" constant="105" id="Squ-yu-dVu"/>
                                     <constraint firstItem="GKv-Ol-aZG" firstAttribute="leading" secondItem="7jv-Tt-otI" secondAttribute="leading" constant="200" id="ZSt-qA-esn"/>
-                                    <constraint firstAttribute="bottom" secondItem="BvU-Ff-ETA" secondAttribute="bottom" constant="320" id="bZG-Z0-jlx"/>
+                                    <constraint firstAttribute="bottom" secondItem="BvU-Ff-ETA" secondAttribute="bottom" constant="420" id="bZG-Z0-jlx"/>
                                     <constraint firstItem="GKv-Ol-aZG" firstAttribute="top" secondItem="BvU-Ff-ETA" secondAttribute="bottom" id="flD-e3-Myu"/>
                                     <constraint firstAttribute="trailing" secondItem="GKv-Ol-aZG" secondAttribute="trailing" id="lGV-gI-aZb"/>
                                     <constraint firstItem="BvU-Ff-ETA" firstAttribute="top" secondItem="LIx-yL-LpY" secondAttribute="bottom" id="q79-xc-1a3"/>
-                                    <constraint firstItem="LIx-yL-LpY" firstAttribute="top" secondItem="7jv-Tt-otI" secondAttribute="top" constant="100" id="yru-C3-YAi"/>
+                                    <constraint firstItem="LIx-yL-LpY" firstAttribute="top" secondItem="7jv-Tt-otI" secondAttribute="top" constant="20" id="yru-C3-YAi"/>
                                     <constraint firstAttribute="trailing" secondItem="LIx-yL-LpY" secondAttribute="trailing" constant="105" id="zDa-Bf-dXK"/>
                                 </constraints>
                             </view>
@@ -437,6 +442,7 @@
                         <outlet property="lineMaskHeight" destination="AgW-KI-1tc" id="HyS-yD-4sZ"/>
                         <outlet property="maskHeadStartX" destination="BzJ-gk-x68" id="HzU-MD-Sbf"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
+                        <outlet property="pageTapGesture" destination="9UD-nN-0xo" id="Eyd-S2-x8l"/>
                         <outlet property="selectBody" destination="BvU-Ff-ETA" id="Vkx-PG-rB0"/>
                         <outlet property="selectBodyBottomY" destination="bZG-Z0-jlx" id="M4v-fu-soa"/>
                         <outlet property="selectEnd" destination="GKv-Ol-aZG" id="uUN-1P-x6u"/>
@@ -456,7 +462,7 @@
                         <action selector="PageLongPressed:" destination="S4R-Ja-viH" id="zqH-FK-bFW"/>
                     </connections>
                 </pongPressGestureRecognizer>
-                <tapGestureRecognizer id="9UD-nN-0xo" userLabel="PageTap">
+                <tapGestureRecognizer enabled="NO" id="9UD-nN-0xo" userLabel="PageTap">
                     <connections>
                         <action selector="pageImageTapped:" destination="S4R-Ja-viH" id="G4H-8Y-drK"/>
                     </connections>
@@ -576,6 +582,7 @@
                                         <connections>
                                             <outlet property="dataSource" destination="g8R-0o-81q" id="2Id-3y-z6v"/>
                                             <outlet property="delegate" destination="g8R-0o-81q" id="nkX-fz-EWp"/>
+                                            <outletCollection property="gestureRecognizers" destination="T4x-zR-iUK" appends="YES" id="SXq-21-sFn"/>
                                         </connections>
                                     </tableView>
                                 </subviews>
@@ -614,7 +621,11 @@
                         <outlet property="searchResultsDelegate" destination="g8R-0o-81q" id="Cjx-8e-iWq"/>
                     </connections>
                 </searchDisplayController>
-                <tapGestureRecognizer id="pso-FL-o5Q"/>
+                <tapGestureRecognizer cancelsTouchesInView="NO" id="T4x-zR-iUK" userLabel="TapOutsideResults">
+                    <connections>
+                        <action selector="onTapOutsideResults:" destination="g8R-0o-81q" id="oji-BJ-TO9"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1046" y="-1846"/>
         </scene>
@@ -758,13 +769,13 @@
         <!--AppNavigation-->
         <scene sceneID="DEj-K2-Mmj">
             <objects>
-                <navigationController title="AppNavigation" id="uE6-fb-nNK" customClass="MainViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
-                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
+                <navigationController autoresizesArchivedViewToFullSize="NO" title="AppNavigation" id="uE6-fb-nNK" customClass="MainViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" alpha="0.5" contentMode="scaleToFill" id="8X9-fd-LSu">
+                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="8X9-fd-LSu">
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.59999999999999998" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="W8o-G2-lMw">

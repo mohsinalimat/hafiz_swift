@@ -84,6 +84,7 @@ class QPagesBrowser: UIViewController
             object: nil
         )
         navigationController?.navigationBar.isHidden = true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
         
         // setting the hidesBarsOnSwift property to false
@@ -193,6 +194,16 @@ class QPagesBrowser: UIViewController
     //Handle Navigation Bar actions
     @IBOutlet var menuItems: UIView!
     
+    @IBAction func onPageTap(_ sender: Any) {
+        if (navigationController?.navigationBar.isHidden)! {
+            //show the navbar
+            navigationController?.navigationBar.isHidden = false
+        }else{
+            navigationController?.navigationBar.isHidden = true
+        }
+    }
+    
+    //Not good to handle both horizontal and vertical swipe
     @IBAction func onSwipePageUp(_ sender: Any) {
         if navigationController?.navigationBar.isHidden == false{
             navigationController?.navigationBar.isHidden = true
@@ -205,15 +216,11 @@ class QPagesBrowser: UIViewController
         navigationController?.navigationBar.isHidden = false
     }
 
+    @IBAction func showSearch(_ sender: Any) {
+        self.performSegue(withIdentifier: "PopupSearch", sender: self)
+    }
+    
     @IBAction func showMenu(_ sender: Any) {
-//        if let menuItems = self.menuItems{
-//            if menuItems.superview == nil {
-//                self.view.addSubview(menuItems)
-//                menuItems.frame = self.view.frame
-//            }else{
-//                hideMenu()
-//            }
-//        }
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -225,18 +232,12 @@ class QPagesBrowser: UIViewController
             print(action)
         }
         
-        let search = UIAlertAction(title: "Search", style: .default) { (action) in
-            //print(action)
-            self.performSegue(withIdentifier: "PopupSearch", sender: self)
-        }
-
         let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
             print(action)
         }
         
         alert.addAction(addToHifz)
-        	alert.addAction(bookmark)
-        alert.addAction(search)
+        alert.addAction(bookmark)
         alert.addAction(close)
         
         self.present(alert, animated: true) {
@@ -252,6 +253,7 @@ class QPagesBrowser: UIViewController
         if let currPageView = currentPageView(){
             currPageView.positionSelection()
         }
+        navigationController?.navigationBar.isHidden = true
     }
 
     @objc func hideMenu(){
@@ -274,13 +276,13 @@ class QPagesBrowser: UIViewController
             currPageView.positionSelection()
         }
         
-        if let rightBarItems = self.navigationItem.rightBarButtonItems{
-            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button
-                self.navigationItem.rightBarButtonItems = [rightBarItems[0], closeBtn!]
-            }else if( MaskStart == -1 && rightBarItems.count > 1){//hide the cancel button
-                self.navigationItem.rightBarButtonItems = [rightBarItems[0]]
-            }
-        }
+//        if let rightBarItems = self.navigationItem.rightBarButtonItems{
+//            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button
+//                self.navigationItem.rightBarButtonItems = [rightBarItems[0], closeBtn!]
+//            }else if( MaskStart == -1 && rightBarItems.count > 1){//hide the cancel button
+//                self.navigationItem.rightBarButtonItems = [rightBarItems[0]]
+//            }
+//        }
     }
     
     func positionMask(_ followPage: Bool ){
@@ -399,17 +401,6 @@ class QPagesBrowser: UIViewController
         return .mid //using two view controllers with middle spine
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController,
-        willTransitionTo pendingViewControllers: [UIViewController]) {
-        for viewController in pendingViewControllers{
-            if let qPageView = viewController as? QPageView {
-                qPageView.positionMask( followPage: false )
-                qPageView.positionSelection()
-                //print ("Positioned page\(qPageView.pageNumber!)")
-            }
-        }
-        navigationController?.navigationBar.isHidden = true
-    }
     
     func pageViewController(_
         pageViewController: UIPageViewController,

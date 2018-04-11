@@ -35,10 +35,10 @@ class SearchViewController:
         results = []
     }
 
-    @IBAction func onTabOutsideSearchbar(_ sender: Any) {
-        //dismiss(animated: true, completion: nil)
+    @IBAction func onTapOutsideResults(_ sender: UITapGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
     }
-
+    
     // MARK: - SearchBarDelegates methods
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         dismiss(animated: true, completion: nil)
@@ -102,6 +102,7 @@ class SearchViewController:
             )
         }
     }
+    
 
     // MARK: - Navigation
 

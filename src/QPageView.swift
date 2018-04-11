@@ -55,6 +55,8 @@ class QPageView: UIViewController{
     @IBOutlet weak var selectEndHeight: NSLayoutConstraint!
     @IBOutlet weak var selectEndX: NSLayoutConstraint!
     
+    @IBOutlet var pageTapGesture: UITapGestureRecognizer!
+    
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
         
@@ -163,7 +165,14 @@ class QPageView: UIViewController{
         createAyatButtons()
         becomeFirstResponder()
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+        pageTapGesture.isEnabled = (MaskStart != -1)
+        positionMask(followPage: false)
+        positionSelection()
+    }
+    
     override func viewDidLayoutSubviews() {
         positionAyatButtons()
         positionSelection()
@@ -217,15 +226,15 @@ class QPageView: UIViewController{
     }
     
     //TODO: parent controller has the same implementation
+    //Parent controller only call setMaskStart upon ending the mask from navigationBar X button
+    
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
         if let pageBrowser = self.parentBrowserView(){
             pageBrowser.setMaskStart( ayaId, followPage: followPage )
         }
-//        MaskStart = ayaId
-//        SelectStart = ayaId
-//        SelectEnd = ayaId
-//        positionMask(followPage)
-//        positionSelection()
+        //Parent controller dosn't have access to pageTabGesture
+        pageTapGesture.isEnabled = ( ayaId != -1 )
+        navigationController?.navigationBar.isHidden = true
     }
 
     func createAyatButtons(){
