@@ -23,7 +23,8 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
     @IBOutlet weak var pagesContainer: UIView!
-
+    @IBOutlet weak var cancelReview: UIButton!
+    
     let firstPage = 1
     let lastPage = 604
     
@@ -72,6 +73,9 @@ class QPagesBrowser: UIViewController
         gotoPage(self.startingPage ?? 1)
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        navigationController?.navigationBar.isHidden = true
+    }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
 
@@ -203,18 +207,6 @@ class QPagesBrowser: UIViewController
         }
     }
     
-    //Not good to handle both horizontal and vertical swipe
-    @IBAction func onSwipePageUp(_ sender: Any) {
-        if navigationController?.navigationBar.isHidden == false{
-            navigationController?.navigationBar.isHidden = true
-        }else{
-            showMenu(sender)
-        }
-    }
-
-    @IBAction func onSwipePageDown(_ sender: Any) {
-        navigationController?.navigationBar.isHidden = false
-    }
 
     @IBAction func showSearch(_ sender: Any) {
         self.performSegue(withIdentifier: "PopupSearch", sender: self)
@@ -265,6 +257,9 @@ class QPagesBrowser: UIViewController
             setMaskStart(-1)
         }
     }
+    @IBAction func clickedCancelReview(_ sender: Any, forEvent event: UIEvent) {
+        setMaskStart(-1)
+    }
     
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
         MaskStart = ayaId
@@ -274,7 +269,11 @@ class QPagesBrowser: UIViewController
         
         if let currPageView = currentPageView(){
             currPageView.positionSelection()
+            currPageView.pageTapGesture.isEnabled = ( ayaId != -1 )
         }
+        
+        navigationController?.navigationBar.isHidden = true
+        cancelReview.isHidden = (ayaId == -1)
         
 //        if let rightBarItems = self.navigationItem.rightBarButtonItems{
 //            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button

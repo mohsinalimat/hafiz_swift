@@ -35,13 +35,12 @@ class QPageView: UIViewController{
 
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
-    @IBOutlet weak var lineMask: UIView!
-    @IBOutlet weak var ayaMask: UIView!
-
+    
+    @IBOutlet weak var maskHead: UIView!
+    @IBOutlet weak var maskBody: UIView!
     @IBOutlet weak var maskHeadStartX: NSLayoutConstraint!
-    @IBOutlet weak var lineMaskHeight: NSLayoutConstraint!
-    @IBOutlet weak var ayaMaskHeight: NSLayoutConstraint!
-    @IBOutlet weak var buttonsView: UIView!
+    @IBOutlet weak var maskHeadHeight: NSLayoutConstraint!
+    @IBOutlet weak var maskBodyHeight: NSLayoutConstraint!
     
     @IBOutlet weak var selectHead: UIView!
     @IBOutlet weak var selectBody: UIView!
@@ -56,6 +55,7 @@ class QPageView: UIViewController{
     @IBOutlet weak var selectEndX: NSLayoutConstraint!
     
     @IBOutlet var pageTapGesture: UITapGestureRecognizer!
+    @IBOutlet weak var buttonsView: LayerView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
@@ -94,7 +94,7 @@ class QPageView: UIViewController{
     }
     
     @IBAction func MaskLongPressed(_ sender: Any) {
-        self.hideMask()
+        //self.hideMask()
     }
     // MARK: - selector functions
     
@@ -119,8 +119,8 @@ class QPageView: UIViewController{
             if let clickedAya = clickedAya {
                 if MaskStart == clickedAya.tag {
                     self.sneekViewWidth = 60
-                    maskHeadStartX.constant = maskHeadStartX.constant + 1
-                    self.updateViewConstraints()
+                    maskHeadStartX.constant = maskHeadStartX.constant + 60
+                    //self.updateViewConstraints()
                     return
                 }
             }
@@ -128,9 +128,9 @@ class QPageView: UIViewController{
             if let clickedAya = clickedAya {
                 let ayaId = clickedAya.tag
                 if MaskStart == ayaId {
-                    maskHeadStartX.constant = maskHeadStartX.constant - 1
+                    maskHeadStartX.constant = maskHeadStartX.constant - 60
                     self.sneekViewWidth = 0
-                    self.updateViewConstraints()
+                    //self.updateViewConstraints()
                     return
                 }
                 if MaskStart != -1 {
@@ -160,22 +160,30 @@ class QPageView: UIViewController{
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-        buttonsView.isHidden = false
+        print ( "QPageView viewDidLoad()" )
         loadPageImage()
         createAyatButtons()
         becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
         navigationController?.navigationBar.isHidden = true
         pageTapGesture.isEnabled = (MaskStart != -1)
-        positionMask(followPage: false)
-        positionSelection()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            self.positionMask(followPage: false)
+            self.viewDidLayoutSubviews()
+        }
     }
     
     override func viewDidLayoutSubviews() {
+        print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
         positionAyatButtons()
         positionSelection()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -233,8 +241,8 @@ class QPageView: UIViewController{
             pageBrowser.setMaskStart( ayaId, followPage: followPage )
         }
         //Parent controller dosn't have access to pageTabGesture
-        pageTapGesture.isEnabled = ( ayaId != -1 )
-        navigationController?.navigationBar.isHidden = true
+        //pageTapGesture.isEnabled = ( ayaId != -1 )
+        //navigationController?.navigationBar.isHidden = true
     }
 
     func createAyatButtons(){
@@ -244,19 +252,17 @@ class QPageView: UIViewController{
             if let pageMap = self.pageMap {
                 for(var button) in pageMap{
                     let btn = UIView()
-                    //let btn = UITextView()
-//                    btn.textAlignment = .center
-//                    btn.text = button["aya"]
                     btn.backgroundColor = .brown
-                    btn.alpha = 0.25
+                    btn.alpha = 0.20
                     btn.layer.cornerRadius = 5
                     let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
                     btn.addGestureRecognizer(tap)
                     tap.minimumPressDuration = 0
                     btn.isUserInteractionEnabled = true
-                    btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)!-1, aya: Int(button["aya"]!)!-1)
+                    btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)! - 1, aya: Int(button["aya"]!)! - 1)
                     self.buttonsView.addSubview(btn)
                 }
+                print ("createAyatButtons-> pg:\(pageNumber) count:\(pageMap.count)")
             }
         }
     }
@@ -266,6 +272,8 @@ class QPageView: UIViewController{
         let imageRect = containerView.frame
         let line_height = CGFloat(imageRect.size.height / 15)
         let line_width = CGFloat(imageRect.size.width)
+        
+        print ( "positionAyatButton-> pg: \(self.pageNumber!), h: \(line_height), w: \(line_width) " )
 
         if let pageMap = self.pageMap{
             let button_width = CGFloat(line_width/9.65)
@@ -302,8 +310,8 @@ class QPageView: UIViewController{
     //Rearrange the mask and aya buttons views and return the mask start page
     func positionMask()->Int{
         let maskAyaPosition = MaskStart
-        ayaMask.isHidden = true
-        lineMask.isHidden = true
+        maskBody.isHidden = true
+        maskHead.isHidden = true
 
         if let buttonsView = self.buttonsView{
             for(_, btn) in buttonsView.subviews.enumerated(){
@@ -322,12 +330,13 @@ class QPageView: UIViewController{
             if  currPageIndex < maskStartPage {
                 return maskStartPage// before masked page
             }
-            ayaMask.isHidden = false
-            lineMask.isHidden = false
+            maskBody.isHidden = false
+            maskHead.isHidden = false
             let imageRect = pageImage.frame
             if( currPageIndex > maskStartPage ){
-                lineMask.isHidden = true
-                ayaMask.frame = imageRect
+                maskHead.isHidden = true
+                //maskBody.frame = imageRect
+                maskBodyHeight.constant = imageRect.size.height
                 return maskStartPage
             }
             
@@ -335,7 +344,7 @@ class QPageView: UIViewController{
                 let pageHeight = imageRect.size.height
                 let lineHeight = CGFloat(pageHeight / 15)
                 let lineWidth = CGFloat(imageRect.size.width)
-                lineMaskHeight.constant = lineHeight
+                maskHeadHeight.constant = lineHeight
                 
                 let headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
                
@@ -346,11 +355,12 @@ class QPageView: UIViewController{
                 if headStartX + sneekViewAdjustedWidth > lineWidth {
                     sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
                 }
+                print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
                 maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
                 //print("PositionMaskHead \(headStartX)")
                 let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
                 //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
-                ayaMaskHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
+                maskBodyHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
             }
             return maskStartPage
         }

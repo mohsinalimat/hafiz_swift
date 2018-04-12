@@ -91,6 +91,14 @@
          contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
       </ContextState>
       <ContextState
+         contextName = "QPagesBrowser.onPageTap(_:):QPagesBrowser.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "navigationController?.navigationBar.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
          <PersistentStrings>
             <PersistentString
