@@ -23,7 +23,7 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
     @IBOutlet weak var pagesContainer: UIView!
-    @IBOutlet weak var cancelReview: UIButton!
+    @IBOutlet weak var suraName: UILabel!
     
     let firstPage = 1
     let lastPage = 604
@@ -33,6 +33,7 @@ class QPagesBrowser: UIViewController
     var closeBtn: UIBarButtonItem?
 
 
+    
     // MARK: - UIViewController delegate methods
     
     override func viewDidLoad() {
@@ -102,6 +103,7 @@ class QPagesBrowser: UIViewController
 
     override func viewWillDisappear(_ animated: Bool) {
         print("QPagesBrowser willDisappear")
+        navigationController?.navigationBar.isHidden = true
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -168,9 +170,13 @@ class QPagesBrowser: UIViewController
         //reference the first QPageView
         let pageIndex = currentPageIndx()
         let qData = QData.instance()
-        //get suraName from pageIndex
-        self.title = qData.suraName(pageIndex: pageIndex)
-        self.pageNumberLabel.text = "\(pageIndex+1)"
+        let suraNumber = qData.suraIndex( pageIndex: pageIndex ) + 1
+        let partNumber = qData.partIndex( pageIndex: pageIndex ) + 1
+        
+        let suraName = qData.suraName(pageIndex: pageIndex)!
+        self.title = suraName
+        self.suraName.text = "\(suraNumber):\(suraName)"
+        self.pageNumberLabel.text = "C:\(partNumber)-P:\(pageIndex+1)"
     }
     
     func currentPageIndx()->Int{
@@ -192,6 +198,10 @@ class QPagesBrowser: UIViewController
         }
         return nil
     }
+    
+    func showSearch(){
+        self.performSegue(withIdentifier: "PopupSearch", sender: self)
+    }
 
     // MARK: - Event Hanlders
     
@@ -207,15 +217,21 @@ class QPagesBrowser: UIViewController
         }
     }
     
-
-    @IBAction func showSearch(_ sender: Any) {
-        self.performSegue(withIdentifier: "PopupSearch", sender: self)
-    }
     
     @IBAction func showMenu(_ sender: Any) {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
+        let startRevise = UIAlertAction(title: "Revise", style: .default) { (action) in
+            let qData = QData.instance()
+            
+            self.setMaskStart( qData.ayaPosition(pageIndex: self.currentPageIndx()))
+        }
+
+        let search = UIAlertAction(title: "Search", style: .default) { (action) in
+            self.showSearch()
+        }
+
         let addToHifz = UIAlertAction(title: "Add to Hifz", style: .default) { (action) in
             print(action)
         }
@@ -228,6 +244,8 @@ class QPagesBrowser: UIViewController
             print(action)
         }
         
+        alert.addAction(startRevise)
+        alert.addAction(search)
         alert.addAction(addToHifz)
         alert.addAction(bookmark)
         alert.addAction(close)
@@ -251,15 +269,26 @@ class QPagesBrowser: UIViewController
     @objc func hideMenu(){
         menuItems.removeFromSuperview()
     }
+    
+    @IBAction func clickClose(_ sender: Any) {
+        if MaskStart != -1 {//If mask is On, clear it first
+            setMaskStart(-1)
+        }else{//go back to calling viewController ( Home )
+            navigationController?.popViewController(animated: true)
+        }
+    }
+   
+    @IBAction func navigationSearchClicked(_ sender: Any) {
+        showSearch()
+    }
+    
     // MARK: - Mask methods
     @objc func hideMask(){
         if MaskStart != -1 {
             setMaskStart(-1)
         }
     }
-    @IBAction func clickedCancelReview(_ sender: Any, forEvent event: UIEvent) {
-        setMaskStart(-1)
-    }
+
     
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
         MaskStart = ayaId
@@ -273,7 +302,7 @@ class QPagesBrowser: UIViewController
         }
         
         navigationController?.navigationBar.isHidden = true
-        cancelReview.isHidden = (ayaId == -1)
+//        cancelReview.isHidden = (ayaId == -1)
         
 //        if let rightBarItems = self.navigationItem.rightBarButtonItems{
 //            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button

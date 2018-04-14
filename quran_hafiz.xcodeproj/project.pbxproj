@@ -26,7 +26,7 @@
 		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
 		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
 		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
-		2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8F4B20200730A500499A3F /* CoreData.framework */; };
+		2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8F4B20200730A500499A3F /* CoreData.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2D8F4B24200730ED00499A3F /* quran.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */; };
 		2D8F4B2720088AEC00499A3F /* Aya+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */; };
 		2D8F4B2820088AEC00499A3F /* Aya+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */; };

@@ -77,6 +77,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "QPageView.scrollToMaskStart():QPageView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "maskHead.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPageView.setMaskStart(_:followPage:):QPageView.swift">
          <PersistentStrings>
             <PersistentString
@@ -88,15 +96,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
-      </ContextState>
-      <ContextState
          contextName = "QPagesBrowser.onPageTap(_:):QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
                value = "navigationController?.navigationBar.isHidden">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
       </ContextState>
       <ContextState
          contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
@@ -167,6 +175,14 @@
             </PersistentString>
             <PersistentString
                value = "s.utf8.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPagesBrowser.updateTitle():QPagesBrowser.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.suraName.titleLabel.text">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

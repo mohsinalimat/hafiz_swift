@@ -182,6 +182,18 @@ class QData{
         return 0
     }
     
+    func partIndex(pageIndex: Int) -> Int{
+        
+        for (n,pInfo) in self.partInfo!.enumerated() {
+            if let pNumber = pInfo["p"] {
+                if pNumber-1 >= pageIndex {
+                    return n
+                }
+            }
+        }
+        return 0
+    }
+    
     func suraIndex(partIndex: Int) -> Int{
         if let partInfo = self.partInfo(partIndex:partIndex){
             return partInfo["s"]! - 1

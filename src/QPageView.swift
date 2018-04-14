@@ -36,6 +36,7 @@ class QPageView: UIViewController{
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
     
+    @IBOutlet weak var btnCloseMask: UIButton!
     @IBOutlet weak var maskHead: UIView!
     @IBOutlet weak var maskBody: UIView!
     @IBOutlet weak var maskHeadStartX: NSLayoutConstraint!
@@ -56,6 +57,7 @@ class QPageView: UIViewController{
     
     @IBOutlet var pageTapGesture: UITapGestureRecognizer!
     @IBOutlet weak var buttonsView: LayerView!
+    @IBOutlet weak var pageScroller: UIScrollView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
@@ -96,6 +98,11 @@ class QPageView: UIViewController{
     @IBAction func MaskLongPressed(_ sender: Any) {
         //self.hideMask()
     }
+    
+    @IBAction func clickedCloseMask(_ sender: Any) {
+        setMaskStart(-1)
+    }
+    
     // MARK: - selector functions
     
     @objc func showTafseer(){
@@ -170,6 +177,7 @@ class QPageView: UIViewController{
         print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
         navigationController?.navigationBar.isHidden = true
         pageTapGesture.isEnabled = (MaskStart != -1)
+        self.maskBodyHeight.constant = self.view.frame.height // to prevent flickering when changing page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.positionMask(followPage: false)
             self.viewDidLayoutSubviews()
@@ -253,7 +261,7 @@ class QPageView: UIViewController{
                 for(var button) in pageMap{
                     let btn = UIView()
                     btn.backgroundColor = .brown
-                    btn.alpha = 0.20
+                    btn.alpha = 0.15
                     btn.layer.cornerRadius = 5
                     let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
                     btn.addGestureRecognizer(tap)
@@ -343,19 +351,21 @@ class QPageView: UIViewController{
             if let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: self.pageMap!){
                 let pageHeight = imageRect.size.height
                 let lineHeight = CGFloat(pageHeight / 15)
+                btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
                 let lineWidth = CGFloat(imageRect.size.width)
                 maskHeadHeight.constant = lineHeight
                 
                 let headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
                
-                //Extend the mask .3 of the button width, if sneekView is not ON
-                let extendedMask = (sneekViewWidth==0) ? (headStartX > lineWidth/9.65/3 ? lineWidth/9.65/3 : 0) : 0
+                //Extend the mask .4 of the lineHeight width, if sneekView is not ON
+                let extensionWidth = lineHeight/4 //lineWidth/9.65/3
+                let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
                 
                 var sneekViewAdjustedWidth = sneekViewWidth
                 if headStartX + sneekViewAdjustedWidth > lineWidth {
                     sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
                 }
-                print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
+                //print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
                 maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
                 //print("PositionMaskHead \(headStartX)")
                 let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
@@ -402,12 +412,36 @@ class QPageView: UIViewController{
                     gotoPage(pageLocation.page)
 
                     if pageLocation.position == .first && pageLocation.page != currPageIndex {
+                        //mask moved to the start of next page
                         return// no need to advance the mask
+                    }
+                    
+                    if pageLocation.position == .last && pageLocation.page == currPageIndex {
+                        scrollToBottom()
+                    }else{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            self.scrollToMaskStart()
+                        }
                     }
                 }
                 setMaskStart(MaskStart + 1, followPage: false)
-                //positionMask(false)
         }
+    }
+
+    func scrollToBottom(){
+        pageScroller.contentSize = pageImage.frame.size
+        let bottomOffset = CGPoint(x: 0, y: pageImage.frame.size.height - pageScroller.frame.size.height)
+        pageScroller.setContentOffset(bottomOffset, animated: true)
+    }
+
+    func scrollToTop(){
+        let topOffset = CGPoint(x: 0, y: 0)
+        pageScroller.setContentOffset(topOffset, animated: true)
+    }
+
+    func scrollToMaskStart(){
+        pageScroller.contentSize = pageImage.frame.size
+        pageScroller.scrollRectToVisible(maskHead.frame, animated: true)
     }
     
     func retreatMask(_ followPage: Bool){
@@ -420,7 +454,20 @@ class QPageView: UIViewController{
                 
                 if pageLocation.position == .first && pageLocation.page-1 != currPageIndex {
                     gotoPage(pageLocation.page-1)
+                    //scroll to the bottom of previous page
+                    if let pageBrowser = self.parentBrowserView(){
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            if let qPageView = pageBrowser.currentPageView(){
+                                qPageView.scrollToBottom()
+                            }
+                            
+                        }
+                    }
                     return
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.scrollToMaskStart()
                 }
             }
             setMaskStart(MaskStart-1, followPage: followPage)

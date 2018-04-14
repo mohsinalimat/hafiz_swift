@@ -36,61 +36,85 @@
                             <view contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" restorationIdentifier="BottomBar" translatesAutoresizingMaskIntoConstraints="NO" id="D7X-gd-Vdj" userLabel="Bottom Bar">
                                 <rect key="frame" x="0.0" y="474" width="320" height="30"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PgNum" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ce-ph-yXQ" userLabel="PageNumber">
-                                        <rect key="frame" x="132" y="0.0" width="56.5" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pg" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ce-ph-yXQ" userLabel="PageNumber">
+                                        <rect key="frame" x="213" y="0.0" width="17" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ud8-d5-vAf" userLabel="CancelButton">
-                                        <rect key="frame" x="230" y="0.0" width="34" height="30"/>
-                                        <color key="tintColor" red="0.40000000000000002" green="0.20000000000000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="X" image="icons8-Eye">
-                                            <color key="titleColor" red="0.40000000000000002" green="0.20000000000000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="clickedCancelReview:forEvent:" destination="703-4V-yAM" eventType="touchUpInside" id="bgO-iZ-86V"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="prevSura" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2UJ-2K-SVB">
-                                        <rect key="frame" x="274" y="0.0" width="46" height="30"/>
+                                        <rect key="frame" x="73" y="0.0" width="45" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="Phc-5T-XtN"/>
+                                            <constraint firstAttribute="width" constant="45" id="iSR-88-Aek"/>
                                         </constraints>
                                         <state key="normal" title="&gt;&gt;"/>
                                         <connections>
                                             <action selector="gotoPrevSura:" destination="703-4V-yAM" eventType="touchUpInside" id="DRu-J2-COp"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sura" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tXa-kd-M9t" userLabel="SuraName">
+                                        <rect key="frame" x="45" y="0.0" width="28" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="nextSura" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YF8-bP-TUs">
-                                        <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="45" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="25k-Aw-t4p"/>
+                                            <constraint firstAttribute="width" constant="45" id="25k-Aw-t4p"/>
                                         </constraints>
                                         <state key="normal" title="&lt;&lt;"/>
                                         <connections>
                                             <action selector="gotoNextSura:" destination="703-4V-yAM" eventType="touchUpInside" id="Uvg-Nh-r5f"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWK-KK-bkf" userLabel="Close">
+                                        <rect key="frame" x="280" y="0.0" width="40" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="dsS-eg-F59"/>
+                                        </constraints>
+                                        <color key="tintColor" red="0.40000000000000002" green="0.20000000000000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" image="close"/>
+                                        <connections>
+                                            <action selector="clickClose:" destination="703-4V-yAM" eventType="touchUpInside" id="zZU-Xz-e6f"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VbZ-hI-fqj" userLabel="ShowMenu">
+                                        <rect key="frame" x="230" y="0.0" width="50" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="H8g-Fi-5Fr"/>
+                                        </constraints>
+                                        <color key="tintColor" red="0.40000000000000002" green="0.20000000000000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" image="icons8-Menu 2 Filled"/>
+                                        <connections>
+                                            <action selector="showMenu:" destination="703-4V-yAM" eventType="touchUpInside" id="4mv-Te-kt1"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="2UJ-2K-SVB" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="Gwt-PM-N48"/>
+                                    <constraint firstItem="tXa-kd-M9t" firstAttribute="trailing" secondItem="2UJ-2K-SVB" secondAttribute="leading" id="0XA-DN-nMx"/>
+                                    <constraint firstAttribute="trailing" secondItem="YWK-KK-bkf" secondAttribute="trailing" id="7Je-vr-laf"/>
+                                    <constraint firstItem="YWK-KK-bkf" firstAttribute="leading" secondItem="VbZ-hI-fqj" secondAttribute="trailing" id="AoH-Eu-Pv1"/>
                                     <constraint firstItem="YF8-bP-TUs" firstAttribute="leading" secondItem="D7X-gd-Vdj" secondAttribute="leading" id="HXi-gS-o5a"/>
+                                    <constraint firstItem="tXa-kd-M9t" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="LYl-Zx-Pam"/>
+                                    <constraint firstItem="tXa-kd-M9t" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="OKR-lO-iJU"/>
                                     <constraint firstItem="6Ce-ph-yXQ" firstAttribute="centerY" secondItem="D7X-gd-Vdj" secondAttribute="centerY" id="Qpi-5Z-wnl"/>
-                                    <constraint firstItem="2UJ-2K-SVB" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="S0Z-06-2UY"/>
-                                    <constraint firstItem="Ud8-d5-vAf" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="Xmx-9h-YBz"/>
-                                    <constraint firstItem="Ud8-d5-vAf" firstAttribute="trailing" secondItem="2UJ-2K-SVB" secondAttribute="leading" constant="-10" id="gtm-YQ-465"/>
-                                    <constraint firstAttribute="trailing" secondItem="2UJ-2K-SVB" secondAttribute="trailing" id="hsw-zy-Itb"/>
+                                    <constraint firstItem="2UJ-2K-SVB" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="a5b-P4-isb"/>
+                                    <constraint firstItem="2UJ-2K-SVB" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="exN-eH-rOG"/>
+                                    <constraint firstItem="VbZ-hI-fqj" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="hDf-VH-9Bk"/>
                                     <constraint firstItem="YF8-bP-TUs" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="jBS-za-qxX"/>
-                                    <constraint firstItem="Ud8-d5-vAf" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="mob-q1-7dV"/>
+                                    <constraint firstItem="YWK-KK-bkf" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="kmJ-8s-GDX"/>
                                     <constraint firstItem="6Ce-ph-yXQ" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="mpd-vj-eoM"/>
-                                    <constraint firstItem="6Ce-ph-yXQ" firstAttribute="centerX" secondItem="D7X-gd-Vdj" secondAttribute="centerX" id="rGD-Z6-0ts"/>
+                                    <constraint firstItem="VbZ-hI-fqj" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="qvS-oB-fab"/>
                                     <constraint firstItem="YF8-bP-TUs" firstAttribute="height" secondItem="D7X-gd-Vdj" secondAttribute="height" id="rJg-fh-cS7"/>
+                                    <constraint firstItem="YWK-KK-bkf" firstAttribute="top" secondItem="D7X-gd-Vdj" secondAttribute="top" id="tdN-NG-kf1"/>
+                                    <constraint firstItem="6Ce-ph-yXQ" firstAttribute="trailing" secondItem="VbZ-hI-fqj" secondAttribute="leading" id="umQ-Iu-s03"/>
+                                    <constraint firstItem="YF8-bP-TUs" firstAttribute="trailing" secondItem="tXa-kd-M9t" secondAttribute="leading" id="vm0-PM-B6y"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="D7X-gd-Vdj" firstAttribute="top" secondItem="6YQ-9R-sJH" secondAttribute="bottom" id="4nC-PX-lZ8"/>
                             <constraint firstItem="6YQ-9R-sJH" firstAttribute="trailing" secondItem="D7X-gd-Vdj" secondAttribute="trailing" id="LaY-1e-4lZ"/>
@@ -112,7 +136,7 @@
                             </barButtonItem>
                             <barButtonItem systemItem="search" id="NDG-Ac-eYf" userLabel="Search">
                                 <connections>
-                                    <action selector="showSearch:" destination="703-4V-yAM" id="rlk-XD-AXR"/>
+                                    <action selector="navigationSearchClicked:" destination="703-4V-yAM" id="Ca8-0y-SV8"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -120,12 +144,12 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="actionsLabel" destination="67N-qd-rDO" id="Bw2-Ti-pCn"/>
-                        <outlet property="cancelReview" destination="Ud8-d5-vAf" id="mRF-rA-01R"/>
                         <outlet property="menuItems" destination="1wn-2t-Y1I" id="oSs-LT-H9H"/>
                         <outlet property="nextSura" destination="YF8-bP-TUs" id="xMi-76-sIu"/>
                         <outlet property="pageNumberLabel" destination="6Ce-ph-yXQ" id="IOh-Ti-gzJ"/>
                         <outlet property="pagesContainer" destination="6YQ-9R-sJH" id="Ex4-rM-iD0"/>
                         <outlet property="prevSura" destination="2UJ-2K-SVB" id="aJe-S4-nPu"/>
+                        <outlet property="suraName" destination="tXa-kd-M9t" id="X1v-xL-UX7"/>
                         <segue destination="g8R-0o-81q" kind="presentation" identifier="PopupSearch" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="FTj-05-K0G"/>
                     </connections>
                 </viewController>
@@ -187,7 +211,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="218" y="-1050"/>
+            <point key="canvasLocation" x="217.5" y="-1050"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="dpE-c9-edA">
@@ -334,13 +358,13 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nPN-Xg-4mg" userLabel="Scroller">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="8" y="0.0" width="304" height="568"/>
                                 <subviews>
                                     <view contentMode="top" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="xth-OK-GBf" userLabel="scrolledRoot">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
                                         <subviews>
                                             <imageView contentMode="redraw" semanticContentAttribute="forceRightToLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="foT-G9-mTN" userLabel="quranPageImage">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="quranPage"/>
                                                 <gestureRecognizers/>
@@ -349,15 +373,29 @@
                                                     <outletCollection property="gestureRecognizers" destination="9UD-nN-0xo" appends="YES" id="OQi-KQ-iKD"/>
                                                 </connections>
                                             </imageView>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="maskHead">
-                                                <rect key="frame" x="0.0" y="210" width="280" height="40"/>
+                                            <view hidden="YES" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="maskHead">
+                                                <rect key="frame" x="0.0" y="210" width="264" height="40"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-I2-sYk" userLabel="closeMask">
+                                                        <rect key="frame" x="229" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <state key="normal" image="close"/>
+                                                        <connections>
+                                                            <action selector="clickedCloseMask:" destination="S4R-Ja-viH" eventType="touchUpInside" id="hu4-o3-Xtj"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
                                                 <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <bool key="isElement" value="YES"/>
                                                 </accessibility>
                                                 <gestureRecognizers/>
                                                 <constraints>
+                                                    <constraint firstItem="hZw-I2-sYk" firstAttribute="height" secondItem="twD-Hm-5Yj" secondAttribute="height" constant="-10" id="9Nw-2Q-YmV"/>
                                                     <constraint firstAttribute="height" constant="40" id="AgW-KI-1tc" userLabel="maskHeadHeight"/>
+                                                    <constraint firstAttribute="trailing" secondItem="hZw-I2-sYk" secondAttribute="trailing" constant="5" id="eEn-Ci-Tsp"/>
+                                                    <constraint firstItem="hZw-I2-sYk" firstAttribute="width" secondItem="twD-Hm-5Yj" secondAttribute="height" constant="-10" id="hCf-5A-Bnw"/>
+                                                    <constraint firstItem="hZw-I2-sYk" firstAttribute="centerY" secondItem="twD-Hm-5Yj" secondAttribute="centerY" id="qcI-Uv-3s9"/>
                                                 </constraints>
                                                 <connections>
                                                     <outletCollection property="gestureRecognizers" destination="M2J-5l-Y1e" appends="YES" id="oVc-Gk-PeI"/>
@@ -365,7 +403,7 @@
                                                 </connections>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="maskBody">
-                                                <rect key="frame" x="0.0" y="250" width="320" height="318"/>
+                                                <rect key="frame" x="0.0" y="250" width="304" height="318"/>
                                                 <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <bool key="isElement" value="YES"/>
@@ -380,10 +418,10 @@
                                                 </connections>
                                             </view>
                                             <view autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" semanticContentAttribute="forceLeftToRight" restorationIdentifier="selection" translatesAutoresizingMaskIntoConstraints="NO" id="7jv-Tt-otI" userLabel="selection">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
                                                 <subviews>
                                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectHead" translatesAutoresizingMaskIntoConstraints="NO" id="LIx-yL-LpY" userLabel="selectHead">
-                                                        <rect key="frame" x="105" y="20" width="110" height="39"/>
+                                                        <rect key="frame" x="105" y="20" width="94" height="39"/>
                                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
                                                             <bool key="isElement" value="YES"/>
@@ -394,7 +432,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectBody" translatesAutoresizingMaskIntoConstraints="NO" id="BvU-Ff-ETA" userLabel="selectBody">
-                                                        <rect key="frame" x="0.0" y="59" width="320" height="89"/>
+                                                        <rect key="frame" x="0.0" y="59" width="304" height="89"/>
                                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
                                                             <bool key="isElement" value="YES"/>
@@ -402,7 +440,7 @@
                                                         <gestureRecognizers/>
                                                     </view>
                                                     <view hidden="YES" alpha="0.25" contentMode="scaleToFill" restorationIdentifier="selectEnd" translatesAutoresizingMaskIntoConstraints="NO" id="GKv-Ol-aZG" userLabel="selectEnd">
-                                                        <rect key="frame" x="200" y="148" width="120" height="39"/>
+                                                        <rect key="frame" x="200" y="148" width="104" height="39"/>
                                                         <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <accessibility key="accessibilityConfiguration">
                                                             <bool key="isElement" value="YES"/>
@@ -428,7 +466,7 @@
                                                 </constraints>
                                             </view>
                                             <view autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" translatesAutoresizingMaskIntoConstraints="NO" id="CTD-Pf-l6U" userLabel="buttons" customClass="LayerView" customModule="quran_hafiz" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -482,13 +520,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nPN-Xg-4mg" firstAttribute="width" secondItem="ZwX-cT-FIQ" secondAttribute="width" id="1A1-wQ-7hb"/>
+                            <constraint firstItem="nPN-Xg-4mg" firstAttribute="width" secondItem="ZwX-cT-FIQ" secondAttribute="width" constant="-16" id="1A1-wQ-7hb"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="Y6m-bQ-n7V"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="height" secondItem="ZwX-cT-FIQ" secondAttribute="height" id="mjf-18-bGA"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="centerY" secondItem="ZwX-cT-FIQ" secondAttribute="centerY" id="nZU-kn-CJq"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnCloseMask" destination="hZw-I2-sYk" id="evB-jr-4jZ"/>
                         <outlet property="buttonsView" destination="CTD-Pf-l6U" id="Vfa-3x-cIQ"/>
                         <outlet property="maskBody" destination="bhi-gQ-9oN" id="mgt-pf-yHs"/>
                         <outlet property="maskBodyHeight" destination="dii-DT-rcp" id="djC-vy-zNa"/>
@@ -496,6 +535,7 @@
                         <outlet property="maskHeadHeight" destination="AgW-KI-1tc" id="HyS-yD-4sZ"/>
                         <outlet property="maskHeadStartX" destination="LGF-VM-sh5" id="ezw-Op-50r"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
+                        <outlet property="pageScroller" destination="nPN-Xg-4mg" id="52v-mA-Zrp"/>
                         <outlet property="pageTapGesture" destination="9UD-nN-0xo" id="Eyd-S2-x8l"/>
                         <outlet property="selectBody" destination="BvU-Ff-ETA" id="Vkx-PG-rB0"/>
                         <outlet property="selectBodyBottomY" destination="bZG-Z0-jlx" id="M4v-fu-soa"/>
@@ -759,7 +799,7 @@
                             <outlet property="delegate" destination="jHV-wq-GPS" id="2MI-d0-ZjJ"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" selectedImage="icons8-Heart" systemItem="featured" id="65I-Ql-lB2"/>
+                    <tabBarItem key="tabBarItem" title="Parts" image="icons8-Bookmark" selectedImage="icons8-Bookmark" id="65I-Ql-lB2"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnA-In-VyK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -829,7 +869,7 @@
                     <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" id="8X9-fd-LSu">
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.59999999999999998" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.20000000000000001" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="W8o-G2-lMw">
@@ -845,14 +885,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="close" width="25" height="25"/>
         <image name="icons8-Bookmark" width="25" height="25"/>
         <image name="icons8-Bookmark Ribbon" width="25" height="25"/>
-        <image name="icons8-Eye" width="24" height="24"/>
-        <image name="icons8-Heart" width="25" height="25"/>
         <image name="icons8-List Filled" width="25" height="25"/>
+        <image name="icons8-Menu 2 Filled" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="FTj-05-K0G"/>
-        <segue reference="ain-zt-Gaq"/>
+        <segue reference="FUA-q2-iz6"/>
     </inferredMetricsTieBreakers>
 </document>
