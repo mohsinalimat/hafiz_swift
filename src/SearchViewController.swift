@@ -74,16 +74,27 @@ class SearchViewController:
         let qData = QData.instance()
         if let results = self.results {
             let ayaPosition = results[indexPath.row]
-            cell.tag = ayaPosition
             
             if let textLabel = cell.textLabel{
-                textLabel.text = qData.ayaText(ayaPosition: ayaPosition)
+                if ayaPosition < 0 {
+                    let suraNumber = -ayaPosition
+                    textLabel.text = qData.suraName( suraIndex: suraNumber-1 )
+                    cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
+                    if let textDetails = cell.detailTextLabel {
+                        textDetails.text = ""
+                    }
+                }
+                else{
+                    cell.tag = ayaPosition
+                    textLabel.text = qData.ayaText(ayaPosition: ayaPosition)
+
+                    if let textDetails = cell.detailTextLabel {
+                        let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
+                        textDetails.text = qData.suraName(suraIndex:suraIndex)! + ": " +  String(ayaIndex+1)
+                    }
+                }
             }
             
-            if let textDetails = cell.detailTextLabel {
-                let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
-                textDetails.text = qData.suraName(suraIndex:suraIndex)! + ": " +  String(ayaIndex+1)
-            }
         }
         
         return cell
@@ -92,10 +103,15 @@ class SearchViewController:
     // MARK: - UITableViewDelegate methods
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let results = self.results {
-            let ayaPosition = results[indexPath.row]
+            var ayaPosition = results[indexPath.row]
+            if ayaPosition < 0 {
+                let qData = QData.instance()
+                let suraIndex = -ayaPosition-1
+                ayaPosition = qData.ayaPosition(sura: suraIndex, aya: 0)
+            }
             SelectStart = ayaPosition
             SelectEnd = ayaPosition
-            dismiss(animated: false, completion: nil)
+            dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(
                 name: NSNotification.Name(rawValue: "searchOpenAya"),
                 object: self

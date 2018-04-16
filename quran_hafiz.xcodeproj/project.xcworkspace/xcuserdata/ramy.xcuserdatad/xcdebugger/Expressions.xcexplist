@@ -107,6 +107,22 @@
          contextName = "closure #1 in TafseerViewController.viewDidLoad():TafseerViewController.swift">
       </ContextState>
       <ContextState
+         contextName = "QData.readNormalizedSuraNames():QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "normalizedSuraNames">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QData.searchQuran(_:max:):QData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "suraNames">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPageView.onHideMenu(menuController:):QPageView.swift">
          <PersistentStrings>
             <PersistentString
@@ -152,6 +168,9 @@
                value = "self.view">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "QPageView.advanceMask(_:):QPageView.swift">
       </ContextState>
       <ContextState
          contextName = "SearchViewController.tableView(_:didHighlightRowAt:):SearchViewController.swift">

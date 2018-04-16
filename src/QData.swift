@@ -20,6 +20,7 @@ class QData{
     var suraNames:NSDictionary?
     var quranData:NSArray?
     var normalizedText:NSArray?
+    var normalizedSuraNames:[String]?
     var quranText:NSArray?
     
     let totalAyat = 6236
@@ -271,18 +272,37 @@ class QData{
     
     func suraName( suraIndex: Int ) -> String? {
         
-        if suraNames == nil {
-            if let path = Bundle.main.path(forResource: "SuraNames", ofType: "plist") {
-                suraNames = NSDictionary(contentsOfFile: path) //cache suraNames NSDictionary
-            }
-        }
-
-        if let suraNames = suraNames{
+        if let suraNames = readSuraNames(){
             return suraNames[String(suraIndex+1)] as? String
             //return suraNames.value( forKey: String(suraIndex+1) ) as? String
         }
 
         return nil
+    }
+    
+    func readSuraNames() -> NSDictionary?{
+        if suraNames == nil {
+            if let path = Bundle.main.path(forResource: "SuraNames", ofType: "plist") {
+                suraNames = NSDictionary(contentsOfFile: path) //cache suraNames NSDictionary
+            }
+        }
+        return suraNames
+    }
+    
+    func readNormalizedSuraNames()-> [String]?{
+        if normalizedSuraNames == nil {
+            if let suraNames = readSuraNames(){
+                normalizedSuraNames = []
+
+                for i in 0..<suraNames.count {
+                    if let name = suraNames[String(i+1)] as? String {
+                        normalizedSuraNames!.append(name.normalizeAya())
+                    }
+                }
+            }
+        }
+        
+        return normalizedSuraNames
     }
     
     func readNormalizedText()-> NSArray?{
@@ -297,11 +317,21 @@ class QData{
     func searchQuran(_ pattern: String, max: Int ) -> [Int] {
         var results :[Int]  = []
         
+
+        let search_term = pattern.normalizeAya()
+        
+        if let suraNames = readNormalizedSuraNames() {
+            for suraNumber in 1...suraNames.count {
+                if suraNames[suraNumber-1].range(of: search_term) != nil {
+                    results.append( -suraNumber )
+                }
+            }
+        }
+
         if pattern.count < 2 {
             return results
         }
-        
-        let search_term = pattern.normalizeAya()
+
         
         if let quranData = readNormalizedText(){
             for pos in 0..<quranData.count{

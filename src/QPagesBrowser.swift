@@ -183,7 +183,7 @@ class QPagesBrowser: UIViewController
         if let qPageView = currentPageView(), let pageNumber = qPageView.pageNumber{
             return pageNumber - 1
         }
-        return 0
+        return -1
     }
     func currentPageView()->QPageView?{
         if  let pageViewController = self.pageViewController,
