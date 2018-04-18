@@ -9,3 +9,5 @@
 "Pg" = "Pg: %d";
 "Part" = "Part %d";
 "PartInfo" = "Page %d - Sura %d - %@";
+"FooterInfo" = "Pt%d:Pg%d";
+"FooterSuraName" = "%d-%@%@";

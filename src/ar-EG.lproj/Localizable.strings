@@ -5,7 +5,10 @@
   Created by Ramy Eldesoky on 8/2/17.
   Copyright © 2017 Ramy Eldesoky. All rights reserved.
 */
-"Sura"= "سورة: %d";
+"Sura" = "سورة: %d";
 "Pg" = "ص: %d";
-"Part" = "الجزء %d";
+"Part" = "جزء %d";
 "PartInfo" = "صفحة %d - سورة %d - %@";
+"FooterInfo" = "ج%d:ص%d";
+"FooterSuraName" = "%d-%@%@";//unused
+

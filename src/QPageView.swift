@@ -35,6 +35,7 @@ class QPageView: UIViewController{
 
     // MARK: - Linked vars and functions
     @IBOutlet weak var pageImage: UIImageView!
+    @IBOutlet weak var pageLoadingIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var btnCloseMask: UIButton!
     @IBOutlet weak var maskHead: UIView!
@@ -69,6 +70,9 @@ class QPageView: UIViewController{
             let imageFrame = pageImageView.frame
             if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
                 setMaskStart( qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya ) )
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.scrollToMaskStart()
+                }
             }
         }
     }
@@ -227,7 +231,9 @@ class QPageView: UIViewController{
             let sPageNumber = String(format: "%03d", pageNumber)
             
             let imageUrl = URL(string:"http://www.egylist.com/qpages_1260/page\(sPageNumber).png")!
-            
+
+            pageLoadingIndicator.startAnimating()
+
             Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
                 
                 guard let data = data, error == nil else { return }
@@ -236,6 +242,7 @@ class QPageView: UIViewController{
                 DispatchQueue.main.async() { () -> Void in
                     //Set the imageView source
                     self.pageImage.image = UIImage(data: data)
+                    self.pageLoadingIndicator.stopAnimating()
                 }
             }
         }
@@ -351,14 +358,14 @@ class QPageView: UIViewController{
             if let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: self.pageMap!){
                 let pageHeight = imageRect.size.height
                 let lineHeight = CGFloat(pageHeight / 15)
-                btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
+                //btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
                 let lineWidth = CGFloat(imageRect.size.width)
                 maskHeadHeight.constant = lineHeight
                 
                 let headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
                
                 //Extend the mask .4 of the lineHeight width, if sneekView is not ON
-                let extensionWidth = lineHeight/4 //lineWidth/9.65/3
+                let extensionWidth = lineHeight/10 //lineWidth/9.65/3
                 let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
                 
                 var sneekViewAdjustedWidth = sneekViewWidth
@@ -404,26 +411,27 @@ class QPageView: UIViewController{
             
             default:
                 let qData = QData.instance()
+                //if maskStart is at first Aya of a page different than current page, goto that page and return
+                let pageLocation = qData.ayaPagePosition(MaskStart)
+                let currPageIndex = self.pageIndex
+
                 if followPage {
-                    //if maskStart is at first Aya of a page different than current page, goto that page and return
-                    let pageLocation = qData.ayaPagePosition(MaskStart)
-                    let currPageIndex = self.pageIndex
-                    
                     gotoPage(pageLocation.page)
 
                     if pageLocation.position == .first && pageLocation.page != currPageIndex {
                         //mask moved to the start of next page
                         return// no need to advance the mask
                     }
-                    
-                    if pageLocation.position == .last && pageLocation.page == currPageIndex {
-                        scrollToBottom()
-                    }else{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            self.scrollToMaskStart()
-                        }
+                }
+
+                if pageLocation.position == .last && pageLocation.page == currPageIndex {
+                    scrollToBottom()
+                }else{
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        self.scrollToMaskStart()
                     }
                 }
+
                 setMaskStart(MaskStart + 1, followPage: false)
         }
     }
@@ -441,12 +449,34 @@ class QPageView: UIViewController{
 
     func scrollToMaskStart(){
         pageScroller.contentSize = pageImage.frame.size
-        pageScroller.scrollRectToVisible(maskHead.frame, animated: true)
+        pageScroller.scrollRectToVisible(selectHead.frame, animated: true)
     }
-    
+
+    func scrollToSelectedAya(){
+        if selectHead.isHidden != true {
+            pageScroller.contentSize = pageImage.frame.size
+            var sel_rect = selectHead.frame
+            if selectBody.isHidden == false {
+                sel_rect.size.height = sel_rect.height + selectBody.frame.height
+            }
+            if selectEnd.isHidden == false {
+                sel_rect.size.height = sel_rect.height + selectEnd.frame.height
+            }
+            if sel_rect.height > pageScroller.frame.height{
+                sel_rect.size.height = pageScroller.frame.height
+            }
+            pageScroller.scrollRectToVisible(sel_rect, animated: true)
+        }
+    }
+
     func retreatMask(_ followPage: Bool){
         if MaskStart != -1 && MaskStart > 0{
             let qData = QData.instance()
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.scrollToMaskStart()
+            }
+
             if followPage {
                 //if maskStart is at first Aya that is not the prior page, goto prior page and return
                 let currPageIndex = self.pageIndex
@@ -465,11 +495,8 @@ class QPageView: UIViewController{
                     }
                     return
                 }
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    self.scrollToMaskStart()
-                }
             }
+
             setMaskStart(MaskStart-1, followPage: followPage)
 //            MaskStart -= 1
 //            positionMask( followPage )
@@ -547,6 +574,9 @@ class QPageView: UIViewController{
         SelectStart = aya
         SelectEnd = aya
         positionSelection()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            self.scrollToSelectedAya()
+        }
     }
     
     func positionSelection(){
@@ -571,10 +601,10 @@ class QPageView: UIViewController{
             let pageHeight = imageRect.height
             selectHead.isHidden = false
             if SelectStart < pageInfo.ayaPos{
-                selectHeadHeight.constant = 0
+                selectHeadHeight.constant = 0// selection started in a previous page
             }else{
+                //selection started at this or the next page
                 selectHeadHeight.constant = lineHeight
-                //print( lineHeight )
                 let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: pageMap)!
                 let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: pageMap)!
                 let ypos = pageHeight * CGFloat(selectStartInfo.sline) / 15
@@ -584,7 +614,7 @@ class QPageView: UIViewController{
                 let endX = selectStartInfo.sline == selectEndInfo.eline && selectStartInfo.page == selectEndInfo.page ?
                     (CGFloat(1000 - selectEndInfo.epos) * pageWidth) / 1000 : 0
                 selectHeadEndX.constant = endX
-                if selectEndInfo.page > self.pageIndex{// end next page
+                if selectEndInfo.page > self.pageIndex{// Selection ends next page
                     //selection body will cover the rest of the page
                     selectBody.isHidden = false
                     selectBodyBottomY.constant = 0

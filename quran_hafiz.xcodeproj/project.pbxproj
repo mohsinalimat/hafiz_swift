@@ -26,7 +26,6 @@
 		2D64CEB51FAFB48800348A34 /* LayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D64CEB41FAFB48800348A34 /* LayerView.swift */; };
 		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
 		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
-		2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8F4B20200730A500499A3F /* CoreData.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2D8F4B24200730ED00499A3F /* quran.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B22200730ED00499A3F /* quran.xcdatamodeld */; };
 		2D8F4B2720088AEC00499A3F /* Aya+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */; };
 		2D8F4B2820088AEC00499A3F /* Aya+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */; };
@@ -54,7 +53,6 @@
 		2D7F5F6E1F04BDA50076316B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2D8F4B20200730A500499A3F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2D8F4B23200730ED00499A3F /* quran.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = quran.xcdatamodel; sourceTree = "<group>"; };
 		2D8F4B2520088AEC00499A3F /* Aya+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2D8F4B2620088AEC00499A3F /* Aya+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Aya+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -79,7 +77,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8F4B21200730A500499A3F /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +155,6 @@
 		2D8F4B1F200730A400499A3F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2D8F4B20200730A500499A3F /* CoreData.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

@@ -17,19 +17,20 @@ class QData{
     var suraInfo:[[String:Int]]?
     var partInfo:[[String:Int]]?
     var pagesInfo:[[String:Int]]?
-    var suraNames:NSDictionary?
+    var suraNames:NSArray?
     var quranData:NSArray?
     var normalizedText:NSArray?
     var normalizedSuraNames:[String]?
     var quranText:NSArray?
     
     let totalAyat = 6236
-    let lastPage = 603
+    let lastPageIndex = 603
     
     enum Direction {
         case forward
         case backward
     }
+    
     enum Position {
         case first
         case inside
@@ -110,14 +111,14 @@ class QData{
     }
     
     func pageInfo(_ pageIndex: Int )->QData.PageInfo? {
-        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > self.lastPage{
+        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > self.lastPageIndex{
             return nil
         }
         let info = self.pagesInfo![pageIndex]
         let suraIndex = info["s"]! - 1
         let ayaIndex = info["a"]! - 1
         let startAya = ayaPosition(sura: suraIndex, aya: ayaIndex)
-        let nextPageStartAya = pageIndex < self.lastPage ? ayaPosition(pageIndex: pageIndex+1) : self.totalAyat
+        let nextPageStartAya = pageIndex < self.lastPageIndex ? ayaPosition(pageIndex: pageIndex+1) : self.totalAyat
 
         return (
             suraIndex:suraIndex,
@@ -242,15 +243,11 @@ class QData{
         if quranData == nil {
             if let path = Bundle.main.path(forResource: "quran", ofType: "plist") {
                 quranData = NSArray(contentsOfFile: path) //cache quranData NSDictionary
-//                for pos in 0..<quranData!.count{
-//                    if var ayaInfo = quranData![pos] as? [String:String]{
-//                        normalizedText.append(ayaInfo["aya_text"]!.normalizeAya())
-//                    }
-//                }
             }
         }
         return quranData
     }
+    
     func readQuranText()->NSArray?{
         if quranText == nil {
             if let path = Bundle.main.path(forResource: "quran_text", ofType: "plist") {
@@ -266,24 +263,21 @@ class QData{
                 return aya_text
             }
         }
-
         return nil
     }
     
     func suraName( suraIndex: Int ) -> String? {
         
         if let suraNames = readSuraNames(){
-            return suraNames[String(suraIndex+1)] as? String
-            //return suraNames.value( forKey: String(suraIndex+1) ) as? String
+            return suraNames[suraIndex] as? String
         }
-
         return nil
     }
     
-    func readSuraNames() -> NSDictionary?{
+    func readSuraNames() -> NSArray?{
         if suraNames == nil {
             if let path = Bundle.main.path(forResource: "SuraNames", ofType: "plist") {
-                suraNames = NSDictionary(contentsOfFile: path) //cache suraNames NSDictionary
+                suraNames = NSArray(contentsOfFile: path) //cache suraNames NSDictionary
             }
         }
         return suraNames
@@ -295,7 +289,7 @@ class QData{
                 normalizedSuraNames = []
 
                 for i in 0..<suraNames.count {
-                    if let name = suraNames[String(i+1)] as? String {
+                    if let name = suraNames[i] as? String {
                         normalizedSuraNames!.append(name.normalizeAya())
                     }
                 }
@@ -317,7 +311,6 @@ class QData{
     func searchQuran(_ pattern: String, max: Int ) -> [Int] {
         var results :[Int]  = []
         
-
         let search_term = pattern.normalizeAya()
         
         if let suraNames = readNormalizedSuraNames() {
@@ -331,7 +324,6 @@ class QData{
         if pattern.count < 2 {
             return results
         }
-
         
         if let quranData = readNormalizedText(){
             for pos in 0..<quranData.count{
@@ -345,7 +337,6 @@ class QData{
                 }
             }
         }
-
         
         return results
     }
@@ -372,7 +363,7 @@ class QData{
     func pageIndex( ayaPosition: Int )->Int{
         let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
         let pageIndex = self.pageIndex(suraIndex: suraIndex)
-        for p in pageIndex...lastPage {
+        for p in pageIndex...lastPageIndex {
             let pageInfo = pagesInfo![p]
             let pageSuraIndex = pageInfo["s"]! - 1
             let pageStartAyaIndex = pageInfo["a"]! - 1
@@ -382,7 +373,7 @@ class QData{
                 return p-1
             }
         }
-        return lastPage
+        return lastPageIndex
     }
     
     func partInfo( partIndex: Int ) -> [String:Int]?{
@@ -461,8 +452,9 @@ class QData{
         if sura == Int(firstPageAya["sura"]!)!-1 && aya == Int(firstPageAya["aya"]!)!-1 {
             return (page: pageIndex, position: .first)
         }
-
+        
         let lastPageAya = pageMap.last!
+        
         if sura == Int(lastPageAya["sura"]!)!-1 && aya == Int(lastPageAya["aya"]!)!-1 {
             return (page: pageIndex, position: .last)
         }

@@ -36,6 +36,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "QPagesBrowser.viewDidLoad():QPagesBrowser.swift">
+      </ContextState>
+      <ContextState
          contextName = "QData.searchQuran(_:):QData.swift">
       </ContextState>
       <ContextState
@@ -131,6 +134,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "QPageView.scrollToSelectedAya():QPageView.swift">
+      </ContextState>
+      <ContextState
          contextName = "QPagesBrowser.viewDidLoad() -&gt; ():QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
@@ -201,7 +207,10 @@
          contextName = "QPagesBrowser.updateTitle():QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.suraName.titleLabel.text">
+               value = "self.nextPageButton.titleLabel.text">
+            </PersistentString>
+            <PersistentString
+               value = "nextPageArrow + String(format:NSLocalizedString(&quot;FooterInfo&quot;, comment: &quot;&quot;), partNumber,pageIndex+1)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

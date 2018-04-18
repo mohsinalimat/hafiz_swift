@@ -24,13 +24,14 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var prevSura: UIButton!
     @IBOutlet weak var pagesContainer: UIView!
     @IBOutlet weak var suraName: UILabel!
+    @IBOutlet weak var nextPageButton: UIButton!
     
     let firstPage = 1
     let lastPage = 604
     
     var pageViewController: UIPageViewController?
     var startingPage:Int?
-    var closeBtn: UIBarButtonItem?
+    //var closeBtn: UIBarButtonItem?
 
 
     
@@ -43,7 +44,7 @@ class QPagesBrowser: UIViewController
         menuItems.addGestureRecognizer(UITapGestureRecognizer(target:self,action:#selector(hideMenu)))
         menuItems.frame = self.view.frame
 
-        closeBtn = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(hideMask))
+//        closeBtn = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(hideMask))
 
         // Configure the page view controller and add it as a child view controller.
 //        self.pageViewController = UIPageViewController(transitionStyle: .scroll,
@@ -69,9 +70,15 @@ class QPagesBrowser: UIViewController
        
 //        self.pageViewController!.view.frame = pageViewRect
 //        self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
-//        self.pageViewController!.view.semanticContentAttribute = .forceLeftToRight
         
         gotoPage(self.startingPage ?? 1)
+        //scroll to selection
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            if let curr_view = self.currentPageView() {
+                curr_view.scrollToSelectedAya()
+            }
+        }
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -170,13 +177,19 @@ class QPagesBrowser: UIViewController
         //reference the first QPageView
         let pageIndex = currentPageIndx()
         let qData = QData.instance()
-        let suraNumber = qData.suraIndex( pageIndex: pageIndex ) + 1
+        //let suraNumber = qData.suraIndex( pageIndex: pageIndex ) + 1
         let partNumber = qData.partIndex( pageIndex: pageIndex ) + 1
         
         let suraName = qData.suraName(pageIndex: pageIndex)!
         self.title = suraName
-        self.suraName.text = "\(suraNumber):\(suraName)"
-        self.pageNumberLabel.text = "C:\(partNumber)-P:\(pageIndex+1)"
+
+        let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
+        let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
+        self.nextPageButton.setTitle("\(pageInfo)\(nextPageArrow)", for: .normal)
+        
+        let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
+        //self.suraName.text = String(format:NSLocalizedString("FooterSuraName", comment: ""),suraNumber,suraName,maskedAya)
+        self.suraName.text = suraName + maskedAya
     }
     
     func currentPageIndx()->Int{
@@ -261,7 +274,7 @@ class QPagesBrowser: UIViewController
         let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
         gotoPage(pageIndex+1)
         if let currPageView = currentPageView(){
-            currPageView.positionSelection()
+            currPageView.selectAya(aya: SelectStart)
         }
         navigationController?.navigationBar.isHidden = true
     }
@@ -280,6 +293,13 @@ class QPagesBrowser: UIViewController
    
     @IBAction func navigationSearchClicked(_ sender: Any) {
         showSearch()
+    }
+    
+    @IBAction func nextPageClicked(_ sender: Any) {
+        let curr_page_index = currentPageIndx() + 1
+        if curr_page_index < lastPage {
+            gotoPage(curr_page_index+1)
+        }
     }
     
     // MARK: - Mask methods
@@ -302,6 +322,9 @@ class QPagesBrowser: UIViewController
         }
         
         navigationController?.navigationBar.isHidden = true
+        
+        updateTitle()
+        
 //        cancelReview.isHidden = (ayaId == -1)
         
 //        if let rightBarItems = self.navigationItem.rightBarButtonItems{
