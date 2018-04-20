@@ -183,9 +183,9 @@ class QPagesBrowser: UIViewController
         let suraName = qData.suraName(pageIndex: pageIndex)!
         self.title = suraName
 
-        let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
+        //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
         let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
-        self.nextPageButton.setTitle("\(pageInfo)\(nextPageArrow)", for: .normal)
+        self.nextPageButton.setTitle(pageInfo, for: .normal)
         
         let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
         //self.suraName.text = String(format:NSLocalizedString("FooterSuraName", comment: ""),suraNumber,suraName,maskedAya)

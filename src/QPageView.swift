@@ -10,6 +10,11 @@ import UIKit
 
 class QPageView: UIViewController{
 
+    struct Colors {
+        static var ayaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.17) }
+        static var maskedAyaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1) }
+    }
+
     var pageNumber: Int? //will be set by the ModelController that creates this controller
     var pageMap: [[String:String]]?
     var _pageInfo: QData.PageInfo?
@@ -222,27 +227,84 @@ class QPageView: UIViewController{
     }
 
     // MARK: - QPageView new methods
+    //static let cache = NSCache<NSString, Data>()
 
-    func loadPageImage(){
+    func fileURL(for fileName :String)->URL?{
         
+        do{
+            let fileManager = FileManager.default
+            let userFolder = try fileManager.url(for: .documentDirectory,
+                                                 in: .userDomainMask,
+                                                 appropriateFor: nil,
+                                                 create: false)
+            let fileURL = userFolder.appendingPathComponent(fileName)
+            return fileURL
+        }catch {
+            print(error)
+        }
+        
+        return nil
+    }
+    
+    func saveData(to fileName:String, data:Data){
+        if let fileURL = fileURL(for: fileName) {
+            do{
+                try data.write(to: fileURL)
+            }catch {
+                print( "Failed to write the data of \(fileName)")
+                print(error)
+            }
+        }
+    }
+
+    func readData(from fileName:String)->Data?{
+        if let fileURL = fileURL(for: fileName) {
+            do{
+                let data = try Data(contentsOf: fileURL)
+                return data
+            }catch {
+                print( "Failed to read the data of \(fileName)")
+                print(error)
+            }
+        }
+        return nil
+    }
+
+    
+    func loadPageImage(){
         if let pageNumber = self.pageNumber {
             //self.pageNumberLabel!.text = String(uwPageNumber)
+            let fileName = String(format: "page%03d.png", pageNumber)
             
-            let sPageNumber = String(format: "%03d", pageNumber)
-            
-            let imageUrl = URL(string:"http://www.egylist.com/qpages_1260/page\(sPageNumber).png")!
+            if let cachedData = readData(from: fileName) {
+                self.pageImage.image = UIImage(data:cachedData)
+                self.pageLoadingIndicator.stopAnimating()
+                return
+            }
+
+            let pageFolder = "qpages_1260"
+            let imageUrl = URL(string:"http://www.egylist.com/\(pageFolder)/\(fileName)")!
 
             pageLoadingIndicator.startAnimating()
 
             Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
                 
-                guard let data = data, error == nil else { return }
+                guard let data = data, error == nil else {
+                    //TODO: show an error and a retry button
+                    print( "Failed to download image \(imageUrl.absoluteString)" )
+                    return
+                }
                 
-                //Apply the image data in the UI thread
-                DispatchQueue.main.async() { () -> Void in
-                    //Set the imageView source
-                    self.pageImage.image = UIImage(data: data)
-                    self.pageLoadingIndicator.stopAnimating()
+                self.saveData(to: fileName, data: data)
+                
+                if let downloadedImage = UIImage(data: data){
+                    //QPageView.cache.setObject(downloadedImage, forKey: fileName)
+                    //Apply the image data in the UI thread
+                    DispatchQueue.main.async() { () -> Void in
+                        //Set the imageView source
+                        self.pageImage.image = downloadedImage
+                        self.pageLoadingIndicator.stopAnimating()
+                    }
                 }
             }
         }
@@ -267,8 +329,8 @@ class QPageView: UIViewController{
             if let pageMap = self.pageMap {
                 for(var button) in pageMap{
                     let btn = UIView()
-                    btn.backgroundColor = .brown
-                    btn.alpha = 0.15
+                    btn.backgroundColor = Colors.ayaBtn
+                    //btn.alpha = 0.10
                     btn.layer.cornerRadius = 5
                     let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
                     btn.addGestureRecognizer(tap)
@@ -331,7 +393,8 @@ class QPageView: UIViewController{
         if let buttonsView = self.buttonsView{
             for(_, btn) in buttonsView.subviews.enumerated(){
                 let ayaId = btn.tag
-                btn.alpha = ayaId == MaskStart ? 1 : 0.25
+                let bgAlpha:CGFloat = (ayaId == MaskStart) ? 1 : 0.17
+                btn.backgroundColor = UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: bgAlpha)
                 if let txtBtn = btn as? UITextView{
                     txtBtn.textColor = ayaId == MaskStart ? .white : .brown
                 }
