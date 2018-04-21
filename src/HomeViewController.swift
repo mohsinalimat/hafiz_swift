@@ -26,7 +26,7 @@ class HomeViewController: UITabBarController
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        print("HomeViewController Appear")
+        //print("HomeViewController Appear")
         NotificationCenter.default.addObserver(
            self,
            selector: #selector(searchOpenAya),
@@ -36,12 +36,12 @@ class HomeViewController: UITabBarController
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        print("HomeViewController willDisappear")
+        //print("HomeViewController willDisappear")
         NotificationCenter.default.removeObserver(self)
     }
 
     @objc func searchOpenAya(vc: SearchViewController){
-        print("HomeViewController.searchOpenAya( \(SelectStart) )")
+        //print("HomeViewController.searchOpenAya( \(SelectStart) )")
         self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)
         //self.navigationController?.pushViewController(QPagesBrowser(), animated: true)
     }
@@ -59,9 +59,6 @@ class HomeViewController: UITabBarController
         }
     }
     
-    @IBAction func openSearch(_ sender: UIBarButtonItem) {
-        //let search = UISearchController()
-    }
     
     @IBAction func openActions(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

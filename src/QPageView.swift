@@ -176,14 +176,14 @@ class QPageView: UIViewController{
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-        print ( "QPageView viewDidLoad()" )
+        //print ( "QPageView viewDidLoad()" )
         loadPageImage()
         createAyatButtons()
         becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
+        //print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
         navigationController?.navigationBar.isHidden = true
         pageTapGesture.isEnabled = (MaskStart != -1)
         self.maskBodyHeight.constant = self.view.frame.height // to prevent flickering when changing page
@@ -194,13 +194,13 @@ class QPageView: UIViewController{
     }
     
     override func viewDidLayoutSubviews() {
-        print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
+        //print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
         positionAyatButtons()
         positionSelection()
     }
     
     override func viewWillLayoutSubviews() {
-        print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
+        //print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -227,63 +227,21 @@ class QPageView: UIViewController{
     }
 
     // MARK: - QPageView new methods
-    //static let cache = NSCache<NSString, Data>()
 
-    func fileURL(for fileName :String)->URL?{
-        
-        do{
-            let fileManager = FileManager.default
-            let userFolder = try fileManager.url(for: .documentDirectory,
-                                                 in: .userDomainMask,
-                                                 appropriateFor: nil,
-                                                 create: false)
-            let fileURL = userFolder.appendingPathComponent(fileName)
-            return fileURL
-        }catch {
-            print(error)
-        }
-        
-        return nil
-    }
-    
-    func saveData(to fileName:String, data:Data){
-        if let fileURL = fileURL(for: fileName) {
-            do{
-                try data.write(to: fileURL)
-            }catch {
-                print( "Failed to write the data of \(fileName)")
-                print(error)
-            }
-        }
-    }
-
-    func readData(from fileName:String)->Data?{
-        if let fileURL = fileURL(for: fileName) {
-            do{
-                let data = try Data(contentsOf: fileURL)
-                return data
-            }catch {
-                print( "Failed to read the data of \(fileName)")
-                print(error)
-            }
-        }
-        return nil
-    }
 
     
     func loadPageImage(){
         if let pageNumber = self.pageNumber {
-            //self.pageNumberLabel!.text = String(uwPageNumber)
-            let fileName = String(format: "page%03d.png", pageNumber)
+            let imagesDir = "qpages_1260"
+            let imageName = String(format: "page%03d.png", pageNumber)
             
-            if let cachedData = readData(from: fileName) {
+            if let cachedData = Utils.readData(dir: imagesDir, file: imageName) {
                 self.pageImage.image = UIImage(data:cachedData)
                 self.pageLoadingIndicator.stopAnimating()
                 return
             }
 
-            let pageFolder = "qpages_1260"
-            let imageUrl = URL(string:"http://www.egylist.com/\(pageFolder)/\(fileName)")!
+            let imageUrl = URL(string:"http://www.egylist.com/\(imagesDir)/\(imageName)")!
 
             pageLoadingIndicator.startAnimating()
 
@@ -295,7 +253,7 @@ class QPageView: UIViewController{
                     return
                 }
                 
-                self.saveData(to: fileName, data: data)
+                Utils.saveData(dir: imagesDir, file:imageName, data: data)
                 
                 if let downloadedImage = UIImage(data: data){
                     //QPageView.cache.setObject(downloadedImage, forKey: fileName)
@@ -350,7 +308,7 @@ class QPageView: UIViewController{
         let line_height = CGFloat(imageRect.size.height / 15)
         let line_width = CGFloat(imageRect.size.width)
         
-        print ( "positionAyatButton-> pg: \(self.pageNumber!), h: \(line_height), w: \(line_width) " )
+        //print ( "positionAyatButton-> pg: \(self.pageNumber!), h: \(line_height), w: \(line_width) " )
 
         if let pageMap = self.pageMap{
             let button_width = CGFloat(line_width/9.65)

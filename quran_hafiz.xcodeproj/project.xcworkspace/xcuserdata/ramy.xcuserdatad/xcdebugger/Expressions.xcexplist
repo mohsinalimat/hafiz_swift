@@ -137,6 +137,22 @@
          contextName = "QPageView.scrollToSelectedAya():QPageView.swift">
       </ContextState>
       <ContextState
+         contextName = "static Utils.saveData(dir:file:data:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "dirURL.absoluteURL">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Utils.readData(dir:file:):Utils.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "fileURL.path">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "QPagesBrowser.viewDidLoad() -&gt; ():QPagesBrowser.swift">
          <PersistentStrings>
             <PersistentString
