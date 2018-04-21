@@ -34,6 +34,7 @@
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
 		2DF0E09A202634BC00B3C493 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF0E099202634BC00B3C493 /* SearchViewController.swift */; };
 		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
+		C7AA0084DAD6431A754B28B3 /* Pods_quran_hafiz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,9 @@
 		2DD8D7601FA69F73008DD81D /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		2DF0E099202634BC00B3C493 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TafseerAyaView.swift; sourceTree = "<group>"; };
+		4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-quran_hafiz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz.debug.xcconfig"; sourceTree = "<group>"; };
+		A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-quran_hafiz.release.xcconfig"; path = "Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz.release.xcconfig"; sourceTree = "<group>"; };
+		B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_quran_hafiz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7AA0084DAD6431A754B28B3 /* Pods_quran_hafiz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +132,7 @@
 				2D7F5F621F04BDA40076316B /* src */,
 				2D7F5F611F04BDA40076316B /* Products */,
 				2D8F4B1F200730A400499A3F /* Frameworks */,
+				F0E78305E50635FABB6BB4C7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,6 +161,7 @@
 		2D8F4B1F200730A400499A3F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -211,6 +218,15 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		F0E78305E50635FABB6BB4C7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */,
+				A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -218,9 +234,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D41B24B1F9BC0A800199BAD /* Build configuration list for PBXNativeTarget "quran_hafiz" */;
 			buildPhases = (
+				98FCB3FD09FD4B78752B6049 /* [CP] Check Pods Manifest.lock */,
 				2D41B2371F9BC0A800199BAD /* Sources */,
 				2D41B2421F9BC0A800199BAD /* Frameworks */,
 				2D41B2431F9BC0A800199BAD /* Resources */,
+				C2E1126CC36D2C16A21C7B54 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -284,6 +302,47 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		98FCB3FD09FD4B78752B6049 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-quran_hafiz-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C2E1126CC36D2C16A21C7B54 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2D41B2371F9BC0A800199BAD /* Sources */ = {
@@ -371,6 +430,7 @@
 /* Begin XCBuildConfiguration section */
 		2D41B24C1F9BC0A800199BAD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PTHW63WY46;
@@ -385,6 +445,7 @@
 		};
 		2D41B24D1F9BC0A800199BAD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PTHW63WY46;

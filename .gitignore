@@ -1,0 +1,7 @@
+Pods/
+*.csv
+*.py
+**/xcuserdatad/
+**/xcuserdata/
+**/xcshareddata/
+*.xcworkspacedata

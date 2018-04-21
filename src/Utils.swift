@@ -15,10 +15,12 @@ class Utils {
         )
     {
         
+        //create the download task
         let downloadTask = URLSession.shared.dataTask( with: url ){ (data, response, error) in
-            completion(data, response, error)
+            completion(data, response, error) // invoke the provided callback function
         }
         
+        //start the download task
         downloadTask.resume()
     }
     
