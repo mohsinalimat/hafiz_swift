@@ -221,14 +221,13 @@ class QPageView: UIViewController{
             tafseerView.ayaPosition = ayaButton.tag
         }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
     // MARK: - QPageView new methods
-
-
     
     func loadPageImage(){
         if let pageNumber = self.pageNumber {
@@ -256,8 +255,7 @@ class QPageView: UIViewController{
                 Utils.saveData(dir: imagesDir, file:imageName, data: data)
                 
                 if let downloadedImage = UIImage(data: data){
-                    //QPageView.cache.setObject(downloadedImage, forKey: fileName)
-                    //Apply the image data in the UI thread
+                    //Apply the image data in the UI thread (similar to javascript:window.setTimeout())
                     DispatchQueue.main.async() { () -> Void in
                         //Set the imageView source
                         self.pageImage.image = downloadedImage
@@ -288,7 +286,6 @@ class QPageView: UIViewController{
                 for(var button) in pageMap{
                     let btn = UIView()
                     btn.backgroundColor = Colors.ayaBtn
-                    //btn.alpha = 0.10
                     btn.layer.cornerRadius = 5
                     let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
                     btn.addGestureRecognizer(tap)
@@ -297,7 +294,7 @@ class QPageView: UIViewController{
                     btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)! - 1, aya: Int(button["aya"]!)! - 1)
                     self.buttonsView.addSubview(btn)
                 }
-                print ("createAyatButtons-> pg:\(pageNumber) count:\(pageMap.count)")
+                //print ("createAyatButtons-> pg:\(pageNumber) count:\(pageMap.count)")
             }
         }
     }
@@ -305,23 +302,23 @@ class QPageView: UIViewController{
     func positionAyatButtons(){
         let containerView = self.buttonsView!
         let imageRect = containerView.frame
-        let line_height = CGFloat(imageRect.size.height / 15)
-        let line_width = CGFloat(imageRect.size.width)
+        let lineHeight = CGFloat(imageRect.size.height / 15)
+        let lineWidth = CGFloat(imageRect.size.width)
         
         //print ( "positionAyatButton-> pg: \(self.pageNumber!), h: \(line_height), w: \(line_width) " )
 
         if let pageMap = self.pageMap{
-            let button_width = CGFloat(line_width/9.65)
+            let buttonWidth = CGFloat(lineWidth/9.65)
             
             containerView.removeConstraints(containerView.constraints)//remove existing constraints
             
             for(index, btn) in containerView.subviews.enumerated(){
-                let button = pageMap[index]
-                let eline = CGFloat(Float(button["eline"]!)!)
-                let epos = CGFloat(Float(button["epos"]!)!)
-                let xpos = CGFloat( epos * line_width / 1000 - button_width )
+                let btnMapInfo = pageMap[index]
+                let eline = CGFloat( Float(btnMapInfo["eline"]!)! )
+                let epos = CGFloat( Float(btnMapInfo["epos"]!)! )
+                let xpos = CGFloat( epos * lineWidth / 1000 - buttonWidth )
                 let ypos = CGFloat( eline * CGFloat(imageRect.size.height) / 15 )
-                var rect = CGRect(x: xpos, y: ypos, width: button_width, height: line_height)
+                var rect = CGRect(x: xpos, y: ypos, width: buttonWidth, height: lineHeight)
                 rect = rect.insetBy(dx: 3, dy: 3)
                 
                 containerView.addSimpleConstraints("H:|-\(rect.origin.x)-[v0(\(rect.size.width))]", views: btn)
@@ -351,8 +348,7 @@ class QPageView: UIViewController{
         if let buttonsView = self.buttonsView{
             for(_, btn) in buttonsView.subviews.enumerated(){
                 let ayaId = btn.tag
-                let bgAlpha:CGFloat = (ayaId == MaskStart) ? 1 : 0.17
-                btn.backgroundColor = UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: bgAlpha)
+                btn.backgroundColor = (ayaId == MaskStart) ? Colors.maskedAyaBtn : Colors.ayaBtn
                 if let txtBtn = btn as? UITextView{
                     txtBtn.textColor = ayaId == MaskStart ? .white : .brown
                 }

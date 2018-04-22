@@ -7,15 +7,22 @@
 //
 
 import UIKit
+import Firebase
+import GoogleSignIn
 
 class HomeViewController: UITabBarController
     ,UITabBarControllerDelegate
     ,UIPopoverPresentationControllerDelegate
-    {
+    ,GIDSignInDelegate
+    ,GIDSignInUIDelegate
+{
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        // GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().signInSilently()
     }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
@@ -63,8 +70,16 @@ class HomeViewController: UITabBarController
     @IBAction func openActions(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let login = UIAlertAction(title: "Login", style: .default) { (action) in
-            print(action)
+        //TODO: change the title according to signin status
+        var login:UIAlertAction?
+        if let _ = Auth.auth().currentUser {
+            login = UIAlertAction(title: "Sign Out", style: .default) { (action) in
+                GIDSignIn.sharedInstance().signOut()
+            }
+        }else{
+            login = UIAlertAction(title: "Sign In", style: .default) { (action) in
+                GIDSignIn.sharedInstance().signIn()
+            }
         }
         let changeLanguage = UIAlertAction(title: "Change Language", style: .default) { (action) in
             print(action)
@@ -74,13 +89,23 @@ class HomeViewController: UITabBarController
             print(action)
         }
 
-        alert.addAction(login)
+        alert.addAction(login!)
         alert.addAction(changeLanguage)
         alert.addAction(close)
         self.present(alert, animated: true) {
             print( "Alert Show animation completed" )
         }
     }
+
+    // MARK: - GIDSignInDelegate methods
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if let _ = user{
+            print( "HomeViewController Signed IN!!" )
+        }else{
+            print( "Not Signed In" )
+        }
+    }
+
     
     /*
     // MARK: - Navigation

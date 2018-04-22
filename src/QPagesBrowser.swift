@@ -88,7 +88,7 @@ class QPagesBrowser: UIViewController
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
 
     override func viewWillAppear(_ animated: Bool) {
-        print("QPagesBrowser willAppear")
+        //print("QPagesBrowser willAppear")
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchOpenAya),

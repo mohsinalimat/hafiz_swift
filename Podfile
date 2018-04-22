@@ -7,5 +7,6 @@ target 'quran_hafiz' do
 
   # Pods for quran_hafiz
   pod 'Firebase/Core'
-
+  pod 'Firebase/Auth'
+  pod 'GoogleSignIn'
 end

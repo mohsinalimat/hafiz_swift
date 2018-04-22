@@ -7,15 +7,15 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class MainViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
-//        self.navigationController?.navigationBar.backgroundColor = .red
-//        self.view.backgroundColor = nil
+        //GIDSignIn.sharedInstance().uiDelegate = self
+        //GIDSignIn.sharedInstance().signInSilently()
     }
 
     override func didReceiveMemoryWarning() {
