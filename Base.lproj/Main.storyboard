@@ -898,7 +898,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" restorationIdentifier="suraName" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oGq-2Z-yCC">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oGq-2Z-yCC">
                                             <rect key="frame" x="15" y="12" width="99.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -930,7 +930,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" restorationIdentifier="suraName" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NCk-k9-21j">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NCk-k9-21j">
                                             <rect key="frame" x="15" y="12" width="99.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1009,11 +1009,11 @@
         <image name="Menu 2 Filled" width="25" height="25"/>
         <image name="Timer" width="25" height="25"/>
         <image name="close" width="25" height="25"/>
-        <image name="index_item_background" width="19" height="19"/>
+        <image name="index_item_background" width="17" height="17"/>
         <image name="left_page" width="33" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="FTj-05-K0G"/>
-        <segue reference="ain-zt-Gaq"/>
+        <segue reference="3aA-4e-oWN"/>
     </inferredMetricsTieBreakers>
 </document>

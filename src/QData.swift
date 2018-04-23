@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 typealias AyaInfo = (sura:Int, aya:Int, page:Int)
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
@@ -461,5 +462,23 @@ class QData{
             return (page: pageIndex, position: .last)
         }
         return (page: pageIndex, position: .inside)
+    }
+    
+    static func bookmarks(_ block: @escaping (NSDictionary?)->Void ) {
+        if let userID = Auth.auth().currentUser?.uid {
+            let ref = Database.database().reference()
+            let bookmarks = ref.child("data/\(userID)/page_marks").queryOrderedByValue() //value is the reversed timestamp
+            
+            bookmarks.observeSingleEvent(of: .value, with: {(snapshot) in
+                block(snapshot.value as? NSDictionary)
+            }) { (error) in
+                print( error )
+                block(nil)
+            }
+        }
+        else{
+            print( "Not authenticated" )
+            block(nil)
+        }
     }
 }

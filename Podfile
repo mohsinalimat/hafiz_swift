@@ -6,7 +6,9 @@ target 'quran_hafiz' do
   use_frameworks!
 
   # Pods for quran_hafiz
+  pod 'Firebase'
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
+  pod 'Firebase/Database'
   pod 'GoogleSignIn'
 end

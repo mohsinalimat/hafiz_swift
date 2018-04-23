@@ -11,6 +11,8 @@ import UIKit
 
 class BookmarksViewController: UITableViewController {
 
+    var pageMarks:[Any]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Preserve selection between presentations
@@ -19,6 +21,12 @@ class BookmarksViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .blue
+        QData.bookmarks({(list) in
+            if let pageMarks = list {
+                self.pageMarks = pageMarks.allKeys//TODO: preserve the sorting, collect keys using enumerated()
+                self.tableView.reloadData()
+            }
+        })
     }
 
     
@@ -36,24 +44,25 @@ class BookmarksViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //return the number of rows (Quran parts)
-        return 30
+        if let pageMarks = self.pageMarks{
+            return pageMarks.count
+        }
+        return 0
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
-
-        // Configure the cell...
-        let rowIndex = indexPath.row
-        cell.textLabel!.text = String(format:NSLocalizedString("Part", comment:""),rowIndex+1)
-
         let qData = QData.instance()
-        let pageNum = qData.pageIndex( partIndex: rowIndex ) + 1
-        let suraNum = qData.suraIndex( partIndex: rowIndex ) + 1
-        let suraName = qData.suraName( suraIndex: suraNum-1)
-        let partDetails = String(format:NSLocalizedString("PartInfo", comment: ""), pageNum, suraNum, suraName!)
-        cell.detailTextLabel!.text = partDetails
-        cell.tag = pageNum //for segue use
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
+        let rowIndex = indexPath.row
+        if let pageMarks = self.pageMarks{
+            let pageIndex = Int(pageMarks[rowIndex] as! String)!
+            let suraIndex = qData.suraIndex(pageIndex: pageIndex)
+            let suraName = qData.suraName(suraIndex: suraIndex)!
+            cell.textLabel!.text = suraName
+            cell.detailTextLabel!.text = String(format:NSLocalizedString("PartInfo", comment: ""), pageIndex+1, suraIndex+1, suraName)
+            cell.tag = pageIndex + 1 //for segue use
+        }
         
         return cell
     }
