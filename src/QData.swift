@@ -185,10 +185,12 @@ class QData{
     }
     
     func partIndex(pageIndex: Int) -> Int{
+        let pageNumber = pageIndex+1
         
         for (n,pInfo) in self.partInfo!.enumerated() {
-            if let pNumber = pInfo["p"] {
-                if pNumber-1 >= pageIndex {
+            if let pStartPage = pInfo["p"], let pEndPage = pInfo["ep"] {
+                
+                if pageNumber >= pStartPage && pageNumber <= pEndPage {
                     return n
                 }
             }

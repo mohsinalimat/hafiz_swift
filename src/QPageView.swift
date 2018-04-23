@@ -64,6 +64,7 @@ class QPageView: UIViewController{
     @IBOutlet var pageTapGesture: UITapGestureRecognizer!
     @IBOutlet weak var buttonsView: LayerView!
     @IBOutlet weak var pageScroller: UIScrollView!
+    @IBOutlet weak var pageBackground: UIImageView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
@@ -190,6 +191,10 @@ class QPageView: UIViewController{
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.positionMask(followPage: false)
             self.viewDidLayoutSubviews()
+        }
+        if let pageNumber = self.pageNumber {
+            let bgImage = (pageNumber % 2 == 0) ? "left_page" : "right_page"
+            pageBackground.image = UIImage(named: bgImage)!
         }
     }
     

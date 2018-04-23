@@ -23,6 +23,7 @@ class HomeViewController: UITabBarController
         // GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signInSilently()
+        //navigationController?.navigationBar.topItem?.title = tabBar.selectedItem?.title
     }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
@@ -62,7 +63,7 @@ class HomeViewController: UITabBarController
     
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if let title = item.title{
-            print (title)
+            navigationController!.navigationBar.topItem?.title = title
         }
     }
     

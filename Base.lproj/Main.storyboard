@@ -84,7 +84,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="H8g-Fi-5Fr" userLabel="width = 40"/>
                                         </constraints>
-                                        <state key="normal" image="icons8-Menu 2 Filled"/>
+                                        <state key="normal" image="Menu 2 Filled"/>
                                         <connections>
                                             <action selector="showMenu:" destination="703-4V-yAM" eventType="touchUpInside" id="4mv-Te-kt1"/>
                                         </connections>
@@ -354,6 +354,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="left_page" translatesAutoresizingMaskIntoConstraints="NO" id="GsP-mw-ZgN" userLabel="pageBackground">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
                             <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nPN-Xg-4mg" userLabel="Scroller">
                                 <rect key="frame" x="8" y="0.0" width="304" height="568"/>
                                 <subviews>
@@ -362,7 +365,6 @@
                                         <subviews>
                                             <imageView contentMode="redraw" semanticContentAttribute="forceRightToLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="foT-G9-mTN" userLabel="quranPageImage">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="quranPage"/>
                                                 <gestureRecognizers/>
                                                 <connections>
@@ -468,7 +470,6 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="568"/>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="7jv-Tt-otI" firstAttribute="centerX" secondItem="xth-OK-GBf" secondAttribute="centerX" id="9m9-zX-6Cz"/>
                                             <constraint firstAttribute="trailing" secondItem="bhi-gQ-9oN" secondAttribute="trailing" id="F3z-Ca-CkM"/>
@@ -524,6 +525,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="width" secondItem="ZwX-cT-FIQ" secondAttribute="width" constant="-16" id="1A1-wQ-7hb"/>
+                            <constraint firstItem="GsP-mw-ZgN" firstAttribute="top" secondItem="ZwX-cT-FIQ" secondAttribute="top" id="3Is-X3-FBB"/>
+                            <constraint firstItem="GsP-mw-ZgN" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="ADv-5Q-oKX"/>
+                            <constraint firstItem="GsP-mw-ZgN" firstAttribute="bottom" secondItem="EPS-s9-h4K" secondAttribute="top" id="EIa-tW-RJx"/>
+                            <constraint firstItem="GsP-mw-ZgN" firstAttribute="leading" secondItem="ZwX-cT-FIQ" secondAttribute="leading" id="Fax-zV-LYj"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="Y6m-bQ-n7V"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="height" secondItem="ZwX-cT-FIQ" secondAttribute="height" id="mjf-18-bGA"/>
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="centerY" secondItem="ZwX-cT-FIQ" secondAttribute="centerY" id="nZU-kn-CJq"/>
@@ -539,6 +544,7 @@
                         <outlet property="maskHead" destination="twD-Hm-5Yj" id="Xi6-K6-Ai2"/>
                         <outlet property="maskHeadHeight" destination="AgW-KI-1tc" id="HyS-yD-4sZ"/>
                         <outlet property="maskHeadStartX" destination="LGF-VM-sh5" id="ezw-Op-50r"/>
+                        <outlet property="pageBackground" destination="GsP-mw-ZgN" id="HuI-ah-Pc6"/>
                         <outlet property="pageImage" destination="foT-G9-mTN" id="nG3-sL-IHb"/>
                         <outlet property="pageLoadingIndicator" destination="Pf1-Oh-TKB" id="L7d-4I-77B"/>
                         <outlet property="pageScroller" destination="nPN-Xg-4mg" id="52v-mA-Zrp"/>
@@ -588,7 +594,31 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="218" y="498"/>
+            <point key="canvasLocation" x="217.5" y="497.53521126760563"/>
+        </scene>
+        <!--Login-->
+        <scene sceneID="vVF-Lc-orT">
+            <objects>
+                <viewController id="mGt-c5-pkX" userLabel="Login" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cwd-bh-4FB"/>
+                        <viewControllerLayoutGuide type="bottom" id="fwP-zZ-XKD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XJm-Vv-dE3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="index_item_background" translatesAutoresizingMaskIntoConstraints="NO" id="twl-q9-0j3">
+                                <rect key="frame" x="40" y="220" width="196" height="63"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tvc-ID-dV0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1681.875" y="-1050"/>
         </scene>
         <!--Home-->
         <scene sceneID="QlN-bz-lYQ">
@@ -759,7 +789,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icons8-Bookmark Ribbon" id="HWn-Cb-ugU">
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="Bookmark Filled" id="HWn-Cb-ugU">
                                             <rect key="frame" x="16" y="9" width="25" height="25"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </imageView>
@@ -775,7 +805,16 @@
                             <outlet property="delegate" destination="BUi-sJ-PCq" id="ODi-oh-M2Y"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" selectedImage="icons8-Bookmark Ribbon" systemItem="bookmarks" id="OmZ-xV-id9"/>
+                    <tabBarItem key="tabBarItem" title="Bookmarks" image="Bookmark Filled" id="OmZ-xV-id9">
+                        <attributedString key="userComments">
+                            <fragment content="Bookmark Tab Title">
+                                <attributes>
+                                    <font key="NSFont" metaFont="smallSystem"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                    </tabBarItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeK-gX-SeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -811,7 +850,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icons8-Bookmark Ribbon" id="WiX-PG-9wu">
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="Bookmark Empty" id="WiX-PG-9wu">
                                             <rect key="frame" x="16" y="9" width="25" height="25"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </imageView>
@@ -828,7 +867,16 @@
                             <outlet property="delegate" destination="jHV-wq-GPS" id="2MI-d0-ZjJ"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Parts" image="icons8-Bookmark" selectedImage="icons8-Bookmark" id="65I-Ql-lB2"/>
+                    <tabBarItem key="tabBarItem" title="Parts" image="Timer" selectedImage="Timer" id="65I-Ql-lB2">
+                        <attributedString key="userComments">
+                            <fragment content="Parts tab title">
+                                <attributes>
+                                    <font key="NSFont" metaFont="smallSystem"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                    </tabBarItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnA-In-VyK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -843,7 +891,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Sura Info" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sura Info" textLabel="oGq-2Z-yCC" detailTextLabel="t44-l6-cGh" imageView="xUl-Yj-zkn" style="IBUITableViewCellStyleValue1" id="WPr-2o-JMI">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SuraStart" selectionStyle="default" indentationWidth="10" reuseIdentifier="SuraStart" textLabel="oGq-2Z-yCC" detailTextLabel="t44-l6-cGh" imageView="xUl-Yj-zkn" style="IBUITableViewCellStyleValue1" id="WPr-2o-JMI" userLabel="SuraStart">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WPr-2o-JMI" id="Jyz-9c-Fdz">
@@ -851,7 +899,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" restorationIdentifier="suraName" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oGq-2Z-yCC">
-                                            <rect key="frame" x="56" y="12" width="99.5" height="20.5"/>
+                                            <rect key="frame" x="15" y="12" width="99.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -864,7 +912,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icons8-Bookmark" id="xUl-Yj-zkn">
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xUl-Yj-zkn">
                                             <rect key="frame" x="16" y="9" width="25" height="25"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </imageView>
@@ -875,6 +923,38 @@
                                     <segue destination="703-4V-yAM" kind="show" identifier="IndexOpenSura" id="ain-zt-Gaq"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SuraResume" selectionStyle="default" indentationWidth="10" reuseIdentifier="SuraResume" textLabel="NCk-k9-21j" detailTextLabel="xsr-RL-NTD" imageView="WWX-lK-b2r" style="IBUITableViewCellStyleValue1" id="dRh-lk-OVg">
+                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRh-lk-OVg" id="Paq-OJ-FAE">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" restorationIdentifier="suraName" text="Sura Name #" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NCk-k9-21j">
+                                            <rect key="frame" x="15" y="12" width="99.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xsr-RL-NTD">
+                                            <rect key="frame" x="260" y="12" width="44" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="WWX-lK-b2r">
+                                            <rect key="frame" x="16" y="9" width="25" height="25"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <connections>
+                                    <segue destination="703-4V-yAM" kind="show" id="7eF-O5-dQo"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
@@ -883,7 +963,16 @@
                         </connections>
                     </tableView>
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <tabBarItem key="tabBarItem" title="Index" image="icons8-List Filled" selectedImage="icons8-List Filled" id="1ru-mj-Mkc"/>
+                    <tabBarItem key="tabBarItem" title="Index" image="List Filled" selectedImage="List Filled" id="1ru-mj-Mkc">
+                        <attributedString key="userComments">
+                            <fragment content="Index tab title">
+                                <attributes>
+                                    <font key="NSFont" metaFont="smallSystem"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                    </tabBarItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Zs-PW-RVD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -914,14 +1003,17 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Bookmark Empty" width="25" height="25"/>
+        <image name="Bookmark Filled" width="25" height="25"/>
+        <image name="List Filled" width="25" height="25"/>
+        <image name="Menu 2 Filled" width="25" height="25"/>
+        <image name="Timer" width="25" height="25"/>
         <image name="close" width="25" height="25"/>
-        <image name="icons8-Bookmark" width="25" height="25"/>
-        <image name="icons8-Bookmark Ribbon" width="25" height="25"/>
-        <image name="icons8-List Filled" width="25" height="25"/>
-        <image name="icons8-Menu 2 Filled" width="25" height="25"/>
+        <image name="index_item_background" width="19" height="19"/>
+        <image name="left_page" width="33" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="FTj-05-K0G"/>
-        <segue reference="3aA-4e-oWN"/>
+        <segue reference="ain-zt-Gaq"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -1,6 +1,60 @@
 
-/* Class = "UIViewController"; title = "Browser"; ObjectID = "703-4V-yAM"; */
-"703-4V-yAM.title" = "متصفح";
+/* Class = "UITabBarItem"; title = "Index"; ObjectID = "1ru-mj-Mkc"; Note = "Index tab title"; */
+"1ru-mj-Mkc.title" = "الفهرس";
+
+/* Class = "UIButton"; normalTitle = "Button2"; ObjectID = "2B5-mV-VQG"; */
+"2B5-mV-VQG.normalTitle" = "Button2";
+
+/* Class = "UIButton"; normalTitle = ">>"; ObjectID = "2UJ-2K-SVB"; */
+"2UJ-2K-SVB.normalTitle" = ">>";
+
+/* Class = "UIButton"; normalTitle = "Button4"; ObjectID = "2qH-Ca-8c0"; */
+"2qH-Ca-8c0.normalTitle" = "Button4";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "4S3-hC-imE"; */
+"4S3-hC-imE.text" = "Title";
+
+/* Class = "UITabBarItem"; title = "Parts"; ObjectID = "65I-Ql-lB2"; Note = "Parts tab title"; */
+"65I-Ql-lB2.title" = "الأجزاء";
+
+/* Class = "UITableViewController"; title = "Bookmarks"; ObjectID = "BUi-sJ-PCq"; */
+"BUi-sJ-PCq.title" = "علامات";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "BcZ-EZ-Ktl"; */
+"BcZ-EZ-Ktl.text" = "Title";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "Gzp-9i-J0B"; */
+"Gzp-9i-J0B.text" = "Detail";
+
+/* Class = "UIButton"; normalTitle = "Button1"; ObjectID = "HNy-i3-6H8"; */
+"HNy-i3-6H8.normalTitle" = "Button1";
+
+/* Class = "UIButton"; normalTitle = "Button3"; ObjectID = "KW1-Lm-2Dd"; */
+"KW1-Lm-2Dd.normalTitle" = "Button3";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "M4V-CY-IJd"; */
+"M4V-CY-IJd.text" = "Subtitle";
+
+/* Class = "UINavigationItem"; title = "Home"; ObjectID = "MHQ-W5-P5q"; */
+"MHQ-W5-P5q.title" = "المدخل";
+
+/* Class = "UIButton"; normalTitle = "<< Next"; ObjectID = "N6s-jL-Je1"; */
+"N6s-jL-Je1.normalTitle" = "<< Next";
+
+/* Class = "UILabel"; text = "Sura Name #"; ObjectID = "NCk-k9-21j"; */
+"NCk-k9-21j.text" = "Sura Name #";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "Okm-hp-4sU"; */
+"Okm-hp-4sU.text" = "Subtitle";
+
+/* Class = "UITabBarItem"; title = "Bookmarks"; ObjectID = "OmZ-xV-id9"; Note = "Bookmark Tab Title"; */
+"OmZ-xV-id9.title" = "علامات";
+
+/* Class = "UISearchBar"; PqC-id-iya.scopeButtonTitles[0] = "Title"; ObjectID = "PqC-id-iya"; */
+"PqC-id-iya.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; PqC-id-iya.scopeButtonTitles[1] = "Title"; ObjectID = "PqC-id-iya"; */
+"PqC-id-iya.scopeButtonTitles[1]" = "Title";
 
 /* Class = "UIViewController"; title = "Page View"; ObjectID = "S4R-Ja-viH"; */
 "S4R-Ja-viH.title" = "عرض الصفحة";
@@ -8,14 +62,33 @@
 /* Class = "UITableViewController"; title = "Quran Index"; ObjectID = "UuV-Ke-L9r"; */
 "UuV-Ke-L9r.title" = "فهرس السور";
 
-/* Class = "UILabel"; text = "Page Number"; ObjectID = "cF2-Le-7mQ"; */
-"cF2-Le-7mQ.text" = "رقم الصفحة";
+/* Class = "UIButton"; normalTitle = "<<"; ObjectID = "YF8-bP-TUs"; */
+"YF8-bP-TUs.normalTitle" = "<<";
 
-/* Class = "UINavigationItem"; title = "Reading"; ObjectID = "cqr-3I-KYN"; */
-"cqr-3I-KYN.title" = "قراءة";
+/* Class = "UINavigationItem"; title = "Sura Name"; ObjectID = "cuz-mW-wfp"; */
+"cuz-mW-wfp.title" = "Sura Name";
+
+/* Class = "UIButton"; normalTitle = "Previous >>"; ObjectID = "gNU-SZ-zXv"; */
+"gNU-SZ-zXv.normalTitle" = "Previous >>";
+
+/* Class = "UIButton"; normalTitle = "<<"; ObjectID = "huS-jI-2Ou"; */
+"huS-jI-2Ou.normalTitle" = "<<";
 
 /* Class = "UILabel"; text = "Sura Name #"; ObjectID = "oGq-2Z-yCC"; */
 "oGq-2Z-yCC.text" = "سورة #";
 
-/* Class = "UINavigationItem"; title = "Quran Index"; ObjectID = "qA5-Dq-stA"; */
-"qA5-Dq-stA.title" = "الفهرس";
+/* Class = "UILabel"; text = "Detail"; ObjectID = "t44-l6-cGh"; */
+"t44-l6-cGh.text" = "Detail";
+
+/* Class = "UILabel"; text = "Sura"; ObjectID = "tXa-kd-M9t"; */
+"tXa-kd-M9t.text" = "Sura";
+
+/* Class = "UINavigationController"; title = "AppNavigation"; ObjectID = "uE6-fb-nNK"; */
+"uE6-fb-nNK.title" = "AppNavigation";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "xsr-RL-NTD"; */
+"xsr-RL-NTD.text" = "Detail";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "y6m-Vw-RfU"; */
+"y6m-Vw-RfU.text" = "Title";
+

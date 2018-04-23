@@ -46,6 +46,7 @@
 		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
 		2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		2D6A718B208D86E20012A67B /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
 		2D7B728E2079D7DC002273A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/normalized_quran.plist; sourceTree = "<group>"; };
 		2D7B72912079DD0C002273A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/quran_text.plist; sourceTree = "<group>"; };
 		2D7F5F631F04BDA40076316B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,7 +58,6 @@
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
-		2DCEFD831F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
 		2DCEFD841F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		2DCEFD971F32EC8700EAC321 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2DCEFD991F32EC9C00EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -404,7 +404,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				2D7F5F6C1F04BDA40076316B /* Base */,
-				2DCEFD831F305D7600EAC321 /* ar-EG */,
+				2D6A718B208D86E20012A67B /* ar-EG */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
