@@ -15,7 +15,7 @@
 "4S3-hC-imE.text" = "Title";
 
 /* Class = "UITabBarItem"; title = "Parts"; ObjectID = "65I-Ql-lB2"; Note = "Parts tab title"; */
-"65I-Ql-lB2.title" = "الأجزاء";
+"65I-Ql-lB2.title" = "محفوظات";
 
 /* Class = "UITableViewController"; title = "Bookmarks"; ObjectID = "BUi-sJ-PCq"; */
 "BUi-sJ-PCq.title" = "علامات";

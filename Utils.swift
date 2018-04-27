@@ -44,6 +44,17 @@ class Utils {
         return nil
     }
     
+    //Not working as expected, not detecting missing files
+    static func fileExists(dir:String, file:String)->URL?{
+        if let fileURL = pathURL(dir: dir, file:file){
+            
+            if FileManager.default.fileExists(atPath: fileURL.path){
+                return fileURL
+            }
+        }
+        return nil
+    }
+    
     static func saveData(dir:String, file:String, data:Data){
         let fileManager = FileManager.default
         if let dirURL = pathURL(dir:dir, file: nil), let fileURL = pathURL(dir:dir, file:file) {
@@ -60,11 +71,7 @@ class Utils {
     }
     
     static func readData(dir:String, file:String)->Data?{
-        if let fileURL = pathURL(dir: dir, file:file){
-            
-            if !FileManager.default.fileExists(atPath: fileURL.path){
-                return nil
-            }
+        if let fileURL = fileExists(dir: dir, file:file){
             
             do{
                 let data = try Data(contentsOf: fileURL)

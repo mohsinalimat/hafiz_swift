@@ -12,6 +12,7 @@ import Firebase
 typealias AyaInfo = (sura:Int, aya:Int, page:Int)
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
 typealias AyaRecord = (sura:String,aya: String, aya_text: String, page: String)
+typealias HifzRange = (sura:Int, page:Int, count:Int, age:Double, revs:Int)
 
 
 class QData{
@@ -464,13 +465,18 @@ class QData{
         return (page: pageIndex, position: .inside)
     }
     
-    static func bookmarks(_ block: @escaping (NSDictionary?)->Void ) {
+    static func bookmarks(_ block: @escaping ([Int]?)->Void ) {
         if let userID = Auth.auth().currentUser?.uid {
             let ref = Database.database().reference()
+            ref.keepSynced(true)
             let bookmarks = ref.child("data/\(userID)/page_marks").queryOrderedByValue() //value is the reversed timestamp
             
             bookmarks.observeSingleEvent(of: .value, with: {(snapshot) in
-                block(snapshot.value as? NSDictionary)
+                var list:[Int] = []
+                for child in snapshot.children.allObjects as! [DataSnapshot]{
+                    list.append(Int(child.key)!)
+                }
+                block(list)
             }) { (error) in
                 print( error )
                 block(nil)
@@ -480,5 +486,41 @@ class QData{
             print( "Not authenticated" )
             block(nil)
         }
+    }
+    
+    static func hifzList(_ block: @escaping([HifzRange]?)->Void ){
+        if let userID = Auth.auth().currentUser?.uid {
+            let ref = Database.database().reference()
+            ref.keepSynced(true)
+            let hifzRanges = ref.child("data/\(userID)/hifz").queryOrdered(byChild: "ts")
+            
+            hifzRanges.observeSingleEvent(of: .value, with: {(snapshot) in
+                var list:[HifzRange] = []
+                for child in snapshot.children.allObjects as! [DataSnapshot]{
+                    if let info = child.value as? NSDictionary{
+                        let pageAndSura:String = child.key
+                        let page = Int(pageAndSura.prefix(3))!
+                        let sura = Int(pageAndSura.suffix(3))!
+                        let ts = info["ts"] as! Double / 1000 //seconds since 1970
+                        let dt = Date(timeIntervalSince1970: ts)
+                        let age = Date().timeIntervalSince( dt ) / 60 / 60 / 24 //days since last review
+                        //print ( "Now=\(Date()), ts=\(ts), Date=\(dt), age=\(age)")
+                        let pages = info["pages"] as! Int
+                        let revs = info["revs"] as! Int
+                        let range = HifzRange(sura:sura, page:page, count:pages, age:age, revs:revs)
+                        list.append(range)
+                    }
+                }
+                block(list)
+            }) { (error) in
+                print( error )
+                block(nil)
+            }
+        }
+        else{
+            print( "Not authenticated" )
+            block(nil)
+        }
+
     }
 }

@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-        // [START setup_gidsignin]
+        Database.database().isPersistenceEnabled = true
+        
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
         
-        // [END setup_gidsignin]
         
         return true
     }

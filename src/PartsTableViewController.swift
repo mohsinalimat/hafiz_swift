@@ -11,16 +11,34 @@ import UIKit
 
 class PartsTableViewController: UITableViewController {
 
+    var hifzRanges:[HifzRange]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
-
+        
+        let refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+    }
+    
+    @objc func onRefresh(){
+        QData.hifzList({(ranges) in
+            self.hifzRanges = ranges
+            self.tableView.reloadData()
+            self.tableView.refreshControl!.endRefreshing()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .brown
+        onRefresh()
+//        QData.hifzList({(ranges) in
+//            self.hifzRanges = ranges
+//            self.tableView.reloadData()
+//        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,24 +54,28 @@ class PartsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return the number of rows (Quran parts)
-        return 30
+        if let hifzRanges = self.hifzRanges {
+            return hifzRanges.count
+        }
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Part Cell", for: indexPath)
 
-        // Configure the cell...
-        let rowIndex = indexPath.row
-        cell.textLabel!.text = String(format:NSLocalizedString("Part", comment:""),rowIndex+1)
+        if let hifzRanges = self.hifzRanges {
+            // Populate cell data...
+            let rowIndex = indexPath.row
+            let hRange = hifzRanges[rowIndex]
+            let qData = QData.instance()
 
-        let qData = QData.instance()
-        let pageNum = qData.pageIndex( partIndex: rowIndex ) + 1
-        let suraNum = qData.suraIndex( partIndex: rowIndex ) + 1
-        let suraName = qData.suraName( suraIndex: suraNum-1)
-        let partDetails = String(format:NSLocalizedString("PartInfo", comment: ""), pageNum, suraNum, suraName!)
-        cell.detailTextLabel!.text = partDetails
-        cell.tag = pageNum //for segue use
+            cell.textLabel!.text = qData.suraName(suraIndex: hRange.sura)
+            cell.detailTextLabel!.text = "\(hRange.count) pages from page \(hRange.page)"
+            cell.tag = hRange.page + 1 //for segue use
+        }else{
+            //TODO: if not logged in, show login required message
+            cell.textLabel!.text = "Loading..."
+        }
         
         return cell
     }

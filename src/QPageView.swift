@@ -239,15 +239,16 @@ class QPageView: UIViewController{
             let imagesDir = "qpages_1260"
             let imageName = String(format: "page%03d.png", pageNumber)
             
-            if let cachedData = Utils.readData(dir: imagesDir, file: imageName) {
-                self.pageImage.image = UIImage(data:cachedData)
+            pageLoadingIndicator.startAnimating()
+
+            if let fileURL = Utils.pathURL(dir: imagesDir, file: imageName),
+                let image = UIImage(contentsOfFile: fileURL.path) {
+                pageImage.image = image
                 self.pageLoadingIndicator.stopAnimating()
                 return
             }
-
+            
             let imageUrl = URL(string:"http://www.egylist.com/\(imagesDir)/\(imageName)")!
-
-            pageLoadingIndicator.startAnimating()
 
             Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
                 
@@ -325,6 +326,7 @@ class QPageView: UIViewController{
                 let ypos = CGFloat( eline * CGFloat(imageRect.size.height) / 15 )
                 var rect = CGRect(x: xpos, y: ypos, width: buttonWidth, height: lineHeight)
                 rect = rect.insetBy(dx: 3, dy: 3)
+                btn.layer.cornerRadius = rect.width * 0.1905 //trying to find the golden ratio
                 
                 containerView.addSimpleConstraints("H:|-\(rect.origin.x)-[v0(\(rect.size.width))]", views: btn)
                 containerView.addSimpleConstraints("V:|-\(rect.origin.y)-[v0(\(rect.size.height))]", views: btn)

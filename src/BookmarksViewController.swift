@@ -11,22 +11,42 @@ import UIKit
 
 class BookmarksViewController: UITableViewController {
 
-    var pageMarks:[Any]?
+    var pageMarks:[Int]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = false
+        let refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+    }
+    
+    @objc func onRefresh(){
+        QData.bookmarks({(list) in
+            if let pageMarks = list {
+                self.pageMarks = []
+                for page in pageMarks{
+                    self.pageMarks!.append(page)
+                }
+                self.tableView.reloadData()
+                self.tableView.refreshControl!.endRefreshing()
+            }
+        })
     }
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .blue
-        QData.bookmarks({(list) in
-            if let pageMarks = list {
-                self.pageMarks = pageMarks.allKeys//TODO: preserve the sorting, collect keys using enumerated()
-                self.tableView.reloadData()
-            }
-        })
+        onRefresh()
+//        QData.bookmarks({(list) in
+//            if let pageMarks = list {
+//                self.pageMarks = []
+//                for page in pageMarks{
+//                    self.pageMarks!.append(page)
+//                }
+//                self.tableView.reloadData()
+//            }
+//        })
     }
 
     
@@ -38,16 +58,14 @@ class BookmarksViewController: UITableViewController {
     // MARK: - Table view data source delegates
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        //return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return the number of rows (Quran parts)
         if let pageMarks = self.pageMarks{
             return pageMarks.count
         }
-        return 0
+        return 1
     }
 
     
@@ -56,12 +74,14 @@ class BookmarksViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
         let rowIndex = indexPath.row
         if let pageMarks = self.pageMarks{
-            let pageIndex = Int(pageMarks[rowIndex] as! String)!
+            let pageIndex = pageMarks[rowIndex]
             let suraIndex = qData.suraIndex(pageIndex: pageIndex)
             let suraName = qData.suraName(suraIndex: suraIndex)!
             cell.textLabel!.text = suraName
             cell.detailTextLabel!.text = String(format:NSLocalizedString("PartInfo", comment: ""), pageIndex+1, suraIndex+1, suraName)
             cell.tag = pageIndex + 1 //for segue use
+        }else{
+            cell.textLabel!.text = "Loading..."
         }
         
         return cell
