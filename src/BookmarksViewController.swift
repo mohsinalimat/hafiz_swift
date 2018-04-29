@@ -20,10 +20,16 @@ class BookmarksViewController: UITableViewController {
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        loadData()
     }
     
     @objc func onRefresh(){
-        QData.bookmarks({(list) in
+        loadData(sync:true)
+    }
+    
+    func loadData(sync: Bool = false){
+        
+        QData.bookmarks(sync:sync){(list) in
             if let pageMarks = list {
                 self.pageMarks = []
                 for page in pageMarks{
@@ -32,12 +38,12 @@ class BookmarksViewController: UITableViewController {
                 self.tableView.reloadData()
                 self.tableView.refreshControl!.endRefreshing()
             }
-        })
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .blue
-        onRefresh()
 //        QData.bookmarks({(list) in
 //            if let pageMarks = list {
 //                self.pageMarks = []

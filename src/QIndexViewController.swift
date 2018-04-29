@@ -107,4 +107,12 @@ class QIndexViewController: UITableViewController{
         }
         
     }
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        var titles = [String]()
+        for n in 1...30 {
+            titles.append(String(n))
+        }
+        return titles
+    }
 }

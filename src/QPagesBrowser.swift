@@ -79,21 +79,32 @@ class QPagesBrowser: UIViewController
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        navigationController?.navigationBar.isHidden = true
+        hideNavBar()
     }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
 
     override func viewWillAppear(_ animated: Bool) {
         //print("QPagesBrowser willAppear")
-        NotificationCenter.default.addObserver(
+        hideNavBar()
+        
+        let nCenter = NotificationCenter.default
+        nCenter.addObserver(
             self,
             selector: #selector(searchOpenAya),
             name: searchOpenAyaNotification,
             object: nil
         )
-        navigationController?.navigationBar.isHidden = true
+        
+        nCenter.addObserver(
+            self,
+            selector: #selector(onDeviceRotated),
+            name: NSNotification.Name.UIDeviceOrientationDidChange,
+            object: nil
+        )
+        hideNavBar()
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
 
         
         // setting the hidesBarsOnSwift property to false
@@ -107,7 +118,7 @@ class QPagesBrowser: UIViewController
 
     override func viewWillDisappear(_ animated: Bool) {
         print("QPagesBrowser willDisappear")
-        navigationController?.navigationBar.isHidden = true
+        hideNavBar()
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -119,8 +130,15 @@ class QPagesBrowser: UIViewController
     
     // MARK: - New class methods
 
+    func gotoPage(pageNum:Int){
+        let _ = checkGotoPage(pageNum: pageNum)
+    }
 
-    func gotoPage( pageNum: Int )->Bool{
+    func gotoPage(ayaPos:Int){
+        let _ = checkGotoPage(ayaPos: ayaPos)
+    }
+
+    func checkGotoPage( pageNum: Int )->Bool{
         let currPageIndex = currentPageIndx()
         
         if  (currPageIndex+1 != pageNum),
@@ -154,11 +172,12 @@ class QPagesBrowser: UIViewController
         return false
     }
 
-    func gotoPage(ayaPos:Int)->Bool{
+    func checkGotoPage(ayaPos:Int)->Bool{
         let qData = QData.instance()
         let selectionPage = qData.pageIndex(ayaPosition: ayaPos)
         if selectionPage != self.currentPageIndx(){
-            return gotoPage(pageNum: selectionPage+1)
+            //TODO: scroll to ayaPos
+            return checkGotoPage(pageNum: selectionPage+1)
         }
         return false
     }
@@ -238,23 +257,20 @@ class QPagesBrowser: UIViewController
     @IBOutlet var menuItems: UIView!
     
     @IBAction func onPageTap(_ sender: Any) {
-        if (navigationController?.navigationBar.isHidden)! {
-            //show the navbar
-            navigationController?.navigationBar.isHidden = false
-        }else{
-            navigationController?.navigationBar.isHidden = true
-        }
+        hideNavBar( navigationController?.navigationBar.isHidden == false)
     }
-    
     
     @IBAction func showMenu(_ sender: Any) {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let startRevise = UIAlertAction(title: "Revise", style: .default) { (action) in
-            let qData = QData.instance()
-            
-            self.setMaskStart( qData.ayaPosition(pageIndex: self.currentPageIndx()))
+            if SelectStart != -1 {
+                self.setMaskStart(SelectStart)
+            }else{
+                let qData = QData.instance()
+                self.setMaskStart( qData.ayaPosition(pageIndex: self.currentPageIndx()))
+            }
         }
 
         let search = UIAlertAction(title: "Search", style: .default) { (action) in
@@ -284,6 +300,12 @@ class QPagesBrowser: UIViewController
         }
     }
 
+    @objc func onDeviceRotated(){
+        if (SelectStart != -1), let currPageView = currentPageView(){
+            currPageView.scrollToSelectedAya()
+        }
+    }
+    
     @objc func searchOpenAya(vc: SearchViewController){
         print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
         let qData = QData.instance()
@@ -292,7 +314,7 @@ class QPagesBrowser: UIViewController
         if let currPageView = currentPageView(){
             currPageView.selectAya(aya: SelectStart)
         }
-        navigationController?.navigationBar.isHidden = true
+        hideNavBar()
     }
 
     @objc func hideMenu(){
@@ -304,10 +326,10 @@ class QPagesBrowser: UIViewController
             setMaskStart(-1)
         }
         else if SelectStart != -1 {
-            if gotoPage(ayaPos: SelectStart){
+            if checkGotoPage(ayaPos: SelectStart){
                 //If selection starts in different page, navigate to that page before hiding the selection
                 if let currPageView = self.currentPageView(){
-                    currPageView.positionSelection()
+                    currPageView.scrollToSelectedAya()
                 }
                 return
             }
@@ -371,8 +393,7 @@ class QPagesBrowser: UIViewController
             currPageView.pageTapGesture.isEnabled = ( ayaId != -1 )
         }
         
-        navigationController?.navigationBar.isHidden = true
-        
+        hideNavBar()
         updateTitle()
     }
     
@@ -389,13 +410,14 @@ class QPagesBrowser: UIViewController
     
     
     @IBAction func gotoNextSura(_ sender: Any) {
+        hideNavBar()
         if MaskStart != -1 {
             if let qPageView = currentPageView() {
                 qPageView.advanceMask(true)
             }
         }
         else if SelectStart != -1 {
-            if !gotoPage(ayaPos: SelectStart){
+            if !checkGotoPage(ayaPos: SelectStart){
                 if let currPageView = currentPageView(){
                     currPageView.selectAya( aya: SelectStart+1 )
                     gotoPage(ayaPos:SelectStart)
@@ -409,13 +431,14 @@ class QPagesBrowser: UIViewController
     }
     
     @IBAction func gotoPrevSura(_ sender: Any) {
+        hideNavBar()
         if MaskStart != -1 {
             if let qPageView = self.currentPageView() {
                 qPageView.retreatMask( true )
             }
         }
         else if SelectStart != -1 {
-            if !gotoPage(ayaPos: SelectStart){
+            if !checkGotoPage(ayaPos: SelectStart){
                 if SelectStart > 1 {
                     gotoPage(ayaPos:SelectStart-1)
                     if let currPageView = currentPageView(){
@@ -428,6 +451,10 @@ class QPagesBrowser: UIViewController
             let prevSuraPageIndex = QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx())
             gotoPage( pageNum: prevSuraPageIndex + 1)
         }
+    }
+    
+    func hideNavBar(_ hide:Bool = true ){
+        navigationController?.navigationBar.isHidden = hide
     }
     
     // MARK: - pageViewController data source methods
@@ -522,6 +549,7 @@ class QPagesBrowser: UIViewController
         transitionCompleted completed: Bool
     ) {
         updateTitle()
+        hideNavBar()
     }
     
 }

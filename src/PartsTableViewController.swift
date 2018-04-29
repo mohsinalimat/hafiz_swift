@@ -22,19 +22,23 @@ class PartsTableViewController: UITableViewController {
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        loadData()
     }
     
     @objc func onRefresh(){
-        QData.hifzList({(ranges) in
+        loadData(sync: true)
+    }
+    
+    func loadData( sync:Bool = false ){
+        QData.hifzList(sync){(ranges) in
             self.hifzRanges = ranges
             self.tableView.reloadData()
             self.tableView.refreshControl!.endRefreshing()
-        })
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .brown
-        onRefresh()
     }
     
     override func didReceiveMemoryWarning() {

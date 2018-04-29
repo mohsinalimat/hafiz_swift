@@ -465,10 +465,14 @@ class QData{
         return (page: pageIndex, position: .inside)
     }
     
-    static func bookmarks(_ block: @escaping ([Int]?)->Void ) {
+    static func bookmarks(sync: Bool,_ block: @escaping ([Int]?)->Void ) {
         if let userID = Auth.auth().currentUser?.uid {
-            let ref = Database.database().reference()
-            let bookmarks = ref.child("data/\(userID)/page_marks").queryOrderedByValue() //value is the reversed timestamp
+            let ref = Database.database().reference().child("data/\(userID)/page_marks")
+            if sync {
+                ref.keepSynced(true)
+            }
+
+            let bookmarks = ref.queryOrderedByValue() //value is the reversed timestamp
             
             bookmarks.observeSingleEvent(of: .value, with: {(snapshot) in
                 var list:[Int] = []
@@ -486,12 +490,33 @@ class QData{
             block(nil)
         }
     }
+    static var cachedHifzRanges:[HifzRange]?
     
-    static func hifzList(_ block: @escaping([HifzRange]?)->Void ){
+    static func hifzColor( range: HifzRange, alpha: CGFloat = 0.12 )->UIColor{
+        if range.age < 0{
+            return .clear
+        }
+        if range.age < 7{
+            return UIColor(red: 0.1, green: 1, blue: 0.1, alpha: alpha)
+        }
+        else if range.age < 14 {
+            return UIColor(red: 0.6, green: 0.4, blue: 0.0, alpha: alpha)
+        }
+        return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
+    }
+    
+    static func hifzList(_ sync:Bool, _ block: @escaping([HifzRange]?)->Void ){
+        
+        if !sync , let cached = cachedHifzRanges{
+            block(cached)
+        }
+        
         if let userID = Auth.auth().currentUser?.uid {
-            let ref = Database.database().reference()
-            ref.keepSynced(true)
-            let hifzRanges = ref.child("data/\(userID)/hifz").queryOrdered(byChild: "ts")
+            let ref = Database.database().reference().child("data/\(userID)/hifz")
+            if sync {
+                ref.keepSynced(true)
+            }
+            let hifzRanges = ref.queryOrdered(byChild: "ts")
             
             hifzRanges.observeSingleEvent(of: .value, with: {(snapshot) in
                 var list:[HifzRange] = []
@@ -502,7 +527,7 @@ class QData{
                         let sura = Int(pageAndSura.suffix(3))!
                         let ts = info["ts"] as! Double / 1000 //seconds since 1970
                         let dt = Date(timeIntervalSince1970: ts)
-                        let age = Date().timeIntervalSince( dt ) / 60 / 60 / 24 //days since last review
+                        let age = (Date().timeIntervalSince(dt)/60/60/24).rounded(.down) //days since last review
                         //print ( "Now=\(Date()), ts=\(ts), Date=\(dt), age=\(age)")
                         let pages = info["pages"] as! Int
                         let revs = info["revs"] as! Int
@@ -510,6 +535,7 @@ class QData{
                         list.append(range)
                     }
                 }
+                cachedHifzRanges = list
                 block(list)
             }) { (error) in
                 print( error )
@@ -520,6 +546,22 @@ class QData{
             print( "Not authenticated" )
             block(nil)
         }
-
+    }
+    
+    static func pageHifzRanges(_ pageIndex: Int, _ block: @escaping([HifzRange]?)->Void ){
+        hifzList(false){ (hifzRanges) in
+            if let hifzRanges = hifzRanges {
+                //filter ranges containing the designated page
+                let pageHifzRanges = hifzRanges.filter{ hifzRange in
+                    return pageIndex>=hifzRange.page && pageIndex<hifzRange.page+hifzRange.count
+                }
+                //sort by .sura
+                let sortedHifzRanges = pageHifzRanges.sorted(by: {(range1, range2) in
+                    return range1.sura < range2.sura
+                })
+                
+                block(sortedHifzRanges)
+            }
+        }
     }
 }

@@ -38,6 +38,7 @@ class QPageView: UIViewController{
         }
     }
     var sneekViewWidth : CGFloat = 0
+    var hifzColorsConstraints : [NSLayoutConstraint] = []
 
 
     // MARK: - Linked vars and functions
@@ -59,6 +60,7 @@ class QPageView: UIViewController{
     @IBOutlet weak var selectHeadSartX: NSLayoutConstraint!
     @IBOutlet weak var selectHeadEndX: NSLayoutConstraint!
 
+    @IBOutlet weak var hifzColors: UIStackView!
     @IBOutlet weak var selectBodyBottomY: NSLayoutConstraint!
     @IBOutlet weak var selectEndHeight: NSLayoutConstraint!
     @IBOutlet weak var selectEndX: NSLayoutConstraint!
@@ -185,6 +187,7 @@ class QPageView: UIViewController{
         // Do any additional setup after loading the view, typically from a nib.
         //print ( "QPageView viewDidLoad()" )
         loadPageImage()
+        createHifzColors()
         
         //createAyatButtons()
         becomeFirstResponder()
@@ -195,7 +198,7 @@ class QPageView: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         //print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
-        navigationController?.navigationBar.isHidden = true
+        //navigationController?.navigationBar.isHidden = true
         pageTapGesture.isEnabled = (MaskStart != -1)
         self.maskBodyHeight.constant = self.view.frame.height // to prevent flickering when changing page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -213,6 +216,7 @@ class QPageView: UIViewController{
         //positionAyatButtons()
         positionMask(followPage: false)
         positionSelection()
+        positionHifzColors()
     }
     
     override func viewWillLayoutSubviews() {
@@ -427,13 +431,12 @@ class QPageView: UIViewController{
         return nil
     }
     
-    func gotoPage(_ pageIndex: Int )->Bool{
+    func gotoPage(_ pageIndex: Int ){
         if pageIndex != self.pageIndex{
             if let parent = parentBrowserView(){
-                return parent.gotoPage( pageNum: pageIndex+1 )
+                parent.gotoPage( pageNum: pageIndex+1 )
             }
         }
-        return false
     }
     
     func advanceMask(_ followPage: Bool){
@@ -560,6 +563,7 @@ class QPageView: UIViewController{
     
     func showAyaMenu(onView:UIView){
         print("showAyaMenu()")
+        navigationController?.navigationBar.isHidden = true
         becomeFirstResponder()//required to show the menu!!
         clickedAya = onView
         let ayaPosition = onView.tag
@@ -619,6 +623,55 @@ class QPageView: UIViewController{
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.scrollToSelectedAya()
         }
+    }
+
+    func createHifzColors(){
+        
+        QData.pageHifzRanges(pageIndex){ ( hifzList: [HifzRange]? ) in
+            //Remove existing subviews
+            for view in self.hifzColors.subviews {
+                view.removeFromSuperview()
+            }
+            
+            self.hifzColorsConstraints.removeAll()
+
+            if let hifzList = hifzList {
+                hifzList.forEach{ ( range: HifzRange ) in
+                    //TODO: insert blank views for gaps with negative lines count
+                    print (range)
+                    let hifzFrame = UIView()
+                    hifzFrame.backgroundColor = QData.hifzColor(range: range) 
+                    hifzFrame.tag = 5 //TODO: calcualte number of lines for this sura from the page map
+                    self.hifzColorsConstraints.append(hifzFrame.heightAnchor.constraint(equalToConstant: 1))
+                    self.hifzColors.addArrangedSubview(hifzFrame)
+                }
+                NSLayoutConstraint.activate(self.hifzColorsConstraints)
+                self.positionHifzColors()
+            }
+        }
+        
+        
+    }
+
+    func positionHifzColors(){
+        let imageRect = pageImage.frame
+        let lineHeight = imageRect.height/15
+        
+        if hifzColorsConstraints.count>0 && hifzColorsConstraints.count == hifzColors.subviews.count {
+            for ndx in 0..<hifzColors.subviews.count {
+                let view = hifzColors.subviews[ndx]
+                let lines = CGFloat(view.tag)
+                let height = lines * lineHeight
+                hifzColorsConstraints[ndx].constant = height
+            }
+            //hifzColors.updateConstraints()
+            self.updateViewConstraints()
+            //print ("** \(hifzColorsConstraints.count) Color constraints updated **")
+        }
+//        else{
+//            print ("** No color constraints created **")
+//        }
+        
     }
     
     func positionSelection(){
