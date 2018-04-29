@@ -25,8 +25,8 @@ class QData{
     var normalizedSuraNames:[String]?
     var quranText:NSArray?
     
-    let totalAyat = 6236
-    let lastPageIndex = 603
+    static let totalAyat = 6236
+    static let lastPageIndex = 603
     
     enum Direction {
         case forward
@@ -113,14 +113,14 @@ class QData{
     }
     
     func pageInfo(_ pageIndex: Int )->QData.PageInfo? {
-        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > self.lastPageIndex{
+        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > QData.lastPageIndex{
             return nil
         }
         let info = self.pagesInfo![pageIndex]
         let suraIndex = info["s"]! - 1
         let ayaIndex = info["a"]! - 1
         let startAya = ayaPosition(sura: suraIndex, aya: ayaIndex)
-        let nextPageStartAya = pageIndex < self.lastPageIndex ? ayaPosition(pageIndex: pageIndex+1) : self.totalAyat
+        let nextPageStartAya = pageIndex < QData.lastPageIndex ? ayaPosition(pageIndex: pageIndex+1) : QData.totalAyat
 
         return (
             suraIndex:suraIndex,
@@ -367,7 +367,7 @@ class QData{
     func pageIndex( ayaPosition: Int )->Int{
         let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
         let pageIndex = self.pageIndex(suraIndex: suraIndex)
-        for p in pageIndex...lastPageIndex {
+        for p in pageIndex...QData.lastPageIndex {
             let pageInfo = pagesInfo![p]
             let pageSuraIndex = pageInfo["s"]! - 1
             let pageStartAyaIndex = pageInfo["a"]! - 1
@@ -377,7 +377,7 @@ class QData{
                 return p-1
             }
         }
-        return lastPageIndex
+        return QData.lastPageIndex
     }
     
     func partInfo( partIndex: Int ) -> [String:Int]?{
@@ -468,7 +468,6 @@ class QData{
     static func bookmarks(_ block: @escaping ([Int]?)->Void ) {
         if let userID = Auth.auth().currentUser?.uid {
             let ref = Database.database().reference()
-            ref.keepSynced(true)
             let bookmarks = ref.child("data/\(userID)/page_marks").queryOrderedByValue() //value is the reversed timestamp
             
             bookmarks.observeSingleEvent(of: .value, with: {(snapshot) in

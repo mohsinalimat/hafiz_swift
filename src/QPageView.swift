@@ -11,8 +11,10 @@ import UIKit
 class QPageView: UIViewController{
 
     struct Colors {
-        static var ayaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.17) }
+        static var ayaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.12) }
         static var maskedAyaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1) }
+        static var maskNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 0, alpha: 0.12) }
+        static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
     }
 
     var pageNumber: Int? //will be set by the ModelController that creates this controller
@@ -92,21 +94,24 @@ class QPageView: UIViewController{
         if sender.state == .ended {
             return
         }
+        //print ("PageLongPressed() isMenuVisible=\(UIMenuController.shared.isMenuVisible)" )
+        if UIMenuController.shared.isMenuVisible{
+            return
+        }
         let qData = QData.instance()
         let pageImageView = sender.view!
         let location = sender.location(in: pageImageView)
         let imageFrame = pageImageView.frame
         if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
             let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
-            if let ayaButton = self.view.viewWithTag(ayaPosition) {
-                selectAya( aya: ayaPosition )
-                showAyaMenu(ayaView: ayaButton)
-            }
+            selectAya( aya: ayaPosition )
+            showAyaMenu(onView: self.selectHead)
         }
     }
     
     @IBAction func MaskLongPressed(_ sender: Any) {
         //self.hideMask()
+        //TODO:
     }
     
     @IBAction func clickedCloseMask(_ sender: Any) {
@@ -130,6 +135,7 @@ class QPageView: UIViewController{
         }
     }
     
+    //TODO: not called
     @objc func onClickAyaButton(sender: UITapGestureRecognizer){
         clickedAya = sender.view
         if sender.state == .began {
@@ -160,7 +166,7 @@ class QPageView: UIViewController{
                     return
                 }
                 selectAya( aya: ayaId )
-                showAyaMenu(ayaView: clickedAya)
+                showAyaMenu( onView: clickedAya )
             }
         }
     }
@@ -179,8 +185,12 @@ class QPageView: UIViewController{
         // Do any additional setup after loading the view, typically from a nib.
         //print ( "QPageView viewDidLoad()" )
         loadPageImage()
-        createAyatButtons()
+        
+        //createAyatButtons()
         becomeFirstResponder()
+        if let pageNumber = self.pageNumber{
+            self.pageMap = QData.pageMap( pageNumber-1 )
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -200,7 +210,8 @@ class QPageView: UIViewController{
     
     override func viewDidLayoutSubviews() {
         //print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
-        positionAyatButtons()
+        //positionAyatButtons()
+        positionMask(followPage: false)
         positionSelection()
     }
     
@@ -276,8 +287,8 @@ class QPageView: UIViewController{
     //Parent controller only call setMaskStart upon ending the mask from navigationBar X button
     
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
-        if let pageBrowser = self.parentBrowserView(){
-            pageBrowser.setMaskStart( ayaId, followPage: followPage )
+        if let pagesBrowser = self.parentBrowserView(){
+            pagesBrowser.setMaskStart( ayaId, followPage: followPage )
         }
         //Parent controller dosn't have access to pageTabGesture
         //pageTapGesture.isEnabled = ( ayaId != -1 )
@@ -293,10 +304,10 @@ class QPageView: UIViewController{
                     let btn = UIView()
                     btn.backgroundColor = Colors.ayaBtn
                     btn.layer.cornerRadius = 5
-                    let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
-                    btn.addGestureRecognizer(tap)
-                    tap.minimumPressDuration = 0
-                    btn.isUserInteractionEnabled = true
+//                    let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
+//                    btn.addGestureRecognizer(tap)
+//                    tap.minimumPressDuration = 0
+//                    btn.isUserInteractionEnabled = true
                     btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)! - 1, aya: Int(button["aya"]!)! - 1)
                     self.buttonsView.addSubview(btn)
                 }
@@ -416,21 +427,19 @@ class QPageView: UIViewController{
         return nil
     }
     
-    func gotoPage(_ pageIndex: Int ){
-        if pageIndex == self.pageIndex{
-            return
+    func gotoPage(_ pageIndex: Int )->Bool{
+        if pageIndex != self.pageIndex{
+            if let parent = parentBrowserView(){
+                return parent.gotoPage( pageNum: pageIndex+1 )
+            }
         }
-        
-        if let parent = parentBrowserView(){
-            parent.gotoPage( pageIndex+1 )
-            return
-        }
+        return false
     }
     
     func advanceMask(_ followPage: Bool){
         
         switch MaskStart {
-            case -1, QData.instance().totalAyat-1:
+            case -1, QData.totalAyat-1:
                 return
             
             default:
@@ -549,11 +558,12 @@ class QPageView: UIViewController{
         }
     }
     
-    func showAyaMenu(ayaView:UIView){
-        becomeFirstResponder()
-        clickedAya = ayaView
-        //let menuRect = CGRect(x:0, y:0, width:ayaView.frame.size.width, height:ayaView.frame.size.height)
-        if let menuRect = self.ayaStartPoint(ayaView.tag){
+    func showAyaMenu(onView:UIView){
+        print("showAyaMenu()")
+        becomeFirstResponder()//required to show the menu!!
+        clickedAya = onView
+        let ayaPosition = onView.tag
+        if let menuRect = self.ayaStartPoint(ayaPosition){
             let mnuController = UIMenuController.shared
             mnuController.setTargetRect(menuRect, in: self.pageImage)
             
@@ -575,10 +585,10 @@ class QPageView: UIViewController{
 //        }
     }
     
-    func ayaStartPoint(_ ayaId:Int )->CGRect?{
+    func ayaStartPoint(_ ayaPosition:Int )->CGRect?{
         let qData = QData.instance()
         if let pageMap = self.pageMap,
-            let ayaMapInfo = qData.ayaMapInfo(ayaId, pageMap: pageMap),
+            let ayaMapInfo = qData.ayaMapInfo(ayaPosition, pageMap: pageMap),
             let pageImage = self.pageImage
         {
             let pageHeight = pageImage.frame.height
@@ -593,10 +603,18 @@ class QPageView: UIViewController{
         }
         return nil
     }
-    
+    //TODO: move this method to QPagesBrowers
     func selectAya( aya: Int ){
+        
+        if (aya+1) > QData.totalAyat {
+            return
+        }
+        
         SelectStart = aya
         SelectEnd = aya
+        if let pagesBrowser = self.parentBrowserView(){
+            pagesBrowser.setNavigationButtonsColor()
+        }
         positionSelection()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.scrollToSelectedAya()
@@ -610,6 +628,9 @@ class QPageView: UIViewController{
         if SelectStart == -1 {
             return
         }
+        
+        selectHead.tag = SelectStart
+        
         if let pageInfo = self.pageInfo, let pageMap = self.pageMap {
             if (SelectStart >= pageInfo.ayaPos + pageInfo.ayaCount) // beyond this page
                 || (SelectEnd < pageInfo.ayaPos) // ended before this page

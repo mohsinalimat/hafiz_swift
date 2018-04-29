@@ -19,20 +19,18 @@ class QPagesBrowser: UIViewController
     {
     
     @IBOutlet weak var actionsLabel: UIBarButtonItem!
-    @IBOutlet weak var pageNumberLabel: UILabel!
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
     @IBOutlet weak var pagesContainer: UIView!
     @IBOutlet weak var suraName: UILabel!
     @IBOutlet weak var nextPageButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
     
     let firstPage = 1
     let lastPage = 604
     
     var pageViewController: UIPageViewController?
     var startingPage:Int?
-    //var closeBtn: UIBarButtonItem?
-
 
     
     // MARK: - UIViewController delegate methods
@@ -57,28 +55,27 @@ class QPagesBrowser: UIViewController
         
 //
 //
-//        self.addChildViewController(self.pageViewController!)//TODO: required?
-//        self.view.addSubview(self.pageViewController!.view)
-//        // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
-//        var pageViewRect = self.view.bounds
-//        pageViewRect.size.height = pageViewRect.height - 30
+        //self.addChildViewController(self.pageViewController!)//TODO: required?
+        //self.view.addSubview(self.pageViewController!.view)
+        // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
+        //var pageViewRect = self.view.bounds
+        //pageViewRect.size.height = pageViewRect.height - 30
 //
 //        //If IPad, add 40 pixel padding around the view
-//        if UIDevice.current.userInterfaceIdiom == .pad {
-//            pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
-//        }
+        //if UIDevice.current.userInterfaceIdiom == .pad {
+        //    pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
+        //}
        
-//        self.pageViewController!.view.frame = pageViewRect
-//        self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
+        //self.pageViewController!.view.frame = pageViewRect
+        //self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
         
-        gotoPage(self.startingPage ?? 1)
-        //scroll to selection
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            if let curr_view = self.currentPageView() {
-                curr_view.scrollToSelectedAya()
-            }
-        }
-
+        gotoPage(pageNum: startingPage ?? 1)
+        
+        
+        setNavigationButtonsColor()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -123,31 +120,49 @@ class QPagesBrowser: UIViewController
     // MARK: - New class methods
 
 
-    func gotoPage(_ pageNum: Int ){
+    func gotoPage( pageNum: Int )->Bool{
         let currPageIndex = currentPageIndx()
         
-        if(currPageIndex+1==pageNum){
-            return
+        if  (currPageIndex+1 != pageNum),
+            let pageViewController = self.pageViewController,
+            let startingViewController = viewControllerAtIndex( pageNum, storyboard: self.storyboard! ){
+        
+            //pass inital set of page viewers
+            let viewControllers = [startingViewController]
+            
+            pageViewController.setViewControllers(
+                viewControllers,
+                direction: pageNum <= currPageIndex ? .forward : .reverse,
+                animated: true,
+                completion: {done in}
+            )
+            
+            updateTitle()
+            
+            //scroll to selection
+            if SelectStart != -1 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    if let curr_view = self.currentPageView() {
+                        curr_view.scrollToSelectedAya()
+                    }
+                }
+            }
+
+            return true
         }
         
-        let startingViewController: QPageView = viewControllerAtIndex(
-            pageNum,
-            storyboard: self.storyboard!
-            )!
-        
-        //pass inital set of page viewers
-        let viewControllers = [startingViewController]
-        
-        self.pageViewController!.setViewControllers(
-            viewControllers,
-            direction: pageNum <= currPageIndex ? .forward : .reverse,
-            animated: true,
-            completion: {done in}
-        )
-        
-        updateTitle()
+        return false
     }
-    
+
+    func gotoPage(ayaPos:Int)->Bool{
+        let qData = QData.instance()
+        let selectionPage = qData.pageIndex(ayaPosition: ayaPos)
+        if selectionPage != self.currentPageIndx(){
+            return gotoPage(pageNum: selectionPage+1)
+        }
+        return false
+    }
+
     // Creates a view controller for the given index.
     func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> QPageView? {
         
@@ -187,9 +202,10 @@ class QPagesBrowser: UIViewController
         let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
         self.nextPageButton.setTitle(pageInfo, for: .normal)
         
-        let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
-        //self.suraName.text = String(format:NSLocalizedString("FooterSuraName", comment: ""),suraNumber,suraName,maskedAya)
-        self.suraName.text = suraName + maskedAya
+        //let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
+        self.suraName.text = suraName //+ maskedAya
+        
+        setNavigationButtonsColor()
     }
     
     func currentPageIndx()->Int{
@@ -272,7 +288,7 @@ class QPagesBrowser: UIViewController
         print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
         let qData = QData.instance()
         let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
-        gotoPage(pageIndex+1)
+        gotoPage(pageNum: pageIndex+1)
         if let currPageView = currentPageView(){
             currPageView.selectAya(aya: SelectStart)
         }
@@ -286,7 +302,18 @@ class QPagesBrowser: UIViewController
     @IBAction func clickClose(_ sender: Any) {
         if MaskStart != -1 {//If mask is On, clear it first
             setMaskStart(-1)
-        }else{//go back to calling viewController ( Home )
+        }
+        else if SelectStart != -1 {
+            if gotoPage(ayaPos: SelectStart){
+                //If selection starts in different page, navigate to that page before hiding the selection
+                if let currPageView = self.currentPageView(){
+                    currPageView.positionSelection()
+                }
+                return
+            }
+            hideSelection()
+        }
+        else{//go back to calling viewController ( Home )
             navigationController?.popViewController(animated: true)
         }
     }
@@ -298,7 +325,7 @@ class QPagesBrowser: UIViewController
     @IBAction func nextPageClicked(_ sender: Any) {
         let curr_page_index = currentPageIndx() + 1
         if curr_page_index < lastPage {
-            gotoPage(curr_page_index+1)
+            gotoPage(pageNum: curr_page_index+1)
         }
     }
     
@@ -308,12 +335,35 @@ class QPagesBrowser: UIViewController
             setMaskStart(-1)
         }
     }
+    
 
+    func hideSelection(){
+        SelectStart = -1
+        SelectEnd = -1
+        setNavigationButtonsColor()
+        if let currentPageViewController = currentPageView(){
+            currentPageViewController.positionSelection()
+        }
+    }
+    func setNavigationButtonsColor(){
+        var bgColor = UIColor.clear
+        if MaskStart != -1 {
+            bgColor = QPageView.Colors.maskNavBg
+        }
+        else if SelectStart != -1 {
+            bgColor = QPageView.Colors.selectNavBg
+        }
+        nextSura.backgroundColor = bgColor
+        prevSura.backgroundColor = bgColor
+        closeButton.backgroundColor = bgColor
+    }
     
     func setMaskStart(_ ayaId:Int, followPage:Bool = false ){
         MaskStart = ayaId
-        SelectStart = ayaId
-        SelectEnd = ayaId
+        if(ayaId != -1){
+            SelectStart = ayaId
+            SelectEnd = ayaId
+        }
         positionMask(followPage)
         
         if let currPageView = currentPageView(){
@@ -324,23 +374,13 @@ class QPagesBrowser: UIViewController
         navigationController?.navigationBar.isHidden = true
         
         updateTitle()
-        
-//        cancelReview.isHidden = (ayaId == -1)
-        
-//        if let rightBarItems = self.navigationItem.rightBarButtonItems{
-//            if( MaskStart != -1 && rightBarItems.count == 1){//show the cancel button
-//                self.navigationItem.rightBarButtonItems = [rightBarItems[0], closeBtn!]
-//            }else if( MaskStart == -1 && rightBarItems.count > 1){//hide the cancel button
-//                self.navigationItem.rightBarButtonItems = [rightBarItems[0]]
-//            }
-//        }
     }
     
     func positionMask(_ followPage: Bool ){
         if let currPageView = currentPageView(){
             let maskPageIndex = currPageView.positionMask()
             if followPage && maskPageIndex != currentPageIndx() {
-                gotoPage(maskPageIndex)
+                gotoPage(pageNum: maskPageIndex+1)//TODO: check
             }else{
                 currPageView.updateViewConstraints()
             }
@@ -350,11 +390,21 @@ class QPagesBrowser: UIViewController
     
     @IBAction func gotoNextSura(_ sender: Any) {
         if MaskStart != -1 {
-            if let qPageView = self.currentPageView() {
+            if let qPageView = currentPageView() {
                 qPageView.advanceMask(true)
             }
-        }else{
-            gotoPage( QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx()) + 1 )
+        }
+        else if SelectStart != -1 {
+            if !gotoPage(ayaPos: SelectStart){
+                if let currPageView = currentPageView(){
+                    currPageView.selectAya( aya: SelectStart+1 )
+                    gotoPage(ayaPos:SelectStart)
+                }
+            }
+        }
+        else{
+            let suraFirstPageIndex = QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx())
+            gotoPage( pageNum: suraFirstPageIndex + 1 )
         }
     }
     
@@ -363,8 +413,20 @@ class QPagesBrowser: UIViewController
             if let qPageView = self.currentPageView() {
                 qPageView.retreatMask( true )
             }
-        }else{
-            gotoPage( QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx()) + 1)
+        }
+        else if SelectStart != -1 {
+            if !gotoPage(ayaPos: SelectStart){
+                if SelectStart > 1 {
+                    gotoPage(ayaPos:SelectStart-1)
+                    if let currPageView = currentPageView(){
+                        currPageView.selectAya( aya: SelectStart-1 )
+                    }
+                }
+            }
+        }
+        else{
+            let prevSuraPageIndex = QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx())
+            gotoPage( pageNum: prevSuraPageIndex + 1)
         }
     }
     

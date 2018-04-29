@@ -35,10 +35,6 @@ class PartsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .brown
         onRefresh()
-//        QData.hifzList({(ranges) in
-//            self.hifzRanges = ranges
-//            self.tableView.reloadData()
-//        })
     }
     
     override func didReceiveMemoryWarning() {
