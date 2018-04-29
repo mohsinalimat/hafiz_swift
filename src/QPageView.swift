@@ -18,7 +18,7 @@ class QPageView: UIViewController{
     }
 
     var pageNumber: Int? //will be set by the ModelController that creates this controller
-    var pageMap: [[String:String]]?
+    var pageMap: PageMap?
     var _pageInfo: QData.PageInfo?
     var pageInfo: QData.PageInfo? {
         get{
@@ -78,6 +78,7 @@ class QPageView: UIViewController{
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
             let imageFrame = pageImageView.frame
+            //TODO: check if self.pageMap if not nil
             if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
                 setMaskStart( qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya ) )
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -249,6 +250,15 @@ class QPageView: UIViewController{
 
     // MARK: - QPageView new methods
     
+    func getPageMap()->PageMap?{
+        if let pageMap = self.pageMap{
+            return pageMap
+        }else if let pageNumber = self.pageNumber{
+            self.pageMap = QData.pageMap(pageNumber-1) // cache 
+        }
+        return self.pageMap
+    }
+    
     func loadPageImage(){
         if let pageNumber = self.pageNumber {
             let imagesDir = "qpages_1260"
@@ -301,10 +311,10 @@ class QPageView: UIViewController{
 
     func createAyatButtons(){
         if let pageNumber = self.pageNumber{
-            self.pageMap = QData.pageMap( pageNumber-1 )
-            let qData = QData.instance()
-            if let pageMap = self.pageMap {
-                for(var button) in pageMap{
+            //self.pageMap = QData.pageMap( pageNumber-1 )
+            if let pageMap = self.getPageMap() {
+                let qData = QData.instance()
+                for ayaFullInfo in pageMap{
                     let btn = UIView()
                     btn.backgroundColor = Colors.ayaBtn
                     btn.layer.cornerRadius = 5
@@ -312,7 +322,7 @@ class QPageView: UIViewController{
 //                    btn.addGestureRecognizer(tap)
 //                    tap.minimumPressDuration = 0
 //                    btn.isUserInteractionEnabled = true
-                    btn.tag = qData.ayaPosition(sura: Int(button["sura"]!)! - 1, aya: Int(button["aya"]!)! - 1)
+                    btn.tag = qData.ayaPosition(sura: ayaFullInfo.sura, aya: ayaFullInfo.aya)
                     self.buttonsView.addSubview(btn)
                 }
                 //print ("createAyatButtons-> pg:\(pageNumber) count:\(pageMap.count)")
@@ -335,10 +345,10 @@ class QPageView: UIViewController{
             
             for(index, btn) in containerView.subviews.enumerated(){
                 let btnMapInfo = pageMap[index]
-                let eline = CGFloat( Float(btnMapInfo["eline"]!)! )
-                let epos = CGFloat( Float(btnMapInfo["epos"]!)! )
+                let eline = btnMapInfo.eline
+                let epos = btnMapInfo.epos
                 let xpos = CGFloat( epos * lineWidth / 1000 - buttonWidth )
-                let ypos = CGFloat( eline * CGFloat(imageRect.size.height) / 15 )
+                let ypos = CGFloat( CGFloat(eline) * CGFloat(imageRect.size.height) / 15 )
                 var rect = CGRect(x: xpos, y: ypos, width: buttonWidth, height: lineHeight)
                 rect = rect.insetBy(dx: 3, dy: 3)
                 btn.layer.cornerRadius = rect.width * 0.1905 //trying to find the golden ratio
@@ -394,7 +404,9 @@ class QPageView: UIViewController{
                 return maskStartPage
             }
             
-            if let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: self.pageMap!){
+            if  let pageMap = self.getPageMap(),
+                let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: pageMap){
+                
                 let pageHeight = imageRect.size.height
                 let lineHeight = CGFloat(pageHeight / 15)
                 //btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
@@ -591,7 +603,8 @@ class QPageView: UIViewController{
     
     func ayaStartPoint(_ ayaPosition:Int )->CGRect?{
         let qData = QData.instance()
-        if let pageMap = self.pageMap,
+        
+        if let pageMap = getPageMap(),
             let ayaMapInfo = qData.ayaMapInfo(ayaPosition, pageMap: pageMap),
             let pageImage = self.pageImage
         {
@@ -607,6 +620,7 @@ class QPageView: UIViewController{
         }
         return nil
     }
+    
     //TODO: move this method to QPagesBrowers
     func selectAya( aya: Int ){
         
@@ -625,6 +639,14 @@ class QPageView: UIViewController{
         }
     }
 
+    func appendHifzRow(lines:Int, bgColor: UIColor = .clear){
+        let hifzRow = UIView()
+        hifzRow.backgroundColor = bgColor
+        //calcualte number of lines for this sura from the page map
+        hifzRow.tag = lines
+        self.hifzColorsConstraints.append(hifzRow.heightAnchor.constraint(equalToConstant: 1))
+        self.hifzColors.addArrangedSubview(hifzRow)
+    }
     func createHifzColors(){
         
         QData.pageHifzRanges(pageIndex){ ( hifzList: [HifzRange]? ) in
@@ -635,15 +657,22 @@ class QPageView: UIViewController{
             
             self.hifzColorsConstraints.removeAll()
 
-            if let hifzList = hifzList {
+            if let hifzList = hifzList, let pageMap = self.getPageMap() {
+                var lastLine = -1
+                
                 hifzList.forEach{ ( range: HifzRange ) in
-                    //TODO: insert blank views for gaps with negative lines count
-                    print (range)
-                    let hifzFrame = UIView()
-                    hifzFrame.backgroundColor = QData.hifzColor(range: range) 
-                    hifzFrame.tag = 5 //TODO: calcualte number of lines for this sura from the page map
-                    self.hifzColorsConstraints.append(hifzFrame.heightAnchor.constraint(equalToConstant: 1))
-                    self.hifzColors.addArrangedSubview(hifzFrame)
+                    //print (range)
+                    
+                    if let suraPageLocation = QData.findSuraPageLocation(suraIndex: range.sura, pageMap: pageMap){
+                        if lastLine + 1 < suraPageLocation.fromLine {
+                            //insert blank views for gaps
+                            self.appendHifzRow(lines: suraPageLocation.fromLine - lastLine - 1)
+                        }
+                        self.appendHifzRow(
+                            lines: suraPageLocation.toLine - suraPageLocation.fromLine + 1,
+                            bgColor: QData.hifzColor(range: range))
+                        lastLine = suraPageLocation.toLine
+                    }
                 }
                 NSLayoutConstraint.activate(self.hifzColorsConstraints)
                 self.positionHifzColors()
@@ -684,7 +713,9 @@ class QPageView: UIViewController{
         
         selectHead.tag = SelectStart
         
-        if let pageInfo = self.pageInfo, let pageMap = self.pageMap {
+        if let pageInfo = self.pageInfo,
+            let pageMap = self.getPageMap() {
+            
             if (SelectStart >= pageInfo.ayaPos + pageInfo.ayaCount) // beyond this page
                 || (SelectEnd < pageInfo.ayaPos) // ended before this page
             {
@@ -697,13 +728,16 @@ class QPageView: UIViewController{
             let lineHeight = imageRect.height/15
             let pageWidth = imageRect.width
             let pageHeight = imageRect.height
+            
             selectHead.isHidden = false
+            
             if SelectStart < pageInfo.ayaPos{
                 selectHeadHeight.constant = 0// selection started in a previous page
             }else{
                 //selection started at this or the next page
                 selectHeadHeight.constant = lineHeight
-                let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: pageMap)!
+                
+                let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: pageMap)! //TODO: validate not nil
                 let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: pageMap)!
                 let ypos = pageHeight * CGFloat(selectStartInfo.sline) / 15
                 selectHeadY.constant = ypos

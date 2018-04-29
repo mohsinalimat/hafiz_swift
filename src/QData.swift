@@ -13,7 +13,8 @@ typealias AyaInfo = (sura:Int, aya:Int, page:Int)
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
 typealias AyaRecord = (sura:String,aya: String, aya_text: String, page: String)
 typealias HifzRange = (sura:Int, page:Int, count:Int, age:Double, revs:Int)
-
+typealias SuraPageLocation = (sura:Int, page:Int, fromLine:Int, toLine: Int)
+typealias PageMap = [AyaFullInfo]
 
 class QData{
     var suraInfo:[[String:Int]]?
@@ -80,7 +81,8 @@ class QData{
         return qData!
     }
     
-    class func pageMap(_ pageIndex:Int)->[[String:String]]{
+    //Synchronous!
+    class func pageMap(_ pageIndex:Int)->PageMap{
         do{
             if let path = Bundle.main.url(forResource: "pg_map/pm_\(pageIndex+1)", withExtension: "json")
             {
@@ -88,9 +90,14 @@ class QData{
                 let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
 
                 if let object = json as? [String: Any] {
-                    // json is a dictionary
-                    if let suraInfo = object["child_list"] {
-                        return (suraInfo as? [[String : String]])!
+                    // json is a [String:String] dictionary
+                    if let jsonArray = object["child_list"] as? [[String:String]]{
+                        //return (ayaFullInfoList as? [[String : String]])!
+                        var retArray = PageMap()
+                        for ndx in 0..<jsonArray.count{
+                            retArray.append(self.ayaFullInfo(jsonArray[ndx]))
+                        }
+                        return retArray
                     }
                 }
             }
@@ -101,15 +108,14 @@ class QData{
         return []
     }
     
-    func ayaMapInfo(_ ayaPosition:Int, pageMap: [[String:String]])->AyaFullInfo?{
+    func ayaMapInfo(_ ayaPosition:Int, pageMap: PageMap)->AyaFullInfo?{
         let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
         for ayaInfo in pageMap{
-            let (s,a) = ( Int(ayaInfo["sura"]!)! - 1, Int(ayaInfo["aya"]!)! - 1 )
-            if s == suraIndex  && a == ayaIndex {
-                return QData.ayaFullInfo(ayaInfo)
+            if ayaInfo.sura == suraIndex  && ayaInfo.aya == ayaIndex {
+                return ayaInfo
             }
         }
-        return nil
+        return nil //not found
     }
     
     func pageInfo(_ pageIndex: Int )->QData.PageInfo? {
@@ -404,12 +410,32 @@ class QData{
         }
         return nil
     }
+    
+    static func findSuraPageLocation( suraIndex: Int, pageMap:PageMap)->SuraPageLocation?{
+        var fromLine = -1, toLine = -1, page = -1
+        
+        for ndx in 0..<pageMap.count {
+            let ayaInfo = pageMap[ndx]
+            if ayaInfo.sura == suraIndex {
+                if fromLine == -1 {
+                    page = ayaInfo.page
+                    fromLine = ayaInfo.sline
+                }
+                toLine = ayaInfo.eline
+            }
+        }
+        
+        if fromLine != -1 {
+            return SuraPageLocation( sura:suraIndex, page:page, fromLine:fromLine, toLine:toLine )
+        }
+        
+        return nil
+    }
 
-    func locateAya( pageMap:[[String:String]], pageSize: CGSize, location: CGPoint )->AyaFullInfo?{
+    func locateAya( pageMap:PageMap, pageSize: CGSize, location: CGPoint )->AyaFullInfo?{
         let line = Int(location.y * 15 / pageSize.height)
         let line_pos = 1000 - (location.x * 1000) / pageSize.width
-        for ayaMap in pageMap {
-            let ayaInfo = QData.ayaFullInfo(ayaMap)
+        for ayaInfo in pageMap {
             
             if ayaInfo.eline > line || ayaInfo.eline == line && ayaInfo.epos >= line_pos {
                 return ayaInfo
@@ -453,13 +479,13 @@ class QData{
         let pageMap = QData.pageMap(pageIndex)
         let firstPageAya = pageMap.first!
         
-        if sura == Int(firstPageAya["sura"]!)!-1 && aya == Int(firstPageAya["aya"]!)!-1 {
+        if sura == firstPageAya.sura && aya == firstPageAya.aya {
             return (page: pageIndex, position: .first)
         }
         
         let lastPageAya = pageMap.last!
         
-        if sura == Int(lastPageAya["sura"]!)!-1 && aya == Int(lastPageAya["aya"]!)!-1 {
+        if sura == lastPageAya.sura && aya == lastPageAya.aya {
             return (page: pageIndex, position: .last)
         }
         return (page: pageIndex, position: .inside)
