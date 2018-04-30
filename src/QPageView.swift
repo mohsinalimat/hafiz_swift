@@ -310,7 +310,7 @@ class QPageView: UIViewController{
     }
 
     func createAyatButtons(){
-        if let pageNumber = self.pageNumber{
+        //if let pageNumber = self.pageNumber{
             //self.pageMap = QData.pageMap( pageNumber-1 )
             if let pageMap = self.getPageMap() {
                 let qData = QData.instance()
@@ -327,7 +327,7 @@ class QPageView: UIViewController{
                 }
                 //print ("createAyatButtons-> pg:\(pageNumber) count:\(pageMap.count)")
             }
-        }
+        //}
     }
     
     func positionAyatButtons(){

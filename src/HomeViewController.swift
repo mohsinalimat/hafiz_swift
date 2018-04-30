@@ -27,6 +27,7 @@ class HomeViewController: UITabBarController
     }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
+    let searchViewResultsNotification = NSNotification.Name(rawValue: "searchViewResults")
 
     override func viewWillAppear(_ animated: Bool) {
         //Show Navigation bar
@@ -41,6 +42,13 @@ class HomeViewController: UITabBarController
            name: searchOpenAyaNotification,
            object: nil
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(searchViewResults),
+            name: searchViewResultsNotification,
+            object: nil
+        )
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -49,18 +57,19 @@ class HomeViewController: UITabBarController
     }
 
     @objc func searchOpenAya(vc: SearchViewController){
-        //print("HomeViewController.searchOpenAya( \(SelectStart) )")
         self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)
-        //self.navigationController?.pushViewController(QPagesBrowser(), animated: true)
     }
 
+    @objc func searchViewResults(vc: SearchViewController){
+        self.performSegue(withIdentifier: "OpenSearchResults", sender: self)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     // MARK: - UITabBarController delegates
-    
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if let title = item.title{
             navigationController!.navigationBar.topItem?.title = title

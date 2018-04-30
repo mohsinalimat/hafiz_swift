@@ -8,6 +8,8 @@
 
 import UIKit
 
+var SearchText = ""
+
 class SearchViewController:
     UIViewController,
     UISearchBarDelegate,
@@ -46,6 +48,23 @@ class SearchViewController:
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print( searchBar.text! )
+        if  let searchText = searchBar.text,
+            searchText.count > 0
+            //let searchResults = self.storyboard!.instantiateViewController(withIdentifier: "SearchResults") as? SearchResultsViewController
+        {
+            //searchResults.searchText = searchText
+            SearchText = searchText
+
+            dismiss(animated: true, completion: nil)
+
+            NotificationCenter.default.post(
+                name: NSNotification.Name(rawValue: "searchViewResults"),
+                object: self
+            )
+
+
+            //navController.pushViewController(searchResults, animated: true)
+        }
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

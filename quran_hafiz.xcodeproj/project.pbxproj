@@ -28,6 +28,7 @@
 		2D6A7188208CE88C0012A67B /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */; };
 		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
 		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
+		2DA603AB2096CF0B004FC9AD /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */; };
 		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
@@ -56,6 +57,7 @@
 		2D7F5F6E1F04BDA50076316B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
 		2DCEFD841F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				2DF0E099202634BC00B3C493 /* SearchViewController.swift */,
 				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
+				2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */,
 			);
 			name = Search;
 			path = src;
@@ -365,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D6A7188208CE88C0012A67B /* BookmarksViewController.swift in Sources */,
+				2DA603AB2096CF0B004FC9AD /* SearchResultsViewController.swift in Sources */,
 				2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */,
 				2D41B2391F9BC0A800199BAD /* QPagesBrowser.swift in Sources */,
 				2D41B23B1F9BC0A800199BAD /* QPageView.swift in Sources */,
