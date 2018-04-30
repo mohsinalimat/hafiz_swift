@@ -9,6 +9,38 @@
 
 import UIKit
 
+
+class HifzTableViewCell : UITableViewCell {
+    
+    @IBOutlet weak var suraName: UILabel!
+    @IBOutlet weak var rangeDescription: UILabel!
+    @IBOutlet weak var lastRevision: UILabel!
+    
+    @IBOutlet weak var hifzChart: UIView!
+    @IBOutlet weak var rangeBody: UIView!
+    @IBOutlet weak var rangeStart: NSLayoutConstraint!
+    @IBOutlet weak var rangeWidth: NSLayoutConstraint!
+    
+    var hifzRange:HifzRange?
+    
+    func updateHifzChart(width:CGFloat){
+        if let hifzRange = self.hifzRange{
+            rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
+            let qData = QData.instance()
+            if let suraInfo = qData.suraInfo(suraIndex: hifzRange.sura){
+                let suraStartPage = CGFloat(suraInfo["sp"]! - 1)
+                let suraEndPage = CGFloat(suraInfo["ep"]! - 1)
+                let pagesCount = CGFloat(suraEndPage - suraStartPage + 1)
+                rangeStart.constant = (CGFloat(hifzRange.page) - suraStartPage) * width / pagesCount
+                rangeWidth.constant = CGFloat(hifzRange.count) * width / pagesCount
+            }
+        }else{
+            rangeWidth.constant = 0
+        }
+    }
+    
+}
+
 class PartsTableViewController: UITableViewController {
 
     var hifzRanges:[HifzRange]?
@@ -17,7 +49,7 @@ class PartsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         // Preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = false
+        self.clearsSelectionOnViewWillAppear = true
         
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
@@ -61,7 +93,7 @@ class PartsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Part Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Hifz Cell", for: indexPath) as! HifzTableViewCell
 
         if let hifzRanges = self.hifzRanges {
             // Populate cell data...
@@ -69,22 +101,32 @@ class PartsTableViewController: UITableViewController {
             let hRange = hifzRanges[rowIndex]
             let qData = QData.instance()
 
-            cell.textLabel!.text = qData.suraName(suraIndex: hRange.sura)
-            cell.detailTextLabel!.text = "\(hRange.count) pages from page \(hRange.page)"
+            cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
+            cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
+            cell.lastRevision!.text = "\(hRange.age) days"
             cell.tag = hRange.page + 1 //for segue use
+            cell.hifzRange = hRange
         }else{
             //TODO: if not logged in, show login required message
-            cell.textLabel!.text = "Loading..."
+            cell.suraName!.text = "Loading..."
         }
         
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let hifzCell = cell as? HifzTableViewCell{
+            hifzCell.updateHifzChart(width: tableView.frame.size.width)
+        }
+    }
+    
+    
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let qPagesBrowser = segue.destination as! QPagesBrowser
-        if let viewCell = sender as? UITableViewCell {
+        if  let qPagesBrowser = segue.destination as? QPagesBrowser,
+            let viewCell = sender as? UITableViewCell
+        {
             qPagesBrowser.startingPage = viewCell.tag
         }
         

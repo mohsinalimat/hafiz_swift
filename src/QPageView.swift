@@ -639,7 +639,7 @@ class QPageView: UIViewController{
         }
     }
 
-    func appendHifzRow(lines:Int, bgColor: UIColor = .clear){
+    func appendColorHifzRow(lines:Int, bgColor: UIColor = .clear){
         let hifzRow = UIView()
         hifzRow.backgroundColor = bgColor
         //calcualte number of lines for this sura from the page map
@@ -647,6 +647,7 @@ class QPageView: UIViewController{
         self.hifzColorsConstraints.append(hifzRow.heightAnchor.constraint(equalToConstant: 1))
         self.hifzColors.addArrangedSubview(hifzRow)
     }
+    
     func createHifzColors(){
         
         QData.pageHifzRanges(pageIndex){ ( hifzList: [HifzRange]? ) in
@@ -666,9 +667,9 @@ class QPageView: UIViewController{
                     if let suraPageLocation = QData.findSuraPageLocation(suraIndex: range.sura, pageMap: pageMap){
                         if lastLine + 1 < suraPageLocation.fromLine {
                             //insert blank views for gaps
-                            self.appendHifzRow(lines: suraPageLocation.fromLine - lastLine - 1)
+                            self.appendColorHifzRow(lines: suraPageLocation.fromLine - lastLine - 1)
                         }
-                        self.appendHifzRow(
+                        self.appendColorHifzRow(
                             lines: suraPageLocation.toLine - suraPageLocation.fromLine + 1,
                             bgColor: QData.hifzColor(range: range))
                         lastLine = suraPageLocation.toLine
