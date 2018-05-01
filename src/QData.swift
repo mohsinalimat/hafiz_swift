@@ -458,8 +458,9 @@ class QData{
         return ayaInfo
     }
     
-    func pageAya( at: Position, pageMap: [[String:String]] ) -> Int {
-        var ayaMapInfo:[String:String]?
+    // TODO: not referenced
+    func pageAya( at: Position, pageMap: PageMap ) -> Int {
+        var ayaMapInfo:AyaFullInfo?
         
         if at == .first {
             ayaMapInfo = pageMap.first
@@ -468,7 +469,7 @@ class QData{
             ayaMapInfo = pageMap.last
         }
         if let ayaMapInfo = ayaMapInfo {
-            return self.ayaPosition(sura: Int(ayaMapInfo["sura"]!)!-1, aya: Int(ayaMapInfo["aya"]!)!-1)
+            return self.ayaPosition( sura: ayaMapInfo.sura, aya: ayaMapInfo.aya )
         }
         return -1
     }

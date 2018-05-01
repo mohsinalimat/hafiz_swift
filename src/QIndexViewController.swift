@@ -53,9 +53,9 @@ class QIndexViewController: UITableViewController{
 
         let partIndex = indexPath.section
         let suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
-        
 
         let pagePrompt = NSLocalizedString("Pg", comment: "")
+        var ayaPos = 0
         var partStartPage = 0
         var suraStartPage = 0
         var pageNumber = 0
@@ -64,6 +64,7 @@ class QIndexViewController: UITableViewController{
 
         if let partInfo = qData.partInfo(partIndex: partIndex), let page = partInfo["p"]{
             partStartPage = page
+            ayaPos = qData.ayaPosition(sura: partInfo["s"]!-1, aya: partInfo["a"]!-1) 
         }
 
         if let sInfo = qData.suraInfo(suraIndex: suraIndex), let page = sInfo["sp"]{
@@ -71,6 +72,7 @@ class QIndexViewController: UITableViewController{
         }
 
         if indexPath.row == 0 {
+            //first row in the section, it could be a part or a sura
             pageNumber = partStartPage
             if suraStartPage != partStartPage{
                 suraPrefix = "..."
@@ -78,18 +80,20 @@ class QIndexViewController: UITableViewController{
             }
         }else{
             pageNumber = suraStartPage
+            ayaPos = qData.ayaPosition(sura: suraIndex, aya: 0)
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        cell.tag = pageNumber;
+        //cell.tag = pageNumber
+        cell.tag = ayaPos
         if cellID == "SuraStart"{
             cell.backgroundView = UIImageView(image:UIImage(named: "index_item_background")!)
         }
         if let suraName = qData.suraName(suraIndex: suraIndex) {
             cell.textLabel!.text = "\(suraPrefix) \(suraName)";
         }
-        cell.detailTextLabel!.text = String(format:pagePrompt, pageNumber)
         
+        cell.detailTextLabel!.text = String(format:pagePrompt, pageNumber)
         return cell;
     }
     
@@ -99,11 +103,13 @@ class QIndexViewController: UITableViewController{
         
         if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser
         {
-            qPagesBrowser.startingPage = viewCell.tag
+            let qData = QData.instance()
+            let ayaPos = viewCell.tag
+            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
             //Reset previous selections and mask
             MaskStart = -1
-            SelectStart = -1
-            SelectEnd = -1
+            SelectStart = ayaPos
+            SelectEnd = ayaPos
         }
         
     }

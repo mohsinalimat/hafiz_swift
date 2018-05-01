@@ -83,19 +83,28 @@ class QPagesBrowser: UIViewController
     }
     
     let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
+    let searchViewResultsNotification = NSNotification.Name(rawValue: "searchViewResults")
 
     override func viewWillAppear(_ animated: Bool) {
         //print("QPagesBrowser willAppear")
         hideNavBar()
         
         let nCenter = NotificationCenter.default
+
         nCenter.addObserver(
             self,
             selector: #selector(searchOpenAya),
             name: searchOpenAyaNotification,
             object: nil
         )
-        
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(searchViewResults),
+            name: searchViewResultsNotification,
+            object: nil
+        )
+
         nCenter.addObserver(
             self,
             selector: #selector(onDeviceRotated),
@@ -315,6 +324,13 @@ class QPagesBrowser: UIViewController
             currPageView.selectAya(aya: SelectStart)
         }
         hideNavBar()
+    }
+    
+    @objc func searchViewResults(vc: SearchViewController){
+        if let navController = navigationController{
+            navController.popToRootViewController(animated: true)
+            self.performSegue(withIdentifier: "OpenSearchResults", sender: self)
+        }
     }
 
     @objc func hideMenu(){

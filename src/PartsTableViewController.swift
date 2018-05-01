@@ -104,6 +104,7 @@ class PartsTableViewController: UITableViewController {
             cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
             cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
             cell.lastRevision!.text = "\(hRange.age) days"
+            //TODO: store ayaPosition instead of pageNumber
             cell.tag = hRange.page + 1 //for segue use
             cell.hifzRange = hRange
         }else{
