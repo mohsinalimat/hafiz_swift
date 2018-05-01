@@ -24,11 +24,11 @@
 		2D41B2481F9BC0A800199BAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7F5F6B1F04BDA40076316B /* Main.storyboard */; };
 		2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */; };
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
-		2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */; };
 		2D6A7188208CE88C0012A67B /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */; };
 		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
 		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
 		2DA603AB2096CF0B004FC9AD /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */; };
+		2DA603AD209887E8004FC9AD /* HifzViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA603AC209887E8004FC9AD /* HifzViewController.swift */; };
 		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
@@ -42,7 +42,6 @@
 		2D1B62C8208BB0F800C2DD28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D1B62CA208BB2F100C2DD28 /* LayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
 		2D41B24E1F9BC0A800199BAD /* quran_hafiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = quran_hafiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartsTableViewController.swift; sourceTree = "<group>"; };
 		2D48D3551F40D9720058552F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
@@ -58,6 +57,7 @@
 		2D7F5F711F04BDA50076316B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D7F5F731F04BDA50076316B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		2DA603AC209887E8004FC9AD /* HifzViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HifzViewController.swift; sourceTree = "<group>"; };
 		2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPageViewController.swift; sourceTree = "<group>"; };
 		2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QIndexViewController.swift; sourceTree = "<group>"; };
 		2DCEFD841F305D7600EAC321 /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -190,10 +190,10 @@
 		2DF881F91FA380CB0045EFCF /* HomeScreen */ = {
 			isa = PBXGroup;
 			children = (
+				2DA603AC209887E8004FC9AD /* HifzViewController.swift */,
 				2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */,
 				2D48D3551F40D9720058552F /* HomeViewController.swift */,
 				2DCEFD811F2EF25E00EAC321 /* QIndexViewController.swift */,
-				2D41B26E1F9BC57200199BAD /* PartsTableViewController.swift */,
 			);
 			name = HomeScreen;
 			path = src;
@@ -372,6 +372,7 @@
 				2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */,
 				2D41B2391F9BC0A800199BAD /* QPagesBrowser.swift in Sources */,
 				2D41B23B1F9BC0A800199BAD /* QPageView.swift in Sources */,
+				2DA603AD209887E8004FC9AD /* HifzViewController.swift in Sources */,
 				2D41B23C1F9BC0A800199BAD /* QData.swift in Sources */,
 				2D41B23D1F9BC0A800199BAD /* TafseerViewController.swift in Sources */,
 				2D41B23E1F9BC0A800199BAD /* AppDelegate.swift in Sources */,
@@ -380,7 +381,6 @@
 				2D41B23F1F9BC0A800199BAD /* HomeViewController.swift in Sources */,
 				2DF0E09A202634BC00B3C493 /* SearchViewController.swift in Sources */,
 				2D41B2401F9BC0A800199BAD /* QIndexViewController.swift in Sources */,
-				2D41B26F1F9BC57300199BAD /* PartsTableViewController.swift in Sources */,
 				2D1B62CB208BB2F100C2DD28 /* LayerView.swift in Sources */,
 				2D41B2411F9BC0A800199BAD /* MainViewController.swift in Sources */,
 				2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */,
@@ -457,7 +457,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -473,7 +473,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

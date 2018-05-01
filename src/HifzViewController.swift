@@ -41,7 +41,7 @@ class HifzTableViewCell : UITableViewCell {
     
 }
 
-class PartsTableViewController: UITableViewController {
+class HifzViewController: UITableViewController {
 
     var hifzRanges:[HifzRange]?
     

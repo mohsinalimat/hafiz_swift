@@ -21,17 +21,17 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var actionsLabel: UIBarButtonItem!
     @IBOutlet weak var nextSura: UIButton!
     @IBOutlet weak var prevSura: UIButton!
-    @IBOutlet weak var pagesContainer: UIView!
+    @IBOutlet weak var pagesContainer: UIView! //TODO: unused
     @IBOutlet weak var suraName: UILabel!
     @IBOutlet weak var nextPageButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     
+    //TODO: use 0 based numbering
     let firstPage = 1
     let lastPage = 604
     
     var pageViewController: UIPageViewController?
     var startingPage:Int?
-
     
     // MARK: - UIViewController delegate methods
     
@@ -44,12 +44,13 @@ class QPagesBrowser: UIViewController
 
 //        closeBtn = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(hideMask))
 
-        // Configure the page view controller and add it as a child view controller.
+        // Create Configure the page view controller and add it as a child view controller.
 //        self.pageViewController = UIPageViewController(transitionStyle: .scroll,
 //                                                       navigationOrientation: .horizontal,
 //                                                       options: nil)
-        // set this object as a delegate
+        // create a reference to the embedded UIPageViewController
         self.pageViewController = self.childViewControllers[0] as? UIPageViewController
+        // Set this object as the delegate for the page view controller
         self.pageViewController!.delegate = self
         self.pageViewController!.dataSource = self
         
@@ -147,6 +148,7 @@ class QPagesBrowser: UIViewController
         let _ = checkGotoPage(ayaPos: ayaPos)
     }
 
+    //TODO: create two pages if ipad landscape mode
     func checkGotoPage( pageNum: Int )->Bool{
         let currPageIndex = currentPageIndx()
         
@@ -155,6 +157,7 @@ class QPagesBrowser: UIViewController
             let startingViewController = viewControllerAtIndex( pageNum, storyboard: self.storyboard! ){
         
             //pass inital set of page viewers
+            //TODO: create two pages if ipad landscape mode
             let viewControllers = [startingViewController]
             
             pageViewController.setViewControllers(
@@ -191,7 +194,8 @@ class QPagesBrowser: UIViewController
         return false
     }
 
-    // Creates a view controller for the given index.
+    // Creates a view controller for the given page number.
+    //TODO: return array of two view controllers, reuse existing view controllers if already created
     func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> QPageView? {
         
         if(index < firstPage) || (index > lastPage) {
@@ -202,6 +206,8 @@ class QPagesBrowser: UIViewController
         let dataViewController = storyboard.instantiateViewController(
             withIdentifier: "QPageView"
             ) as! QPageView
+        
+        //set page number
         dataViewController.pageNumber = index;
         
         return dataViewController
@@ -242,6 +248,7 @@ class QPagesBrowser: UIViewController
         }
         return -1
     }
+    //TODO: support two pages view mode
     func currentPageView()->QPageView?{
         if  let pageViewController = self.pageViewController,
             let viewControllers = pageViewController.viewControllers
@@ -327,10 +334,10 @@ class QPagesBrowser: UIViewController
     }
     
     @objc func searchViewResults(vc: SearchViewController){
-        if let navController = navigationController{
-            navController.popToRootViewController(animated: true)
+        //if let navController = navigationController{
+            //navController.popToRootViewController(animated: true)
             self.performSegue(withIdentifier: "OpenSearchResults", sender: self)
-        }
+        //}
     }
 
     @objc func hideMenu(){
@@ -513,20 +520,31 @@ class QPagesBrowser: UIViewController
             spineLocationFor orientation: UIInterfaceOrientation
         ) -> UIPageViewControllerSpineLocation
     {
-        updateTitle()
+        //updateTitle()
         
-        if (orientation == .portrait) || (orientation == .portraitUpsideDown) || (UIDevice.current.userInterfaceIdiom == .phone) {
+        if (orientation == .portrait)
+            || (orientation == .portraitUpsideDown)
+            || (UIDevice.current.userInterfaceIdiom == .phone)
+        {
             // In portrait orientation or on iPhone: Set the spine position to "min" and the page view controller's view controllers array to contain just one view controller. Setting the spine position to 'UIPageViewControllerSpineLocationMid' in landscape orientation sets the doubleSided property to true, so set it to false here.
-            let currentViewController = self.pageViewController!.viewControllers![0]
-            let viewControllers = [currentViewController]
-            self.pageViewController!.setViewControllers(
-                viewControllers,
-                direction: .forward,
-                animated: true,
-                completion: {done in }
-            )
+            if  let pageViewController = self.pageViewController,
+                let qPageViewController = pageViewController.viewControllers!.first as? QPageView {
 
-            self.pageViewController!.isDoubleSided = false
+                pageViewController.isDoubleSided = false
+
+                let viewControllers = [qPageViewController]
+                
+//                let spine : UIPageViewControllerSpineLocation =
+//                    (qPageViewController.pageIndex % 2) == 0 ? .max : .min
+
+                self.pageViewController!.setViewControllers(
+                    viewControllers,
+                    direction: .forward,
+                    animated: true,
+                    completion: {done in }
+                )
+            }
+            
             return .min //show only one page
         }
 

@@ -59,7 +59,7 @@ class TafseerViewController: UIViewController,
         pageViewController!.view.semanticContentAttribute = .forceRightToLeft
 
 
-        //Show initial pager pager
+        //Show initial pager page
         gotoAya(ayaPosition)
     }
     

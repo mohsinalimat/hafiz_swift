@@ -53,8 +53,24 @@ class SearchResultsViewController: UIViewController,
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    func removeExistingPageBrowserFromStack(){
+        if let navController = navigationController{
+            if let ndx = navController.viewControllers.index(where: { (vc) in
+                if let _ = vc as? QPagesBrowser {
+                    return true
+                }
+                return false
+            })
+            {
+                navController.viewControllers.remove(at: ndx)
+            }
+        }
+    }
 
     @objc func searchOpenAya(vc: SearchViewController){
+        //Remove existing QPageBrowser from stack
+        removeExistingPageBrowserFromStack()
         self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)//
     }
 
@@ -126,6 +142,7 @@ class SearchResultsViewController: UIViewController,
         }
         
         if SelectStart != -1, let vc = segue.destination as? QPagesBrowser{
+            removeExistingPageBrowserFromStack()
             let qData = QData.instance()
             vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
         }
