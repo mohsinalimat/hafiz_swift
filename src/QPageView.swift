@@ -17,10 +17,10 @@ class QPageView: UIViewController{
         static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
     }
 
-    var pageNumber: Int? //will be set by the ModelController that creates this controller
+    var pageNumber: Int? //will be set by the creator ViewController
     var pageMap: PageMap?
-    var _pageInfo: QData.PageInfo?
-    var pageInfo: QData.PageInfo? {
+    var _pageInfo: PageInfo?
+    var pageInfo: PageInfo? { //lazy loading
         get{
             if _pageInfo == nil && pageIndex != -1{
                 self._pageInfo = QData.instance().pageInfo(pageIndex)
@@ -78,8 +78,8 @@ class QPageView: UIViewController{
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
             let imageFrame = pageImageView.frame
-            //TODO: check if self.pageMap if not nil
-            if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
+            if let pageMap = self.pageMap,
+                let ayaInfo = qData.locateAya(pageMap: pageMap, pageSize: imageFrame.size, location: location) {
                 setMaskStart( qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya ) )
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.scrollToMaskStart()

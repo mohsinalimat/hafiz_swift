@@ -27,10 +27,11 @@ class HifzTableViewCell : UITableViewCell {
         if let hifzRange = self.hifzRange{
             rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
             let qData = QData.instance()
-            if let suraInfo = qData.suraInfo(suraIndex: hifzRange.sura){
-                let suraStartPage = CGFloat(suraInfo["sp"]! - 1)
-                let suraEndPage = CGFloat(suraInfo["ep"]! - 1)
+            if let suraInfo = qData.suraInfo(hifzRange.sura){
+                let suraStartPage = CGFloat(suraInfo.page)
+                let suraEndPage = CGFloat(suraInfo.endPage)
                 let pagesCount = CGFloat(suraEndPage - suraStartPage + 1)
+                //TODO: use mutipliers instead of constants to support view resizing
                 rangeStart.constant = (CGFloat(hifzRange.page) - suraStartPage) * width / pagesCount
                 rangeWidth.constant = CGFloat(hifzRange.count) * width / pagesCount
             }
@@ -38,7 +39,6 @@ class HifzTableViewCell : UITableViewCell {
             rangeWidth.constant = 0
         }
     }
-    
 }
 
 class HifzViewController: UITableViewController {
@@ -104,8 +104,8 @@ class HifzViewController: UITableViewController {
             cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
             cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
             cell.lastRevision!.text = "\(hRange.age) days"
-            //TODO: store ayaPosition instead of pageNumber
-            cell.tag = hRange.page + 1 //for segue use
+            //store ayaPosition instead of pageNumber
+            cell.tag = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
             cell.hifzRange = hRange
         }else{
             //TODO: if not logged in, show login required message
@@ -126,9 +126,14 @@ class HifzViewController: UITableViewController {
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if  let qPagesBrowser = segue.destination as? QPagesBrowser,
-            let viewCell = sender as? UITableViewCell
+            let viewCell = sender as? HifzTableViewCell
         {
-            qPagesBrowser.startingPage = viewCell.tag
+            let ayaPos = viewCell.tag
+            let qData = QData.instance()
+            SelectStart = ayaPos
+            SelectEnd = ayaPos
+            MaskStart = ayaPos
+            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
         }
         
     }

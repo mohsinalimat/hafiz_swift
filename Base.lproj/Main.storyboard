@@ -22,11 +22,11 @@
                         <viewControllerLayoutGuide type="bottom" id="IfR-02-kHw"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="502-Ir-ELC" userLabel="Page Body">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="6YQ-9R-sJH" userLabel="pagesContainer">
-                                <rect key="frame" x="0.0" y="20" width="320" height="516"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="472"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="4ZR-hv-zdW" appends="YES" id="Sb7-sD-IGd"/>
@@ -36,7 +36,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" restorationIdentifier="BottomBar" translatesAutoresizingMaskIntoConstraints="NO" id="D7X-gd-Vdj" userLabel="Bottom Bar">
-                                <rect key="frame" x="0.0" y="536" width="320" height="32"/>
+                                <rect key="frame" x="0.0" y="472" width="320" height="32"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YWK-KK-bkf" userLabel="Close">
                                         <rect key="frame" x="0.0" y="0.0" width="40" height="32"/>
@@ -642,7 +642,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Results title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e8N-ki-C4j" userLabel="SearchText">
-                                <rect key="frame" x="0.0" y="20" width="320" height="38"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="38"/>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="38" id="hZ1-ux-PFW"/>
@@ -652,7 +652,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VhH-5z-80h" userLabel="ResultsTable">
-                                <rect key="frame" x="0.0" y="58" width="320" height="510"/>
+                                <rect key="frame" x="0.0" y="102" width="320" height="466"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="0.0" reuseIdentifier="SearchResultCell" textLabel="VJe-M5-m9K" detailTextLabel="dOp-Or-zMz" style="IBUITableViewCellStyleSubtitle" id="VVI-hy-Ein" userLabel="ResultCell">
@@ -1163,6 +1163,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="FTj-05-K0G"/>
         <segue reference="hY7-SJ-Dos"/>
-        <segue reference="UMP-tO-r5S"/>
+        <segue reference="ain-zt-Gaq"/>
     </inferredMetricsTieBreakers>
 </document>

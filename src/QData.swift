@@ -9,7 +9,11 @@
 import UIKit
 import Firebase
 
-typealias AyaInfo = (sura:Int, aya:Int, page:Int)
+typealias NamedIntegers = [String:Int]
+typealias PageInfo = (suraIndex:Int, ayaIndex:Int, ayaPos:Int, ayaCount:Int)
+typealias SuraInfo = (page:Int, endPage:Int, totalAyat:Int, tanzeel:Int)
+typealias PartInfo = (sura:Int, aya:Int, endSura:Int, endAya:Int, page:Int, endPage:Int)
+typealias AyaInfo = (sura:Int, aya:Int, page:Int)//unused
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
 typealias AyaRecord = (sura:String,aya: String, aya_text: String, page: String)
 typealias HifzRange = (sura:Int, page:Int, count:Int, age:Double, revs:Int)
@@ -17,9 +21,9 @@ typealias SuraPageLocation = (sura:Int, page:Int, fromLine:Int, toLine: Int)
 typealias PageMap = [AyaFullInfo]
 
 class QData{
-    var suraInfo:[[String:Int]]?
-    var partInfo:[[String:Int]]?
-    var pagesInfo:[[String:Int]]?
+    var suraInfo:[NamedIntegers]?
+    var partInfo:[NamedIntegers]?
+    var pagesInfo:[PageInfo]?
     var suraNames:NSArray?
     var quranData:NSArray?
     var normalizedText:NSArray?
@@ -40,27 +44,30 @@ class QData{
         case last
     }
 
-    typealias PageInfo = (suraIndex:Int, ayaIndex:Int, ayaPos:Int, ayaCount:Int)
     typealias AyaPagePosition = (page:Int, position:Position)
 
     init(){
         do{
-            if let path = Bundle.main.url(forResource: "qdata", withExtension: "json")
-            {
+            if let path = Bundle.main.url(forResource: "qdata", withExtension: "json") {
                 let jsonData = try Data(contentsOf: path)
                 
                 let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
                 
                 if let object = json as? [String: Any] {
-                    // json is a dictionary
+                    // json is a [String:Any] dictionary
                     if let suraInfo = object["sura_info"] {
-                        self.suraInfo = suraInfo as? [[String : Int]]
+                        //TODO: process the data for quicker access
+                        self.suraInfo = suraInfo as? [NamedIntegers]
                     }
                     if let partInfo = object["parts"]{
-                        self.partInfo = partInfo as? [[String : Int]]
+                        self.partInfo = partInfo as? [NamedIntegers]
                     }
-                    if let pagesInfo = object["pagesInfo"]{
-                        self.pagesInfo = pagesInfo as? [[String : Int]]
+                    if let pagesInfo = object["pagesInfo"] as? [NamedIntegers]{
+                        self.pagesInfo = []
+                        for n in 0..<pagesInfo.count{
+                            self.pagesInfo?.append( self.pageInfo(n, infoList: pagesInfo)! )
+                        }
+                        //self.pagesInfo = pagesInfo as? [NamedIntegers]
                     }
                 }
             }
@@ -118,21 +125,37 @@ class QData{
         return nil //not found
     }
     
-    func pageInfo(_ pageIndex: Int )->QData.PageInfo? {
-        if self.pagesInfo == nil || pageIndex < 0 || pageIndex > QData.lastPageIndex{
+    func pageInfo(_ pageIndex: Int )->PageInfo?{
+        if let pagesInfo = self.pagesInfo, pageIndex < pagesInfo.count {
+            return pagesInfo[pageIndex]
+        }
+        return nil
+    }
+    
+    //Slow function
+    private func pageInfo(_ pageIndex: Int, infoList: [NamedIntegers] )->PageInfo? {
+        if pageIndex < 0 || pageIndex > infoList.count{
             return nil
         }
-        let info = self.pagesInfo![pageIndex]
+
+        let info = infoList[pageIndex]
         let suraIndex = info["s"]! - 1
         let ayaIndex = info["a"]! - 1
+        
+        //two CPU expensive calls
         let startAya = ayaPosition(sura: suraIndex, aya: ayaIndex)
-        let nextPageStartAya = pageIndex < QData.lastPageIndex ? ayaPosition(pageIndex: pageIndex+1) : QData.totalAyat
+        var nextPageStartAya = QData.totalAyat
+        
+        if pageIndex+1 < infoList.count{//not last page
+            let nextPageInfo = infoList[pageIndex+1]
+            nextPageStartAya = ayaPosition(sura: nextPageInfo["s"]! - 1, aya: nextPageInfo["a"]! - 1)
+        }
 
         return (
-            suraIndex:suraIndex,
-            ayaIndex:ayaIndex,
-            ayaPos:startAya,
-            ayaCount:nextPageStartAya-startAya
+            suraIndex: suraIndex,
+            ayaIndex: ayaIndex,
+            ayaPos: startAya,
+            ayaCount: nextPageStartAya-startAya
         )
     }
     
@@ -142,15 +165,30 @@ class QData{
     }
     
     func ayaPosition( pageIndex: Int )->Int{
-        let pageInfo = self.pagesInfo![pageIndex]
-        return ayaPosition(sura: pageInfo["s"]!-1, aya: pageInfo["a"]!-1)
+        let pageInfo = self.pageInfo( pageIndex )!
+        return pageInfo.ayaPos
     }
-    
-    func ayaPosition( sura:Int, aya:Int )->Int{
+
+    func ayaPosition( pageIndex: Int, suraIndex: Int )->Int{
+        
+        if let suraInfo = self.suraInfo(suraIndex),
+            suraInfo.page == pageIndex{
+            //Sura starts in this page, return first sura's first aya
+            return self.ayaPosition(sura:suraIndex, aya:0)
+        }
+        
+        if let pageInfo = self.pageInfo(pageIndex){
+            return pageInfo.ayaPos
+        }
+        
+        return -1
+    }
+
+    func ayaPosition( sura: Int, aya: Int )->Int{
         var index = 0
         for suraIndex in 0..<sura{
-            if let suraInfo = self.suraInfo(suraIndex:suraIndex) {
-                index += suraInfo["ac"]!
+            if let suraInfo = self.suraInfo(suraIndex) {
+                index += suraInfo.totalAyat
             }
         }
         return index+aya
@@ -208,7 +246,7 @@ class QData{
     
     func suraIndex(partIndex: Int) -> Int{
         if let partInfo = self.partInfo(partIndex:partIndex){
-            return partInfo["s"]! - 1
+            return partInfo.sura
         }
         return 0
     }
@@ -358,14 +396,14 @@ class QData{
     
     func pageIndex( partIndex: Int )-> Int{
         if let partInfo = self.partInfo(partIndex:partIndex){
-            return partInfo["p"]! - 1
+            return partInfo.page
         }
         return 0
     }
     
     func pageIndex( suraIndex: Int )-> Int{
-        if let suraInfo = self.suraInfo(suraIndex:suraIndex){
-            return suraInfo["sp"]! - 1
+        if let suraInfo = self.suraInfo(suraIndex){
+            return suraInfo.page
         }
         return 0
     }
@@ -375,8 +413,8 @@ class QData{
         let pageIndex = self.pageIndex(suraIndex: suraIndex)
         for p in pageIndex...QData.lastPageIndex {
             let pageInfo = pagesInfo![p]
-            let pageSuraIndex = pageInfo["s"]! - 1
-            let pageStartAyaIndex = pageInfo["a"]! - 1
+            let pageSuraIndex = pageInfo.suraIndex
+            let pageStartAyaIndex = pageInfo.ayaIndex
             if ( pageSuraIndex > suraIndex )
                 || ( pageSuraIndex == suraIndex && pageStartAyaIndex > ayaIndex )
             {
@@ -386,27 +424,42 @@ class QData{
         return QData.lastPageIndex
     }
     
-    func partInfo( partIndex: Int ) -> [String:Int]?{
+    func partInfo( partIndex: Int ) -> PartInfo?{
         if let parts = self.partInfo{
             if(partIndex<parts.count){
-                return parts[partIndex]
+                let partValues = parts[partIndex]
+                return PartInfo(
+                    sura: partValues["s"]! - 1,
+                    aya: partValues["a"]! - 1,
+                    endSura: partValues["es"]! - 1,
+                    endAya: partValues["ea"]! - 1,
+                    page: partValues["p"]! - 1,
+                    endPage: partValues["ep"]! - 1
+                )
             }
         }
         return nil
     }
     
-    func suraInfo( suraIndex: Int ) -> [String:Int]?{
+    func suraInfo(_ suraIndex: Int ) -> SuraInfo?{
         if let suras = self.suraInfo{
             if(suraIndex<suras.count){
-                return suras[suraIndex]
+                let sInfo = suras[suraIndex]
+                
+                return SuraInfo(
+                    page:sInfo["sp"]! - 1,
+                    endPage:sInfo["ep"]! - 1,
+                    totalAyat: sInfo["ac"]!,
+                    tanzeel: sInfo["t"]!
+                )
             }
         }
         return nil
     }
     
     func ayaCount( suraIndex: Int ) -> Int?{
-        if let suraInfo = suraInfo(suraIndex:suraIndex) {
-            return suraInfo["ac"]
+        if let suraInfo = suraInfo(suraIndex) {
+            return suraInfo.totalAyat
         }
         return nil
     }

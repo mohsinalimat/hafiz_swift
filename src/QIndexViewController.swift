@@ -33,7 +33,7 @@ class QIndexViewController: UITableViewController{
         let qData = QData.instance()
         
         if let partInfo = qData.partInfo(partIndex: partIndex) {
-            let rows = partInfo["es"]! - partInfo["s"]!
+            let rows = partInfo.endSura - partInfo.sura
             return rows + 1
         }
         
@@ -62,24 +62,24 @@ class QIndexViewController: UITableViewController{
         var suraPrefix = "\(suraIndex+1)"
         //let backgroundView = UIImageView(image: UIImage(named: "Heart"))
 
-        if let partInfo = qData.partInfo(partIndex: partIndex), let page = partInfo["p"]{
-            partStartPage = page
-            ayaPos = qData.ayaPosition(sura: partInfo["s"]!-1, aya: partInfo["a"]!-1) 
+        if let partInfo = qData.partInfo(partIndex: partIndex) {
+            partStartPage = partInfo.page
+            ayaPos = qData.ayaPosition(sura: partInfo.sura, aya: partInfo.aya)
         }
 
-        if let sInfo = qData.suraInfo(suraIndex: suraIndex), let page = sInfo["sp"]{
-            suraStartPage = page
+        if let sInfo = qData.suraInfo(suraIndex) {
+            suraStartPage = sInfo.page
         }
 
         if indexPath.row == 0 {
             //first row in the section, it could be a part or a sura
-            pageNumber = partStartPage
+            pageNumber = partStartPage + 1
             if suraStartPage != partStartPage{
                 suraPrefix = "..."
                 cellID = "SuraResume"
             }
         }else{
-            pageNumber = suraStartPage
+            pageNumber = suraStartPage + 1
             ayaPos = qData.ayaPosition(sura: suraIndex, aya: 0)
         }
 
