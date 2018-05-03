@@ -23,6 +23,11 @@ class HifzTableViewCell : UITableViewCell {
     
     var hifzRange:HifzRange?
     
+    func setRange(_ hifzRange: HifzRange ){
+        self.hifzRange = hifzRange
+        rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
+    }
+    
     func updateHifzChart(width:CGFloat){
         if let hifzRange = self.hifzRange{
             rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
@@ -104,8 +109,6 @@ class HifzViewController: UITableViewController {
             cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
             cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
             cell.lastRevision!.text = "\(hRange.age) days"
-            //store ayaPosition instead of pageNumber
-            cell.tag = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
             cell.hifzRange = hRange
         }else{
             //TODO: if not logged in, show login required message
@@ -125,11 +128,20 @@ class HifzViewController: UITableViewController {
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if  let qPagesBrowser = segue.destination as? QPagesBrowser,
-            let viewCell = sender as? HifzTableViewCell
+        if let hifzDetails = segue.destination as? HifzDetailsViewController,
+           let viewCell = sender as? HifzTableViewCell,
+            let hifzRange = viewCell.hifzRange
         {
-            let ayaPos = viewCell.tag
+            hifzDetails.setHifzRange( hifzRange )
+        }
+        
+        if  let qPagesBrowser = segue.destination as? QPagesBrowser,
+            let viewCell = sender as? HifzTableViewCell,
+            let hRange = viewCell.hifzRange
+        {
+            
             let qData = QData.instance()
+            let ayaPos = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
             SelectStart = ayaPos
             SelectEnd = ayaPos
             MaskStart = ayaPos

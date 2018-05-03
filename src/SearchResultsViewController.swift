@@ -80,7 +80,7 @@ class SearchResultsViewController: UIViewController,
     }
 
     func doSearch(){
-        resultsDescription.text = "Search Results for \(SearchText)"
+        resultsDescription.text = "Results for \(SearchText)"
 
         let qData = QData.instance()
         
@@ -107,7 +107,7 @@ class SearchResultsViewController: UIViewController,
             let ayaPosition = results[rowIndex]
             
             if let textLabel = cell.textLabel{
-                if ayaPosition < 0 {
+                if ayaPosition < 0 {// This is suraNumber in negative
                     let suraNumber = -ayaPosition
                     textLabel.text = qData.suraName( suraIndex: suraNumber-1 )
                     cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)

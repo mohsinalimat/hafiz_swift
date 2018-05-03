@@ -21,7 +21,7 @@ typealias SuraPageLocation = (sura:Int, page:Int, fromLine:Int, toLine: Int)
 typealias PageMap = [AyaFullInfo]
 
 class QData{
-    var suraInfo:[NamedIntegers]?
+    var suraInfo:[SuraInfo]?
     var partInfo:[NamedIntegers]?
     var pagesInfo:[PageInfo]?
     var suraNames:NSArray?
@@ -54,10 +54,15 @@ class QData{
                 let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
                 
                 if let object = json as? [String: Any] {
+
                     // json is a [String:Any] dictionary
-                    if let suraInfo = object["sura_info"] {
-                        //TODO: process the data for quicker access
-                        self.suraInfo = suraInfo as? [NamedIntegers]
+                    self.suraInfo = []
+                    
+                    if let suras = object["sura_info"] as? [NamedIntegers] {
+                        //process the data for quicker access
+                        for n in 0..<suras.count{
+                            self.suraInfo?.append(self.suraInfo(n, suras:suras)!)
+                        }
                     }
                     if let partInfo = object["parts"]{
                         self.partInfo = partInfo as? [NamedIntegers]
@@ -199,31 +204,37 @@ class QData{
         if let suras = self.suraInfo {
             for suraIndex in 0..<114{
                 let suraInfo = suras[suraIndex]
-                if suraStartIndex + suraInfo["ac"]! > index {
+                if suraStartIndex + suraInfo.totalAyat > index {
                     return (suraIndex, index-suraStartIndex)
                 }
-                suraStartIndex+=suraInfo["ac"]!
+                suraStartIndex+=suraInfo.totalAyat
             }
         }
         return (0,0)
     }
     
     func suraIndex( pageIndex: Int, direction: Direction = .forward )->Int{
+        
         if let suraInfoList = self.suraInfo {
-            //let seq = suraInfoList.enumerated()
-            let seq = (direction == .backward) ? suraInfoList.reversed().enumerated() : suraInfoList.enumerated()
-            for (suraIndex, suraInfo) in seq  {
-                if let ep = suraInfo["ep"], let sp = suraInfo["sp"]{
-                    if(direction == .backward){
-                        if sp <= pageIndex{
-                            return suraInfoList.count - suraIndex
-                        }
-                    }else{
-                        if ep > pageIndex{
-                            return suraIndex
-                        }
+            
+            let seq = (direction == .backward) ?
+                        suraInfoList.reversed().enumerated() : suraInfoList.enumerated()
+            
+            for (suraIndex, suraInfo) in seq {
+                
+                if(direction == .forward){
+                    //found first sura that the page is inside it
+                    if suraInfo.endPage >= pageIndex{
+                        return suraIndex
                     }
                 }
+                else{//find last sura where the target page is inside it
+                    if suraInfo.page <= pageIndex{
+                        //sura is found in the reverse order
+                        return suraInfoList.count - suraIndex
+                    }
+                }
+                
             }
             return direction == .backward ? 0 : suraInfoList.count - 1 //return first or last sura
         }
@@ -442,20 +453,26 @@ class QData{
     }
     
     func suraInfo(_ suraIndex: Int ) -> SuraInfo?{
-        if let suras = self.suraInfo{
-            if(suraIndex<suras.count){
-                let sInfo = suras[suraIndex]
-                
-                return SuraInfo(
-                    page:sInfo["sp"]! - 1,
-                    endPage:sInfo["ep"]! - 1,
-                    totalAyat: sInfo["ac"]!,
-                    tanzeel: sInfo["t"]!
-                )
-            }
+        if let suras = self.suraInfo, suraIndex<suras.count{
+            return suras[suraIndex]
         }
         return nil
     }
+
+    private func suraInfo(_ suraIndex: Int, suras: [NamedIntegers] ) -> SuraInfo?{
+        if(suraIndex<suras.count){
+            let sInfo = suras[suraIndex]
+            
+            return SuraInfo(
+                page:sInfo["sp"]! - 1,
+                endPage:sInfo["ep"]! - 1,
+                totalAyat: sInfo["ac"]!,
+                tanzeel: sInfo["t"]!
+            )
+        }
+        return nil
+    }
+
     
     func ayaCount( suraIndex: Int ) -> Int?{
         if let suraInfo = suraInfo(suraIndex) {
@@ -585,6 +602,25 @@ class QData{
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
     
+    static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(NSDictionary?)->Void )->Bool{
+        if let userID = Auth.auth().currentUser?.uid {
+            let ref = Database.database().reference().child("data/\(userID)/hifz")
+
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                block(snapshot.value as? NSDictionary)
+            })
+            
+            let hifzPage = String(format:"%03d",hifzRange.page)
+            let hifzSura = String(format:"%03d",hifzRange.sura)
+            let hifzID = "\(hifzPage)\(hifzSura)"
+            ref.child( "\(hifzID)/ts" ).setValue(Date().timeIntervalSince1970*1000)
+            ref.child( "\(hifzID)/revs" ).setValue(hifzRange.revs+1)
+            return true
+        }
+        return false
+    }
+    
+    //Read hifz ranges from Firebase
     static func hifzList(_ sync:Bool, _ block: @escaping([HifzRange]?)->Void ){
         
         if !sync , let cached = cachedHifzRanges{

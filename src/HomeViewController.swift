@@ -80,11 +80,13 @@ class HomeViewController: UITabBarController
     @IBAction func openActions(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        //TODO: change the title according to signin status
+        //change the title according to signin status
         var login:UIAlertAction?
-        if let _ = Auth.auth().currentUser {
-            login = UIAlertAction(title: "Sign Out", style: .default) { (action) in
+        
+        if let user = Auth.auth().currentUser, let email = user.email {
+            login = UIAlertAction(title: "Sign Out \(email)", style: .default) { (action) in
                 GIDSignIn.sharedInstance().signOut()
+                GIDSignIn.sharedInstance().disconnect()
             }
         }else{
             login = UIAlertAction(title: "Sign In", style: .default) { (action) in

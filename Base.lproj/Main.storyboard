@@ -629,10 +629,10 @@
             </objects>
             <point key="canvasLocation" x="213.75" y="495.42253521126759"/>
         </scene>
-        <!--Search Results-->
+        <!--Search-->
         <scene sceneID="vVF-Lc-orT">
             <objects>
-                <viewController storyboardIdentifier="SearchResults" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mGt-c5-pkX" userLabel="Search Results" customClass="SearchResultsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchResults" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mGt-c5-pkX" userLabel="Search" customClass="SearchResultsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cwd-bh-4FB"/>
                         <viewControllerLayoutGuide type="bottom" id="fwP-zZ-XKD"/>
@@ -697,7 +697,7 @@
                             <constraint firstItem="VhH-5z-80h" firstAttribute="top" secondItem="e8N-ki-C4j" secondAttribute="bottom" id="urc-xl-ebw"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Results" id="sqy-At-Uum">
+                    <navigationItem key="navigationItem" title="Search" id="sqy-At-Uum">
                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="eZp-nK-c0n">
                             <connections>
                                 <segue destination="g8R-0o-81q" kind="presentation" id="KTf-Yf-aXe"/>
@@ -907,6 +907,120 @@
             </objects>
             <point key="canvasLocation" x="-774" y="498"/>
         </scene>
+        <!--Hifz-->
+        <scene sceneID="RJV-3r-Ue2">
+            <objects>
+                <viewController title="Hifz Details" id="DfT-l6-szp" userLabel="Hifz" customClass="HifzDetailsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9PO-Ir-yPS"/>
+                        <viewControllerLayoutGuide type="bottom" id="KQY-fT-Kf4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="guv-ul-osW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hifz Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REN-vJ-Ogf">
+                                <rect key="frame" x="15" y="72" width="290" height="57"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLX-ah-vtX">
+                                <rect key="frame" x="15" y="139" width="290" height="57"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" semanticContentAttribute="forceRightToLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Aya Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Bx-hV-NC1">
+                                <rect key="frame" x="15" y="204" width="290" height="113.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zUw-tg-0vT" userLabel="ButtonsGrid">
+                                <rect key="frame" x="15" y="327.5" width="290" height="220.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="Read" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Jo-EB-GKE" userLabel="Read">
+                                        <rect key="frame" x="0.0" y="0.0" width="140" height="105.5"/>
+                                        <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Read"/>
+                                        <connections>
+                                            <segue destination="703-4V-yAM" kind="show" identifier="ReadHifz" id="382-2P-X8T"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="50a-Qx-Ygq" userLabel="BottomLeft">
+                                        <rect key="frame" x="0.0" y="114" width="140" height="105"/>
+                                        <color key="backgroundColor" red="0.86100012079999999" green="0.93846757339999998" blue="0.78776618440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Mark as Revised"/>
+                                        <connections>
+                                            <action selector="markAsRevised:" destination="DfT-l6-szp" eventType="touchUpInside" id="EUE-cf-xtP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qh4-rG-kTr" userLabel="Revise">
+                                        <rect key="frame" x="150" y="0.0" width="140" height="105.5"/>
+                                        <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Revise"/>
+                                        <connections>
+                                            <segue destination="703-4V-yAM" kind="show" identifier="ReviseHifz" id="JMX-lt-Q6B"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f18-Cz-qhV" userLabel="BottomRight">
+                                        <rect key="frame" x="150" y="115" width="140" height="105"/>
+                                        <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Remove from Hifz"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="8Jo-EB-GKE" firstAttribute="width" secondItem="zUw-tg-0vT" secondAttribute="width" multiplier="0.5" constant="-5" id="2Ox-cH-KtB"/>
+                                    <constraint firstItem="f18-Cz-qhV" firstAttribute="width" secondItem="zUw-tg-0vT" secondAttribute="width" multiplier="0.5" constant="-5" id="2oL-Va-j2c"/>
+                                    <constraint firstItem="Qh4-rG-kTr" firstAttribute="height" secondItem="zUw-tg-0vT" secondAttribute="height" multiplier="0.5" constant="-5" id="3sz-kh-Frq"/>
+                                    <constraint firstItem="Qh4-rG-kTr" firstAttribute="top" secondItem="zUw-tg-0vT" secondAttribute="top" id="A43-2U-QvF"/>
+                                    <constraint firstItem="50a-Qx-Ygq" firstAttribute="width" secondItem="zUw-tg-0vT" secondAttribute="width" multiplier="0.5" constant="-5" id="FOv-oS-gvo"/>
+                                    <constraint firstAttribute="bottom" secondItem="f18-Cz-qhV" secondAttribute="bottom" id="KIH-wq-rLa"/>
+                                    <constraint firstAttribute="trailing" secondItem="f18-Cz-qhV" secondAttribute="trailing" id="PrO-Oh-78h"/>
+                                    <constraint firstItem="50a-Qx-Ygq" firstAttribute="leading" secondItem="zUw-tg-0vT" secondAttribute="leading" id="TGA-kN-9iw"/>
+                                    <constraint firstItem="8Jo-EB-GKE" firstAttribute="height" secondItem="zUw-tg-0vT" secondAttribute="height" multiplier="0.5" constant="-5" id="Vyh-pZ-gdU"/>
+                                    <constraint firstItem="f18-Cz-qhV" firstAttribute="height" secondItem="zUw-tg-0vT" secondAttribute="height" multiplier="0.5" constant="-5" id="XZL-sd-DYU"/>
+                                    <constraint firstItem="Qh4-rG-kTr" firstAttribute="width" secondItem="zUw-tg-0vT" secondAttribute="width" multiplier="0.5" constant="-5" id="Xm8-91-WHH"/>
+                                    <constraint firstItem="50a-Qx-Ygq" firstAttribute="height" secondItem="zUw-tg-0vT" secondAttribute="height" multiplier="0.5" constant="-5" id="Xuu-J4-YTA"/>
+                                    <constraint firstItem="8Jo-EB-GKE" firstAttribute="leading" secondItem="zUw-tg-0vT" secondAttribute="leading" id="ZMu-hS-ArB"/>
+                                    <constraint firstAttribute="trailing" secondItem="Qh4-rG-kTr" secondAttribute="trailing" id="eFB-aK-V5E"/>
+                                    <constraint firstItem="8Jo-EB-GKE" firstAttribute="top" secondItem="zUw-tg-0vT" secondAttribute="top" id="jm6-EL-rLb"/>
+                                    <constraint firstAttribute="bottom" secondItem="50a-Qx-Ygq" secondAttribute="bottom" constant="0.5" id="jzn-UU-0qD"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="1BL-Za-INn"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="5x0-z7-NCp"/>
+                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="BF8-fI-NA0"/>
+                            <constraint firstItem="MLX-ah-vtX" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="C5S-sc-Gtj"/>
+                            <constraint firstItem="MLX-ah-vtX" firstAttribute="top" secondItem="REN-vJ-Ogf" secondAttribute="bottom" constant="10" id="EoK-Mt-cKQ"/>
+                            <constraint firstItem="KQY-fT-Kf4" firstAttribute="top" secondItem="zUw-tg-0vT" secondAttribute="bottom" constant="20" id="IvX-XP-cll"/>
+                            <constraint firstItem="MLX-ah-vtX" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="NG1-vj-T85"/>
+                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.1" id="O0t-VP-H0B"/>
+                            <constraint firstItem="MLX-ah-vtX" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.1" id="QM7-dQ-gaO"/>
+                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="top" secondItem="MLX-ah-vtX" secondAttribute="bottom" constant="8" symbolic="YES" id="hJh-Aj-Bja"/>
+                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="jW8-0z-PYS"/>
+                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="lkk-5q-AXf"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="top" secondItem="8Bx-hV-NC1" secondAttribute="bottom" constant="10" id="nft-a7-URC"/>
+                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="vOF-0f-rJy"/>
+                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="top" secondItem="9PO-Ir-yPS" secondAttribute="bottom" constant="8" id="vx8-Fg-oCe"/>
+                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.2" id="wQe-wV-gig"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="firstAya" destination="8Bx-hV-NC1" id="894-xa-1j7"/>
+                        <outlet property="hifzDetails" destination="MLX-ah-vtX" id="MWa-1r-OSq"/>
+                        <outlet property="hifzTitle" destination="REN-vJ-Ogf" id="LVN-D6-hDs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RCY-O1-NXC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1943" y="321"/>
+        </scene>
         <!--Hifz Table-->
         <scene sceneID="RRa-g1-8g5">
             <objects>
@@ -1005,7 +1119,7 @@
                                     <outlet property="rangeStart" destination="BvT-Kl-g3I" id="4G5-HT-VcP"/>
                                     <outlet property="rangeWidth" destination="ria-FD-1Zf" id="xDZ-v6-mKu"/>
                                     <outlet property="suraName" destination="kUh-x1-r02" id="83b-0l-FtK"/>
-                                    <segue destination="703-4V-yAM" kind="show" id="Mfu-sa-lR7"/>
+                                    <segue destination="DfT-l6-szp" kind="show" id="hh2-Ut-l3k"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1161,8 +1275,8 @@
         <image name="left_page" width="33" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="FTj-05-K0G"/>
+        <segue reference="KTf-Yf-aXe"/>
         <segue reference="hY7-SJ-Dos"/>
-        <segue reference="ain-zt-Gaq"/>
+        <segue reference="JMX-lt-Q6B"/>
     </inferredMetricsTieBreakers>
 </document>
