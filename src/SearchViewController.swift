@@ -58,7 +58,7 @@ class SearchViewController:
             dismiss(animated: true, completion: nil)
 
             NotificationCenter.default.post(
-                name: NSNotification.Name(rawValue: "searchViewResults"),
+                name: AppNotifications.searchViewResults,
                 object: self
             )
 
@@ -132,7 +132,7 @@ class SearchViewController:
             SelectEnd = ayaPosition
             dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(
-                name: NSNotification.Name(rawValue: "searchOpenAya"),
+                name: AppNotifications.searchOpenAya,
                 object: self
             )
         }

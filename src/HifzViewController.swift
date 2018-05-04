@@ -59,11 +59,27 @@ class HifzViewController: UITableViewController {
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.signedIn, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
+
         loadData()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func onRefresh(){
         loadData(sync: true)
+    }
+    
+    @objc func onDataUpdated(){
+        QData.hifzList(false){(ranges) in
+            self.hifzRanges = ranges
+            self.tableView.reloadData()
+        }
     }
     
     func loadData( sync:Bool = false ){

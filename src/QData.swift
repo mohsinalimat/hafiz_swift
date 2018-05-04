@@ -81,6 +81,12 @@ class QData{
             print ("JSON load error")
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSignIn), name: AppNotifications.signedIn, object: nil)
+    }
+    
+    @objc func handleSignIn(){
+        //clear cached data
+        QData.cachedHifzRanges = nil
     }
     
     static var qData: QData?
@@ -602,22 +608,52 @@ class QData{
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
     
-    static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(NSDictionary?)->Void )->Bool{
+    static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
         if let userID = Auth.auth().currentUser?.uid {
-            let ref = Database.database().reference().child("data/\(userID)/hifz")
-
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                block(snapshot.value as? NSDictionary)
-            })
-            
             let hifzPage = String(format:"%03d",hifzRange.page)
             let hifzSura = String(format:"%03d",hifzRange.sura)
             let hifzID = "\(hifzPage)\(hifzSura)"
-            ref.child( "\(hifzID)/ts" ).setValue(Date().timeIntervalSince1970*1000)
-            ref.child( "\(hifzID)/revs" ).setValue(hifzRange.revs+1)
+            let ref = Database.database().reference().child("data/\(userID)/hifz")
+
+            ref.observeSingleEvent(of: .childChanged, with: { (snapshot) in
+                //TODO: check if snapshot.key matchs hifzID
+                print("DB Child Changed: key=\(snapshot.key)")
+                NotificationCenter.default.post(
+                    name: AppNotifications.dataUpdated, object: snapshot
+                )
+                block(snapshot)
+            })
+            
+            let dict : NSDictionary = [
+                "pages": hifzRange.count,
+                "revs": hifzRange.revs+1,
+                "ts": Date().timeIntervalSince1970*1000
+            ]
+
+            ref.child( "\(hifzID)" ).setValue(dict)
+
+            cachedHifzRanges = nil // reset the cache
+            
             return true
         }
         return false
+    }
+    
+    static func hifzRange( snapshot: DataSnapshot )->HifzRange?{
+
+        if let info = snapshot.value as? NSDictionary {
+            let pageAndSura = snapshot.key
+            let page = Int(pageAndSura.prefix(3))!
+            let sura = Int(pageAndSura.suffix(3))!
+            let ts = info["ts"] as! Double / 1000 //seconds since 1970
+            let dt = Date(timeIntervalSince1970: ts)
+            let age = (Date().timeIntervalSince(dt)/60/60/24).rounded(.down) //days since last review
+            let pages = info["pages"] as! Int
+            let revs = info["revs"] as! Int
+            return HifzRange(sura:sura, page:page, count:pages, age:age, revs:revs)
+        }
+        
+        return nil
     }
     
     //Read hifz ranges from Firebase
@@ -629,30 +665,24 @@ class QData{
         
         if let userID = Auth.auth().currentUser?.uid {
             let ref = Database.database().reference().child("data/\(userID)/hifz")
+            
             if sync {
                 ref.keepSynced(true)
             }
+            
             let hifzRanges = ref.queryOrdered(byChild: "ts")
             
             hifzRanges.observeSingleEvent(of: .value, with: {(snapshot) in
-                var list:[HifzRange] = []
-                for child in snapshot.children.allObjects as! [DataSnapshot]{
-                    if let info = child.value as? NSDictionary{
-                        let pageAndSura:String = child.key
-                        let page = Int(pageAndSura.prefix(3))!
-                        let sura = Int(pageAndSura.suffix(3))!
-                        let ts = info["ts"] as! Double / 1000 //seconds since 1970
-                        let dt = Date(timeIntervalSince1970: ts)
-                        let age = (Date().timeIntervalSince(dt)/60/60/24).rounded(.down) //days since last review
-                        //print ( "Now=\(Date()), ts=\(ts), Date=\(dt), age=\(age)")
-                        let pages = info["pages"] as! Int
-                        let revs = info["revs"] as! Int
-                        let range = HifzRange(sura:sura, page:page, count:pages, age:age, revs:revs)
-                        list.append(range)
+                if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+                    var list:[HifzRange] = []
+                    for child in snapshots{
+                        if let range = QData.hifzRange(snapshot: child){
+                            list.append(range)
+                        }
                     }
+                    cachedHifzRanges = list
+                    block(list)
                 }
-                cachedHifzRanges = list
-                block(list)
             }) { (error) in
                 print( error )
                 block(nil)

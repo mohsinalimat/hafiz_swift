@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class HifzDetailsViewController: UIViewController {
 
@@ -18,26 +19,27 @@ class HifzDetailsViewController: UIViewController {
     
     @IBAction func markAsRevised(_ sender: Any) {
         //can't test before figuring out how to signout from my main account
-//        if let hifzRage = self.hifzRange{
-//            let _ = QData.promoteHifz(hifzRage){ (info:NSDictionary?) in
-//                if let info = info {
-//                    print( info )
-//                }
-//            }
-//        }
+        if let hifzRage = self.hifzRange{
+            let _ = QData.promoteHifz(hifzRage){ (snapshot:DataSnapshot?) in
+                if let snapshot = snapshot, let updatedHifzRange = QData.hifzRange(snapshot: snapshot) {
+                    self.setHifzRange(updatedHifzRange)
+                    self.updateViews()
+                    
+                    Utils.showMessage(
+                        self,
+                        title: "Revision Updated",
+                        message: "This memorized part has been marked as revised today"
+                    )
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        if let hifzRange = self.hifzRange{
-            let qData = QData.instance()
-            let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
-            hifzTitle.text = qData.suraName(suraIndex: hifzRange.sura)
-            firstAya.text = qData.ayaText(ayaPosition: ayaPos)
-            hifzDetails.text = "\(hifzRange.count) pages from page \(hifzRange.page)\n\(hifzRange.age) days"
-        }
+        updateViews()
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,7 +53,16 @@ class HifzDetailsViewController: UIViewController {
     
     func setHifzRange(_ hifzRange: HifzRange){
         self.hifzRange = hifzRange
-        
+    }
+    
+    func updateViews(){
+        if let hifzRange = self.hifzRange{
+            let qData = QData.instance()
+            let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
+            hifzTitle.text = qData.suraName(suraIndex: hifzRange.sura)
+            firstAya.text = qData.ayaText(ayaPosition: ayaPos)
+            hifzDetails.text = "\(hifzRange.count) pages from page \(hifzRange.page)\n\(hifzRange.age) days"
+        }
     }
 
     // MARK: - Navigation

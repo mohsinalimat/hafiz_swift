@@ -6,7 +6,7 @@
 //  Copyright © 2017 Ramy Eldesoky. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class Utils {
     static func getDataFromUrl(
@@ -84,5 +84,16 @@ class Utils {
         return nil
     }
 
-
+    static func showMessage(_ host: UIViewController, title:String,message:String){
+        let alert = UIAlertController(
+                        title: title,
+                        message: message,
+                        preferredStyle:UIAlertControllerStyle.alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        
+        host.present(alert, animated: true, completion: nil)
+    }
+    
 }

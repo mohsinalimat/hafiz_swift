@@ -12,11 +12,7 @@ class SearchResultsViewController: UIViewController,
     UITableViewDelegate,
     UITableViewDataSource {
 
-    let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
-    let searchViewResultsNotification = NSNotification.Name(rawValue: "searchViewResults")
-    
     @IBOutlet weak var resultsDescription: UILabel!
-    
     @IBOutlet weak var searchResultsTable: UITableView!
     
     var results:[Int] = []
@@ -38,14 +34,14 @@ class SearchResultsViewController: UIViewController,
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchOpenAya),
-            name: searchOpenAyaNotification,
+            name: AppNotifications.searchOpenAya,
             object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchViewResults),
-            name: searchViewResultsNotification,
+            name: AppNotifications.searchViewResults,
             object: nil
         )
     }

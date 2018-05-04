@@ -26,9 +26,6 @@ class HomeViewController: UITabBarController
         //navigationController?.navigationBar.topItem?.title = tabBar.selectedItem?.title
     }
     
-    let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
-    let searchViewResultsNotification = NSNotification.Name(rawValue: "searchViewResults")
-
     override func viewWillAppear(_ animated: Bool) {
         //Show Navigation bar
         navigationController?.navigationBar.isHidden = false
@@ -39,14 +36,14 @@ class HomeViewController: UITabBarController
         NotificationCenter.default.addObserver(
            self,
            selector: #selector(searchOpenAya),
-           name: searchOpenAyaNotification,
+           name: AppNotifications.searchOpenAya,
            object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchViewResults),
-            name: searchViewResultsNotification,
+            name: AppNotifications.searchViewResults,
             object: nil
         )
     }
@@ -83,10 +80,11 @@ class HomeViewController: UITabBarController
         //change the title according to signin status
         var login:UIAlertAction?
         
-        if let user = Auth.auth().currentUser, let email = user.email {
+        if let user = Auth.auth().currentUser,let email = user.email {
             login = UIAlertAction(title: "Sign Out \(email)", style: .default) { (action) in
                 GIDSignIn.sharedInstance().signOut()
                 GIDSignIn.sharedInstance().disconnect()
+                GIDSignIn.sharedInstance().signIn()
             }
         }else{
             login = UIAlertAction(title: "Sign In", style: .default) { (action) in

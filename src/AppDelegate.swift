@@ -89,9 +89,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 return
             }
             print( "AppDelegate Firebase signed in :)" )
-            // User is signed in
-            // broadcast a notification to refresh the data
             
+            NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
         }
     }
     
@@ -110,4 +109,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
 }
 
+struct AppNotifications {
+    static var searchOpenAya: NSNotification.Name { return NSNotification.Name(rawValue: "searchOpenAya") }
+    static var searchViewResults: NSNotification.Name { return NSNotification.Name(rawValue: "searchViewResults") }
+    static var dataUpdated: NSNotification.Name { return NSNotification.Name(rawValue: "dataUpdated") }
+    static var signedIn: NSNotification.Name { return NSNotification.Name(rawValue: "signedIn") }
+}
 

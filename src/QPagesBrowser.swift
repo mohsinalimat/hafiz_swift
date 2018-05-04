@@ -83,9 +83,6 @@ class QPagesBrowser: UIViewController
         hideNavBar()
     }
     
-    let searchOpenAyaNotification = NSNotification.Name(rawValue: "searchOpenAya")
-    let searchViewResultsNotification = NSNotification.Name(rawValue: "searchViewResults")
-
     override func viewWillAppear(_ animated: Bool) {
         //print("QPagesBrowser willAppear")
         hideNavBar()
@@ -95,14 +92,14 @@ class QPagesBrowser: UIViewController
         nCenter.addObserver(
             self,
             selector: #selector(searchOpenAya),
-            name: searchOpenAyaNotification,
+            name: AppNotifications.searchOpenAya,
             object: nil
         )
 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchViewResults),
-            name: searchViewResultsNotification,
+            name: AppNotifications.searchViewResults,
             object: nil
         )
 
@@ -171,6 +168,7 @@ class QPagesBrowser: UIViewController
             
             //scroll to selection
             if SelectStart != -1 {
+                //Similar to window.setTimeout()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     if let curr_view = self.currentPageView() {
                         curr_view.scrollToSelectedAya()
