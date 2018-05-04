@@ -345,6 +345,7 @@ class QPagesBrowser: UIViewController
     @IBAction func clickClose(_ sender: Any) {
         if MaskStart != -1 {//If mask is On, clear it first
             setMaskStart(-1)
+            hideSelection()
         }
         else if SelectStart != -1 {
             if checkGotoPage(ayaPos: SelectStart){
@@ -366,10 +367,12 @@ class QPagesBrowser: UIViewController
     }
     
     @IBAction func nextPageClicked(_ sender: Any) {
-        let curr_page_index = currentPageIndx() + 1
-        if curr_page_index < lastPage {
-            gotoPage(pageNum: curr_page_index+1)
-        }
+//        let curr_page_index = currentPageIndx() + 1
+//        if curr_page_index < lastPage {
+//            gotoPage(pageNum: curr_page_index+1)
+//        }
+        showMenu(sender)
+        
     }
     
     // MARK: - Mask methods

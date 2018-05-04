@@ -614,6 +614,7 @@ class QData{
             let hifzSura = String(format:"%03d",hifzRange.sura)
             let hifzID = "\(hifzPage)\(hifzSura)"
             let ref = Database.database().reference().child("data/\(userID)/hifz")
+            ref.keepSynced(true)
 
             ref.observeSingleEvent(of: .childChanged, with: { (snapshot) in
                 //TODO: check if snapshot.key matchs hifzID
@@ -627,8 +628,10 @@ class QData{
             let dict : NSDictionary = [
                 "pages": hifzRange.count,
                 "revs": hifzRange.revs+1,
-                "ts": Date().timeIntervalSince1970*1000
+                "ts": Int64(Date().timeIntervalSince1970*1000)
             ]
+            
+            //TODO: increment activities
 
             ref.child( "\(hifzID)" ).setValue(dict)
 
