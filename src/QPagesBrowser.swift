@@ -109,9 +109,8 @@ class QPagesBrowser: UIViewController
             name: NSNotification.Name.UIDeviceOrientationDidChange,
             object: nil
         )
-        hideNavBar()
+
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        
 
         
         // setting the hidesBarsOnSwift property to false
@@ -296,7 +295,9 @@ class QPagesBrowser: UIViewController
         }
 
         let bookmark = UIAlertAction(title: "Bookmark", style: .default) { (action) in
-            print(action)
+            if false ==  QData.createBookmark(page: self.currentPageIndx()){ (snapshot) in } {
+                Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
+            }
         }
         
         let close = UIAlertAction(title: "Close", style: .cancel) { (action) in

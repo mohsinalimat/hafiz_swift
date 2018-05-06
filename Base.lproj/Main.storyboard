@@ -238,10 +238,10 @@
             </objects>
             <point key="canvasLocation" x="218" y="-320"/>
         </scene>
-        <!--Tafseer View Controller-->
+        <!--Tafseer Browser-->
         <scene sceneID="IVQ-cT-Ipg">
             <objects>
-                <viewController id="im7-xJ-McY" customClass="TafseerViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="im7-xJ-McY" userLabel="Tafseer Browser" customClass="TafseerViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WgS-wk-GQW"/>
                         <viewControllerLayoutGuide type="bottom" id="fIJ-VD-jnW"/>
@@ -313,10 +313,10 @@
             </objects>
             <point key="canvasLocation" x="1291.875" y="-767.95774647887322"/>
         </scene>
-        <!--Tafseer Aya View-->
+        <!--Tafseer Aya-->
         <scene sceneID="yw5-hV-mil">
             <objects>
-                <viewController storyboardIdentifier="TafseerAyaView" id="EjG-LK-2vR" customClass="TafseerAyaView" customModule="quran_hafiz" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TafseerAyaView" id="EjG-LK-2vR" userLabel="Tafseer Aya" customClass="TafseerAyaView" customModule="quran_hafiz" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="EUJ-Np-nOp"/>
                         <viewControllerLayoutGuide type="bottom" id="tSP-Rx-ah4"/>
@@ -629,10 +629,10 @@
             </objects>
             <point key="canvasLocation" x="213.75" y="495.42253521126759"/>
         </scene>
-        <!--Search-->
+        <!--Search Results-->
         <scene sceneID="vVF-Lc-orT">
             <objects>
-                <viewController storyboardIdentifier="SearchResults" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mGt-c5-pkX" userLabel="Search" customClass="SearchResultsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchResults" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mGt-c5-pkX" userLabel="Search Results" customClass="SearchResultsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cwd-bh-4FB"/>
                         <viewControllerLayoutGuide type="bottom" id="fwP-zZ-XKD"/>
@@ -748,10 +748,10 @@
             </objects>
             <point key="canvasLocation" x="-774" y="-1846"/>
         </scene>
-        <!--Search View Controller-->
+        <!--Search Popup-->
         <scene sceneID="Gp7-j5-ir2">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="g8R-0o-81q" customClass="SearchViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="g8R-0o-81q" userLabel="Search Popup" customClass="SearchViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9Y1-Ls-JCa"/>
                         <viewControllerLayoutGuide type="bottom" id="qUm-SN-bDJ"/>
@@ -907,10 +907,10 @@
             </objects>
             <point key="canvasLocation" x="-774" y="498"/>
         </scene>
-        <!--Hifz-->
+        <!--Hifz Details-->
         <scene sceneID="RJV-3r-Ue2">
             <objects>
-                <viewController title="Hifz Details" id="DfT-l6-szp" userLabel="Hifz" customClass="HifzDetailsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Hifz Details" id="DfT-l6-szp" userLabel="Hifz Details" customClass="HifzDetailsViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9PO-Ir-yPS"/>
                         <viewControllerLayoutGuide type="bottom" id="KQY-fT-Kf4"/>
@@ -919,54 +919,76 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hifz Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REN-vJ-Ogf">
-                                <rect key="frame" x="15" y="72" width="290" height="57"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLX-ah-vtX">
-                                <rect key="frame" x="15" y="139" width="290" height="57"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" semanticContentAttribute="forceRightToLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Aya Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Bx-hV-NC1">
-                                <rect key="frame" x="15" y="204" width="290" height="113.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zUw-tg-0vT" userLabel="ButtonsGrid">
-                                <rect key="frame" x="15" y="327.5" width="290" height="220.5"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xw4-L2-1XU" userLabel="DetailsFrame">
+                                <rect key="frame" x="17" y="64" width="290" height="242"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="Read" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Jo-EB-GKE" userLabel="Read">
-                                        <rect key="frame" x="0.0" y="0.0" width="140" height="105.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="dDI-iL-Ulj" userLabel="DetaildStack">
+                                        <rect key="frame" x="0.0" y="0.5" width="290" height="242"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="30" text="Hifz Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REN-vJ-Ogf">
+                                                <rect key="frame" x="0.0" y="0.0" width="290" height="23"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" semanticContentAttribute="forceRightToLeft" horizontalHuggingPriority="251" verticalHuggingPriority="1" text="First Aya Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Bx-hV-NC1">
+                                                <rect key="frame" x="0.0" y="33" width="290" height="178.5"/>
+                                                <color key="backgroundColor" white="0.91556352890000003" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="10" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLX-ah-vtX">
+                                                <rect key="frame" x="0.0" y="221.5" width="290" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="dDI-iL-Ulj" secondAttribute="trailing" id="BDc-Ab-SDw"/>
+                                    <constraint firstItem="dDI-iL-Ulj" firstAttribute="leading" secondItem="xw4-L2-1XU" secondAttribute="leading" id="Iyx-h2-3fi"/>
+                                    <constraint firstItem="dDI-iL-Ulj" firstAttribute="top" secondItem="xw4-L2-1XU" secondAttribute="top" id="bog-SM-UPO"/>
+                                    <constraint firstAttribute="bottom" secondItem="dDI-iL-Ulj" secondAttribute="bottom" id="q5a-kw-dFB"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zUw-tg-0vT" userLabel="ButtonsGrid">
+                                <rect key="frame" x="15" y="321" width="290" height="227"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="Read" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="8Jo-EB-GKE" userLabel="Read">
+                                        <rect key="frame" x="0.0" y="0.0" width="140" height="109"/>
                                         <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Read"/>
                                         <connections>
                                             <segue destination="703-4V-yAM" kind="show" identifier="ReadHifz" id="382-2P-X8T"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="50a-Qx-Ygq" userLabel="BottomLeft">
-                                        <rect key="frame" x="0.0" y="114" width="140" height="105"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="50a-Qx-Ygq" userLabel="BottomLeft">
+                                        <rect key="frame" x="0.0" y="119" width="140" height="108"/>
                                         <color key="backgroundColor" red="0.86100012079999999" green="0.93846757339999998" blue="0.78776618440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Mark as Revised"/>
                                         <connections>
                                             <action selector="markAsRevised:" destination="DfT-l6-szp" eventType="touchUpInside" id="EUE-cf-xtP"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qh4-rG-kTr" userLabel="Revise">
-                                        <rect key="frame" x="150" y="0.0" width="140" height="105.5"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Qh4-rG-kTr" userLabel="Revise">
+                                        <rect key="frame" x="150" y="0.0" width="140" height="109"/>
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Revise"/>
                                         <connections>
                                             <segue destination="703-4V-yAM" kind="show" identifier="ReviseHifz" id="JMX-lt-Q6B"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f18-Cz-qhV" userLabel="BottomRight">
-                                        <rect key="frame" x="150" y="115" width="140" height="105"/>
+                                    <button opaque="NO" contentMode="left" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="f18-Cz-qhV" userLabel="BottomRight">
+                                        <rect key="frame" x="150" y="118" width="140" height="109"/>
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Remove from Hifz"/>
                                     </button>
                                 </subviews>
@@ -994,22 +1016,42 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="zUw-tg-0vT" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="1BL-Za-INn"/>
+                            <constraint firstItem="xw4-L2-1XU" firstAttribute="top" secondItem="9PO-Ir-yPS" secondAttribute="bottom" id="3ju-ik-Nus"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.4" id="4b4-jG-eZm"/>
                             <constraint firstItem="zUw-tg-0vT" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="5x0-z7-NCp"/>
-                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="BF8-fI-NA0"/>
-                            <constraint firstItem="MLX-ah-vtX" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="C5S-sc-Gtj"/>
-                            <constraint firstItem="MLX-ah-vtX" firstAttribute="top" secondItem="REN-vJ-Ogf" secondAttribute="bottom" constant="10" id="EoK-Mt-cKQ"/>
+                            <constraint firstItem="xw4-L2-1XU" firstAttribute="trailing" secondItem="zUw-tg-0vT" secondAttribute="leading" constant="-15" id="9n5-r5-u81"/>
                             <constraint firstItem="KQY-fT-Kf4" firstAttribute="top" secondItem="zUw-tg-0vT" secondAttribute="bottom" constant="20" id="IvX-XP-cll"/>
-                            <constraint firstItem="MLX-ah-vtX" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="NG1-vj-T85"/>
-                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.1" id="O0t-VP-H0B"/>
-                            <constraint firstItem="MLX-ah-vtX" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.1" id="QM7-dQ-gaO"/>
-                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="top" secondItem="MLX-ah-vtX" secondAttribute="bottom" constant="8" symbolic="YES" id="hJh-Aj-Bja"/>
-                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="jW8-0z-PYS"/>
-                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="centerX" secondItem="guv-ul-osW" secondAttribute="centerX" id="lkk-5q-AXf"/>
-                            <constraint firstItem="zUw-tg-0vT" firstAttribute="top" secondItem="8Bx-hV-NC1" secondAttribute="bottom" constant="10" id="nft-a7-URC"/>
-                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="vOF-0f-rJy"/>
-                            <constraint firstItem="REN-vJ-Ogf" firstAttribute="top" secondItem="9PO-Ir-yPS" secondAttribute="bottom" constant="8" id="vx8-Fg-oCe"/>
-                            <constraint firstItem="8Bx-hV-NC1" firstAttribute="height" secondItem="guv-ul-osW" secondAttribute="height" multiplier="0.2" id="wQe-wV-gig"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" multiplier="0.5" id="Lko-Wu-kwX"/>
+                            <constraint firstItem="xw4-L2-1XU" firstAttribute="bottom" secondItem="zUw-tg-0vT" secondAttribute="top" constant="-15" id="MtX-sz-Xi1"/>
+                            <constraint firstItem="xw4-L2-1XU" firstAttribute="width" secondItem="guv-ul-osW" secondAttribute="width" constant="-30" id="Noc-Lo-5J0"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="top" secondItem="9PO-Ir-yPS" secondAttribute="bottom" constant="14" id="Zm3-28-bfY"/>
+                            <constraint firstItem="KQY-fT-Kf4" firstAttribute="top" secondItem="xw4-L2-1XU" secondAttribute="bottom" constant="14" id="eM0-wl-Cjt"/>
+                            <constraint firstItem="zUw-tg-0vT" firstAttribute="trailing" secondItem="guv-ul-osW" secondAttribute="trailing" constant="-15" id="lCW-5q-JlB"/>
+                            <constraint firstAttribute="leading" secondItem="xw4-L2-1XU" secondAttribute="leading" constant="-17" id="pCz-ke-Oqf"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Lko-Wu-kwX"/>
+                                <exclude reference="Zm3-28-bfY"/>
+                                <exclude reference="lCW-5q-JlB"/>
+                                <exclude reference="eM0-wl-Cjt"/>
+                                <exclude reference="9n5-r5-u81"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <exclude reference="1BL-Za-INn"/>
+                                <exclude reference="4b4-jG-eZm"/>
+                                <exclude reference="5x0-z7-NCp"/>
+                                <include reference="Lko-Wu-kwX"/>
+                                <include reference="Zm3-28-bfY"/>
+                                <include reference="lCW-5q-JlB"/>
+                                <include reference="eM0-wl-Cjt"/>
+                                <include reference="9n5-r5-u81"/>
+                                <exclude reference="MtX-sz-Xi1"/>
+                                <exclude reference="Noc-Lo-5J0"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="firstAya" destination="8Bx-hV-NC1" id="894-xa-1j7"/>
@@ -1019,18 +1061,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RCY-O1-NXC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1943" y="321"/>
+            <point key="canvasLocation" x="-1944.375" y="320.07042253521126"/>
         </scene>
         <!--Hifz Table-->
         <scene sceneID="RRa-g1-8g5">
             <objects>
                 <tableViewController id="jHV-wq-GPS" userLabel="Hifz Table" customClass="HifzViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="LvO-m7-PIX">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="LvO-m7-PIX" userLabel="HifzTableView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="0.0" reuseIdentifier="Hifz Cell" id="3ub-tY-BQ2" customClass="HifzTableViewCell" customModule="quran_hafiz" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="Hifz Cell" editingAccessoryType="detailButton" id="3ub-tY-BQ2" customClass="HifzTableViewCell" customModule="quran_hafiz" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3ub-tY-BQ2" id="LEA-3A-sII">
@@ -1041,24 +1083,20 @@
                                             <rect key="frame" x="0.0" y="0.0" width="286" height="43.5"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hg3-rJ-WLw" userLabel="RangeLeading">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="71.5" height="43.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="BvT-Kl-g3I" userLabel="rangeStart"/>
-                                                    </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37r-z2-8TD" userLabel="RangeBody">
-                                                    <rect key="frame" x="50" y="2" width="100" height="39.5"/>
+                                                    <rect key="frame" x="71.5" y="2" width="86.5" height="39.5"/>
                                                     <color key="backgroundColor" red="0.59999999999999998" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="100" id="ria-FD-1Zf" userLabel="rangeWidth"/>
-                                                    </constraints>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstItem="37r-z2-8TD" firstAttribute="width" secondItem="Ueg-7K-ZUy" secondAttribute="width" multiplier="0.3" identifier="rangeWidth" id="1Qb-aa-dCj" userLabel="rangeWidth"/>
                                                 <constraint firstItem="Hg3-rJ-WLw" firstAttribute="height" secondItem="Ueg-7K-ZUy" secondAttribute="height" id="5ax-ih-TOe"/>
                                                 <constraint firstItem="37r-z2-8TD" firstAttribute="leading" secondItem="Hg3-rJ-WLw" secondAttribute="trailing" id="GkF-om-niW"/>
+                                                <constraint firstItem="Hg3-rJ-WLw" firstAttribute="width" secondItem="Ueg-7K-ZUy" secondAttribute="width" multiplier="0.25" identifier="rangeStart" id="NZc-5l-5VJ" userLabel="rangeStart"/>
                                                 <constraint firstItem="Hg3-rJ-WLw" firstAttribute="leading" secondItem="Ueg-7K-ZUy" secondAttribute="leading" id="Tye-jR-T7X"/>
                                                 <constraint firstItem="37r-z2-8TD" firstAttribute="top" secondItem="Ueg-7K-ZUy" secondAttribute="top" constant="2" id="YVp-8v-AkS"/>
                                                 <constraint firstItem="37r-z2-8TD" firstAttribute="height" secondItem="Ueg-7K-ZUy" secondAttribute="height" constant="-4" id="pfv-lo-DuG"/>
@@ -1116,11 +1154,27 @@
                                     <outlet property="lastRevision" destination="KiD-mP-IKx" id="EoC-kc-KXB"/>
                                     <outlet property="rangeBody" destination="37r-z2-8TD" id="aw0-98-0ED"/>
                                     <outlet property="rangeDescription" destination="gRL-tR-12H" id="aMP-nx-tft"/>
-                                    <outlet property="rangeStart" destination="BvT-Kl-g3I" id="4G5-HT-VcP"/>
-                                    <outlet property="rangeWidth" destination="ria-FD-1Zf" id="xDZ-v6-mKu"/>
+                                    <outlet property="rangeLeading" destination="Hg3-rJ-WLw" id="Fvf-ff-jx6"/>
                                     <outlet property="suraName" destination="kUh-x1-r02" id="83b-0l-FtK"/>
-                                    <segue destination="DfT-l6-szp" kind="show" id="hh2-Ut-l3k"/>
+                                    <segue destination="703-4V-yAM" kind="show" identifier="ReviseHifz" id="Yoy-kt-B5E"/>
                                 </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Loading" textLabel="zn1-Io-LJP" style="IBUITableViewCellStyleDefault" id="thc-6d-74U" userLabel="LoadingHifz">
+                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="thc-6d-74U" id="HKP-c4-gd2">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zn1-Io-LJP">
+                                            <rect key="frame" x="16" y="0.0" width="288" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -1138,6 +1192,10 @@
                             </fragment>
                         </attributedString>
                     </tabBarItem>
+                    <connections>
+                        <segue destination="DfT-l6-szp" kind="show" identifier="ViewHifzDetails" id="oQe-sT-ZCQ"/>
+                        <segue destination="703-4V-yAM" kind="show" identifier="ReadHifz" id="xTL-Fx-IJt"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnA-In-VyK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1275,8 +1333,8 @@
         <image name="left_page" width="33" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="FTj-05-K0G"/>
-        <segue reference="hY7-SJ-Dos"/>
-        <segue reference="JMX-lt-Q6B"/>
+        <segue reference="KTf-Yf-aXe"/>
+        <segue reference="G6v-7F-wGi"/>
+        <segue reference="xTL-Fx-IJt"/>
     </inferredMetricsTieBreakers>
 </document>

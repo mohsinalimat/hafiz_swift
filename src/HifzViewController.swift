@@ -17,42 +17,88 @@ class HifzTableViewCell : UITableViewCell {
     @IBOutlet weak var lastRevision: UILabel!
     
     @IBOutlet weak var hifzChart: UIView!
+    @IBOutlet weak var rangeLeading: UIView!
     @IBOutlet weak var rangeBody: UIView!
-    @IBOutlet weak var rangeStart: NSLayoutConstraint!
-    @IBOutlet weak var rangeWidth: NSLayoutConstraint!
     
     var hifzRange:HifzRange?
     
     func setRange(_ hifzRange: HifzRange ){
         self.hifzRange = hifzRange
-        rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
+        updateRangeColor()
+        updateHifzChart()
     }
     
-    func updateHifzChart(width:CGFloat){
+    func updateRangeColor(){
         if let hifzRange = self.hifzRange{
             rangeBody.backgroundColor = QData.hifzColor(range: hifzRange)
-            let qData = QData.instance()
-            if let suraInfo = qData.suraInfo(hifzRange.sura){
-                let suraStartPage = CGFloat(suraInfo.page)
-                let suraEndPage = CGFloat(suraInfo.endPage)
-                let pagesCount = CGFloat(suraEndPage - suraStartPage + 1)
-                //TODO: use mutipliers instead of constants to support view resizing
-                rangeStart.constant = (CGFloat(hifzRange.page) - suraStartPage) * width / pagesCount
-                rangeWidth.constant = CGFloat(hifzRange.count) * width / pagesCount
-            }
-        }else{
-            rangeWidth.constant = 0
         }
     }
+    
+    func updateHifzChart(){
+        let qData = QData.instance()
+        
+        if let hifzRange = self.hifzRange,
+           let suraInfo = qData.suraInfo(hifzRange.sura)
+        {
+            //remove existing constraints
+            hifzChart.removeConstraints( hifzChart.constraints.filter{ $0.identifier == "rangeStart" || $0.identifier == "rangeWidth" } )
+            rangeLeading.removeConstraints( rangeLeading.constraints.filter{ $0.identifier == "rangeStart" } )
+            rangeBody.removeConstraints( rangeBody.constraints.filter{ $0.identifier == "rangeWidth" } )
+            
+            let suraStartPage = CGFloat(suraInfo.page)
+            let suraEndPage = CGFloat(suraInfo.endPage)
+            let pagesCount = CGFloat(suraEndPage - suraStartPage + 1)
+
+            let rangeStartMultiplier = (CGFloat(hifzRange.page) - suraStartPage)  / pagesCount
+            let rangeWidthMultiplier = CGFloat(hifzRange.count) / pagesCount
+
+            let leadingConstraint = rangeLeading.widthAnchor.constraint(equalTo: hifzChart.widthAnchor, multiplier: rangeStartMultiplier)
+            let widthConstraint = rangeBody.widthAnchor.constraint(equalTo: hifzChart.widthAnchor, multiplier: rangeWidthMultiplier)
+            leadingConstraint.identifier = "rangeStart"
+            widthConstraint.identifier = "rangeWidth"
+
+            NSLayoutConstraint.activate( [ leadingConstraint, widthConstraint ] )
+        }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(reviseHifz)
+            || action == #selector(readHifz)
+            || action == #selector(viewHifzDetails)
+    }
+
+    @objc func reviseHifz(){
+        if let vc = self.parentViewController as? HifzViewController{
+            vc.performSegue(withIdentifier: "ReviseHifz", sender: self)
+        }
+    }
+
+    @objc func viewHifzDetails(){
+        if let vc = self.parentViewController as? HifzViewController{
+            vc.performSegue(withIdentifier: "ViewHifzDetails", sender: self)
+        }
+    }
+
+    @objc func readHifz(){
+        if let vc = self.parentViewController as? HifzViewController{
+            vc.performSegue(withIdentifier: "ReadHifz", sender: self)
+        }
+    }
+
+
+//    @objc func dummy(sender: Any?){
+//        //Utils.showMessage(nil, title: "Dummy", message: "Menu Command")
+//        print ("Cell.dummy(sender) called")
+//    }
 }
 
 class HifzViewController: UITableViewController {
 
-    var hifzRanges:[HifzRange]?
+    var hifzRanges:HifzList?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = true
         
@@ -60,11 +106,25 @@ class HifzViewController: UITableViewController {
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
         
+        //relead data upon signed In user is changed
         NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.signedIn, object: nil)
         
+        //relead data upon data change
         NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
 
         loadData()
+        
+        becomeFirstResponder()
+    }
+    
+    override var canBecomeFirstResponder: Bool{
+        get {
+            return true
+        }
+    }
+    
+    @objc func dummy(){
+        print("UITableView.dumm() called")
     }
     
     deinit {
@@ -76,14 +136,14 @@ class HifzViewController: UITableViewController {
     }
     
     @objc func onDataUpdated(){
-        QData.hifzList(false){(ranges) in
+        QData.hifzList(sortByAge: true, sync: true){(ranges) in
             self.hifzRanges = ranges
             self.tableView.reloadData()
         }
     }
     
     func loadData( sync:Bool = false ){
-        QData.hifzList(sync){(ranges) in
+        QData.hifzList(sortByAge: true, sync: sync){(ranges) in
             self.hifzRanges = ranges
             self.tableView.reloadData()
             self.tableView.refreshControl!.endRefreshing()
@@ -114,9 +174,8 @@ class HifzViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Hifz Cell", for: indexPath) as! HifzTableViewCell
-
         if let hifzRanges = self.hifzRanges {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Hifz Cell", for: indexPath) as! HifzTableViewCell
             // Populate cell data...
             let rowIndex = indexPath.row
             let hRange = hifzRanges[rowIndex]
@@ -124,26 +183,91 @@ class HifzViewController: UITableViewController {
 
             cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
             cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
-            cell.lastRevision!.text = "\(hRange.age) days"
-            cell.hifzRange = hRange
-        }else{
-            //TODO: if not logged in, show login required message
-            cell.suraName!.text = "Loading..."
+            cell.lastRevision!.text = "\(Int(-hRange.age)) days"
+            cell.setRange(hRange)
+            return cell
         }
         
-        return cell
+        //TODO: if not logged in, show login required message
+        let loadingCell = tableView.dequeueReusableCell(withIdentifier: "Loading", for: indexPath)
+        loadingCell.textLabel?.text = "Loading Hifz data..."
+        return loadingCell
     }
     
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let hifzCell = cell as? HifzTableViewCell{
-            hifzCell.updateHifzChart(width: tableView.frame.size.width)
+    //Will be invoked upon long press to check for supported edit menus ( usually "Copy", "Paste", "Delete" )
+    override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        //print ("shouldShowMenuForRowAt(\(indexPath.row))")
+        if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell{
+            UIMenuController.shared.menuItems =  [
+                UIMenuItem(title: "Read", action: #selector(HifzTableViewCell.readHifz)),
+                UIMenuItem(title: "Revise", action: #selector(HifzTableViewCell.reviseHifz)),
+                UIMenuItem(title: "Details", action: #selector(HifzTableViewCell.viewHifzDetails))
+            ]
+            cell.updateRangeColor()
+            return true
+        }
+        return false
+    }
+    
+    //UIMenuController will call the cell view to check if the action is supported,
+    //However, we have to override this method in the tableview in order for UIMenuController to consider showing the context menu
+    override func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool
+    {
+        //Never called
+        return action == #selector(HifzTableViewCell.readHifz)
+            || action == #selector(HifzTableViewCell.viewHifzDetails)
+            || action == #selector(HifzTableViewCell.reviseHifz)
+    }
+
+    //UIMenuController will call the cell view to check if the action is supported,
+    //However, we have to override this method in the tableview in order for UIMenuController to consider showing the context menu
+    override func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?)
+    {
+        //Never called
+        print( "I am not expected to be called" )
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell{
+            cell.updateRangeColor()
         }
     }
     
+    // Return right swipe edit actions
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        return [
+            UITableViewRowAction(style: .destructive, title: "Revised", handler: {
+                (rowAction, indexPath) in
+                
+                if let hifzRange = self.hifzRanges?.remove(at: indexPath.row){
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    let _ = QData.promoteHifz(hifzRange, {(snapshot) in })//dataUpdated event will refresh the table
+                }
+            }),
+            
+            UITableViewRowAction(style: .normal, title: "Edit", handler: {
+                (rowAction, indexPath) in
+                if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell {
+                    self.performSegue(withIdentifier: "ViewHifzDetails", sender: cell)
+                }
+            })
+        ]
+    }
+    
+//    @IBAction func onLongPressHifzTable(_ sender: UILongPressGestureRecognizer) {
+//        let p = sender.location(in: tableView)
+//        if  let indexPath = tableView.indexPathForRow(at: p),
+//            let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell
+//        {
+//            Utils.showMessage(self, title: "Long Pressed", message: cell.suraName!.text!)
+//        }
+//    }
     
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        //Segue to HifzDetailsViewController
         if let hifzDetails = segue.destination as? HifzDetailsViewController,
            let viewCell = sender as? HifzTableViewCell,
             let hifzRange = viewCell.hifzRange
@@ -151,6 +275,7 @@ class HifzViewController: UITableViewController {
             hifzDetails.setHifzRange( hifzRange )
         }
         
+        //Segue to QPageBrowser
         if  let qPagesBrowser = segue.destination as? QPagesBrowser,
             let viewCell = sender as? HifzTableViewCell,
             let hRange = viewCell.hifzRange
@@ -158,56 +283,37 @@ class HifzViewController: UITableViewController {
             
             let qData = QData.instance()
             let ayaPos = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
+            
             SelectStart = ayaPos
             SelectEnd = ayaPos
-            MaskStart = ayaPos
+            
+            if segue.identifier == "ReviseHifz"{
+                MaskStart = ayaPos
+            }
+            
             qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
         }
         
     }
-    /*
+    
+    // MARK: - Table Editing delegate methods
+    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
-
-    /*
+    
     // Override to support editing the table view.
+    /*
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
+        }
+        else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

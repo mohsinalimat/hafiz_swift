@@ -49,6 +49,7 @@ class HifzDetailsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     func setHifzRange(_ hifzRange: HifzRange){

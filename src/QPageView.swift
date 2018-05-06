@@ -309,6 +309,7 @@ class QPageView: UIViewController{
         //navigationController?.navigationBar.isHidden = true
     }
 
+    //TODO: unused
     func createAyatButtons(){
         //if let pageNumber = self.pageNumber{
             //self.pageMap = QData.pageMap( pageNumber-1 )
@@ -330,6 +331,7 @@ class QPageView: UIViewController{
         //}
     }
     
+    //TODO: Unused
     func positionAyatButtons(){
         let containerView = self.buttonsView!
         let imageRect = containerView.frame
@@ -413,9 +415,13 @@ class QPageView: UIViewController{
                 let lineWidth = CGFloat(imageRect.size.width)
                 maskHeadHeight.constant = lineHeight
                 
-                let headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
+                var headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
+
+                if headStartX < lineWidth / 20{
+                    headStartX = 0
+                }
                
-                //Extend the mask .4 of the lineHeight width, if sneekView is not ON
+                //Extend the mask .1 of the lineHeight width, if sneekView is not ON
                 let extensionWidth = lineHeight/10 //lineWidth/9.65/3
                 let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
                 
@@ -742,8 +748,15 @@ class QPageView: UIViewController{
                 let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: pageMap)!
                 let ypos = pageHeight * CGFloat(selectStartInfo.sline) / 15
                 selectHeadY.constant = ypos
-                let startX = (CGFloat(selectStartInfo.spos) * pageWidth) / 1000
-                selectHeadSartX.constant = startX
+                var startX = (CGFloat(selectStartInfo.spos) * pageWidth) / 1000
+                if startX < pageWidth/20 {
+                    startX = 0
+                }
+                var extensionWidth = lineHeight/10
+                if extensionWidth > startX{
+                    extensionWidth = startX
+                }
+                selectHeadSartX.constant = startX - extensionWidth
                 let endX = selectStartInfo.sline == selectEndInfo.eline && selectStartInfo.page == selectEndInfo.page ?
                     (CGFloat(1000 - selectEndInfo.epos) * pageWidth) / 1000 : 0
                 selectHeadEndX.constant = endX

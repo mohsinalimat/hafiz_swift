@@ -105,6 +105,23 @@ class BookmarksViewController: UITableViewController {
         return cell
     }
     
+    // Return right swipe edit actions
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        return [
+            UITableViewRowAction(style: .destructive, title: "Remove", handler: {
+                (rowAction, indexPath) in
+                
+                if let page = self.pageMarks?.remove(at: indexPath.row){
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    let _ = QData.deleteBookmark(page: page){(snapshot) in
+                        print( "Bookmark deleted")
+                    }//dataUpdated event will refresh the table
+                }
+            })
+        ]
+    }
+    
     // MARK: - Navigation
 
     override

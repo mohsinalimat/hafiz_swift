@@ -17,6 +17,7 @@ typealias AyaInfo = (sura:Int, aya:Int, page:Int)//unused
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
 typealias AyaRecord = (sura:String,aya: String, aya_text: String, page: String)
 typealias HifzRange = (sura:Int, page:Int, count:Int, age:Double, revs:Int)
+typealias HifzList = [HifzRange]
 typealias SuraPageLocation = (sura:Int, page:Int, fromLine:Int, toLine: Int)
 typealias PageMap = [AyaFullInfo]
 
@@ -26,7 +27,7 @@ class QData{
     var pagesInfo:[PageInfo]?
     var suraNames:NSArray?
     var quranData:NSArray?
-    var normalizedText:NSArray?
+    var normalizedQuranTextArray:NSArray?
     var normalizedSuraNames:[String]?
     var quranText:NSArray?
     
@@ -86,7 +87,7 @@ class QData{
     
     @objc func handleSignIn(){
         //clear cached data
-        QData.cachedHifzRanges = nil
+        QData.cachedHifzList = nil
     }
     
     static var qData: QData?
@@ -365,12 +366,12 @@ class QData{
     }
     
     func readNormalizedText()-> NSArray?{
-        if normalizedText == nil {
+        if normalizedQuranTextArray == nil {
             if let path = Bundle.main.path(forResource: "normalized_quran", ofType: "plist") {
-                normalizedText = NSArray(contentsOfFile: path) //cache quranData NSDictionary
+                normalizedQuranTextArray = NSArray(contentsOfFile: path) //cache quranData NSDictionary
             }
         }
-        return normalizedText
+        return normalizedQuranTextArray
     }
     
     func searchQuran(_ pattern: String, max: Int ) -> [Int] {
@@ -567,6 +568,8 @@ class QData{
         }
         return (page: pageIndex, position: .inside)
     }
+
+    // MARK: - Bookmarks data methods
     
     static func bookmarks(sync: Bool,_ block: @escaping ([Int]?)->Void ) {
         if let userID = Auth.auth().currentUser?.uid {
@@ -593,8 +596,48 @@ class QData{
             block(nil)
         }
     }
-    static var cachedHifzRanges:[HifzRange]?
+
+    static func createBookmark( page: Int, block: @escaping( DataSnapshot? )->Void )->Bool{
+        if let pageMarks = userData("page_marks") {
+            pageMarks.keepSynced(true)//update remote data if connected
+            
+            pageMarks.observeSingleEvent(of: .childChanged) { (snapshot) in
+                NotificationCenter.default.post(
+                    name: AppNotifications.dataUpdated, object: snapshot
+                )
+                block(snapshot)
+            }
+            
+            
+            pageMarks.child(String(page)).setValue( -Utils.timeStamp() ) //store current timestamp in negative for reverse sorting
+            return true
+        }
+        return false // not authenticated
+    }
     
+    static func deleteBookmark( page: Int, block: @escaping( DataSnapshot? ) -> Void )->Bool{
+        if let pageMarks = userData("page_marks") {
+            pageMarks.keepSynced(true)//update remote data if connected
+            
+            pageMarks.observeSingleEvent(of: .childRemoved) { (snapshot) in
+                NotificationCenter.default.post(
+                    name: AppNotifications.dataUpdated, object: snapshot
+                )
+                block(snapshot)
+            }
+            
+            pageMarks.child(String(page)).removeValue()
+            
+            return true
+        }
+        return false // not authenticated
+    }
+
+    // MARK: - Hifz data methods
+    
+    static var cachedHifzList:HifzList?
+    static var cachedSortedHifzList:HifzList?
+
     static func hifzColor( range: HifzRange, alpha: CGFloat = 0.12 )->UIColor{
         if range.age < 0{
             return .clear
@@ -608,34 +651,67 @@ class QData{
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
     
+    static func userData(_ key:String)->DatabaseReference?{
+        if let userID = Auth.auth().currentUser?.uid  {
+            let userData = Database.database().reference().child("data/\(userID)")
+            return userData.child(key)
+        }
+        return nil
+    }
+    
     static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
-        if let userID = Auth.auth().currentUser?.uid {
+
+        let promtedHifz = HifzRange (
+            sura: hifzRange.sura,
+            page: hifzRange.page,
+            count: hifzRange.count,
+            age: hifzRange.age,
+            revs: hifzRange.revs + 1
+        )
+
+        return updateHifz( promtedHifz, block )
+    }
+    
+    //Update or create new Hifz
+    static func updateHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
+
+        let df = DateFormatter()
+        df.dateFormat = "YYYY-MM-dd"
+        df.locale = Locale.init(identifier: "en-us")
+        let today = df.string(from:Date())
+        
+        if let hifz = userData("hifz"), let activity = userData("activity/\(today)") {
+            hifz.keepSynced(true)
+
             let hifzPage = String(format:"%03d",hifzRange.page)
             let hifzSura = String(format:"%03d",hifzRange.sura)
             let hifzID = "\(hifzPage)\(hifzSura)"
-            let ref = Database.database().reference().child("data/\(userID)/hifz")
-            ref.keepSynced(true)
 
-            ref.observeSingleEvent(of: .childChanged, with: { (snapshot) in
+            hifz.observeSingleEvent(of: .childChanged) { (snapshot) in
                 //TODO: check if snapshot.key matchs hifzID
-                print("DB Child Changed: key=\(snapshot.key)")
+                //print("DB Child Changed: key=\(snapshot.key)")
                 NotificationCenter.default.post(
                     name: AppNotifications.dataUpdated, object: snapshot
                 )
                 block(snapshot)
-            })
+            }
             
             let dict : NSDictionary = [
                 "pages": hifzRange.count,
-                "revs": hifzRange.revs+1,
-                "ts": Int64(Date().timeIntervalSince1970*1000)
+                "revs": hifzRange.revs,
+                "ts": Utils.timeStamp()
             ]
             
-            //TODO: increment activities
+            hifz.child( "\(hifzID)" ).setValue(dict)
 
-            ref.child( "\(hifzID)" ).setValue(dict)
+            if hifzRange.revs > 0 { //make sure it is not first creation
+                activity.child("pages").observeSingleEvent(of: .value){ (snapshot) in
+                    let pages = snapshot.value as? Int ?? 0
+                    activity.child("pages").setValue(pages+hifzRange.count)
+                }
+            }
 
-            cachedHifzRanges = nil // reset the cache
+            cachedHifzList = nil // reset the cache
             
             return true
         }
@@ -643,7 +719,6 @@ class QData{
     }
     
     static func hifzRange( snapshot: DataSnapshot )->HifzRange?{
-
         if let info = snapshot.value as? NSDictionary {
             let pageAndSura = snapshot.key
             let page = Int(pageAndSura.prefix(3))!
@@ -655,14 +730,26 @@ class QData{
             let revs = info["revs"] as! Int
             return HifzRange(sura:sura, page:page, count:pages, age:age, revs:revs)
         }
-        
         return nil
     }
     
+    static func cachedHifz( sortByAge: Bool )->HifzList?{
+        return sortByAge ? cachedSortedHifzList : cachedHifzList
+    }
+    
+    static func setHifzCache( sortByAge: Bool, hifzList: HifzList ){
+        if sortByAge {
+            cachedSortedHifzList = hifzList
+        }
+        else{
+            cachedHifzList = hifzList
+        }
+    }
+    
     //Read hifz ranges from Firebase
-    static func hifzList(_ sync:Bool, _ block: @escaping([HifzRange]?)->Void ){
+    static func hifzList( sortByAge:Bool, sync:Bool, _ block: @escaping(HifzList?)->Void ){
         
-        if !sync , let cached = cachedHifzRanges{
+        if !sync , let cached = cachedHifzList{
             block(cached)
         }
         
@@ -677,13 +764,13 @@ class QData{
             
             hifzRanges.observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
-                    var list:[HifzRange] = []
+                    var list:HifzList = []
                     for child in snapshots{
                         if let range = QData.hifzRange(snapshot: child){
                             list.append(range)
                         }
                     }
-                    cachedHifzRanges = list
+                    setHifzCache(sortByAge: sortByAge, hifzList: list)
                     block(list)
                 }
             }) { (error) in
@@ -697,8 +784,8 @@ class QData{
         }
     }
     
-    static func pageHifzRanges(_ pageIndex: Int, _ block: @escaping([HifzRange]?)->Void ){
-        hifzList(false){ (hifzRanges) in
+    static func pageHifzRanges(_ pageIndex: Int, _ block: @escaping(HifzList?)->Void ){
+        hifzList(sortByAge: true, sync:false){ (hifzRanges) in
             if let hifzRanges = hifzRanges {
                 //filter ranges containing the designated page
                 let pageHifzRanges = hifzRanges.filter{ hifzRange in
