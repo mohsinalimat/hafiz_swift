@@ -245,6 +245,14 @@ class QPagesBrowser: UIViewController
         }
         return -1
     }
+    
+    func isBookmarked()->Bool{
+        if let qPageView = currentPageView(), let isBookmarked = qPageView.isBookmarked{
+            return isBookmarked
+        }
+        return false
+    }
+    
     //TODO: support two pages view mode
     func currentPageView()->QPageView?{
         if  let pageViewController = self.pageViewController,
@@ -273,46 +281,81 @@ class QPagesBrowser: UIViewController
         hideNavBar( navigationController?.navigationBar.isHidden == false)
     }
     
-    @IBAction func showMenu(_ sender: Any) {
-        
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let startRevise = UIAlertAction(title: "Revise", style: .default) { (action) in
+    func handleAlertAction(_ id: String,_ selection: Int? = nil ){
+        switch id {
+        case "revise":
             if SelectStart != -1 {
                 self.setMaskStart(SelectStart)
             }else{
                 let qData = QData.instance()
                 self.setMaskStart( qData.ayaPosition(pageIndex: self.currentPageIndx()))
             }
-        }
-
-        let search = UIAlertAction(title: "Search", style: .default) { (action) in
-            self.showSearch()
-        }
-
-        let addToHifz = UIAlertAction(title: "Add to Hifz", style: .default) { (action) in
-            print(action)
-        }
-
-        let bookmark = UIAlertAction(title: "Bookmark", style: .default) { (action) in
-            if false ==  QData.createBookmark(page: self.currentPageIndx()){ (snapshot) in } {
+            break
+        case "bookmark":
+            if false == QData.createBookmark(page: self.currentPageIndx(), block:{ (snapshot) in }) {
                 Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
+            }
+            break
+        case "addHifz":
+            showAlertActions([
+                alertAction("addHifzSelectSura","Fateha",1),
+                alertAction("addHifzSelectSura","Baqarah",2)
+            ], "Select Sura")
+            break
+        case "addHifzSelectSura":
+            print( "Selected Sura is \(selection!)" )
+            showAlertActions([
+                alertAction("addHifzSelectRange","Whole Sura",1),
+                alertAction("addHifzSelectRange","From Sura Start",2),
+                alertAction("addHifzSelectRange","To Sura End",3),
+                alertAction("addHifzSelectRange","Current Page",4)
+            ], "Select Range")
+            break
+        case "addHifzSelectRange":
+            print( "Selected Range is \(selection!)" )
+            break
+        default:
+            print( id )
+        }
+    }
+    
+    func alertAction(_ id:String,_ title:String,_ selection:Int? = nil)->UIAlertAction{
+        return UIAlertAction(title: title, style: .default, handler: { (action) in
+            self.handleAlertAction(id, selection)
+        })
+    }
+    
+    func showAlertActions(_ actions:[UIAlertAction?],_ title:String? = nil, msg:String? = nil){
+        
+        //create the controller
+        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .actionSheet)
+        
+        //loop to add all actions
+        actions.forEach{(action) in
+            if let action = action {
+                alertController.addAction(action)
             }
         }
         
-        let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
-            print(action)
-        }
+        //Add the cancel action
+        alertController.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+
+        //show the actions
+        self.present(alertController, animated: true)
+    }
+    
+    @IBAction func showMenu(_ sender: Any) {
         
-        alert.addAction(startRevise)
-        alert.addAction(search)
-        alert.addAction(addToHifz)
-        alert.addAction(bookmark)
-        alert.addAction(close)
+        let startRevise = alertAction("revise", "Revise")
+        let addToHifz = alertAction("addHifz", "Add to Hifz")
+        let bookmark = isBookmarked() ? nil : alertAction("bookmark", "Bookmark")
         
-        self.present(alert, animated: true) {
-            print( "Alert Dismissed" )
-        }
+        showAlertActions([
+            startRevise,
+            addToHifz,
+            bookmark
+        ])
+        
     }
 
     @objc func onDeviceRotated(){
@@ -376,13 +419,64 @@ class QPagesBrowser: UIViewController
         
     }
     
+    var autoRotate = true
+    
+    @IBAction func onPinchAction(_ sender: UIPinchGestureRecognizer) {
+        if sender.state == .ended {
+            autoRotate = false
+            if sender.scale > 1 {
+                AppDelegate.orientation = .landscape
+                //UIDevice.current.setValue(UIInterfaceOrientationMask.landscapeRight.rawValue, forKey: "orientation")
+            }
+            else{
+                AppDelegate.orientation = .portrait
+                //UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
+            }
+            
+            UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
+            
+            //UIViewController.attemptRotationToDeviceOrientation()
+        }
+    }
+    
+    override var shouldAutorotate: Bool {
+        return autoRotate
+    }
+
+//    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+//        return UIInterfaceOrientation.landscapeLeft
+//    }
+    
+    
+//    @IBAction func onSwipePageDown(_ sender: UISwipeGestureRecognizer) {
+//        if sender.state == .ended {
+//            hideNavBar(false)
+//        }
+//    }
+    
+    @IBOutlet var contextMenu: UIView!
+    
+    @IBAction func showContextMenu(_ sender: Any) {
+//        self.view.addSubview(contextMenu)
+//        contextMenu.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
+    }
+    
     // MARK: - Mask methods
     @objc func hideMask(){
         if MaskStart != -1 {
             setMaskStart(-1)
         }
     }
-    
+
+//
+//    var sio = UIInterfaceOrientationMask.all
+//
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask{
+//        get {
+//            return sio
+//        }
+//    }
+
 
     func hideSelection(){
         SelectStart = -1
@@ -590,3 +684,14 @@ class QPagesBrowser: UIViewController
     
 }
 
+//class PageAlertAction : UIAlertAction {
+//    var id:String?
+//    convenience init(id:String, title: String?, style: UIAlertActionStyle, handler: ((PageAlertAction) -> Swift.Void)? = nil){
+//        self.init(title:title,style:style,handler:{(action) in
+//            if let handler = handler, let action = action as PageAlertAction{
+//                handler( action )
+//            }
+//        })
+//    }
+//
+//}

@@ -17,9 +17,11 @@ class QPageView: UIViewController{
         static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
     }
 
+    var isBookmarked: Bool?
     var pageNumber: Int? //will be set by the creator ViewController
     var pageMap: PageMap?
     var _pageInfo: PageInfo?
+    
     var pageInfo: PageInfo? { //lazy loading
         get{
             if _pageInfo == nil && pageIndex != -1{
@@ -28,7 +30,9 @@ class QPageView: UIViewController{
             return _pageInfo
         }
     }
+    
     var clickedAya : UIView?
+    
     var pageIndex:Int {
         get{
             if pageNumber != nil {
@@ -37,6 +41,7 @@ class QPageView: UIViewController{
             return -1
         }
     }
+    
     var sneekViewWidth : CGFloat = 0
     var hifzColorsConstraints : [NSLayoutConstraint] = []
 
@@ -114,7 +119,7 @@ class QPageView: UIViewController{
     
     @IBAction func MaskLongPressed(_ sender: Any) {
         //self.hideMask()
-        //TODO:
+        //TODO: if maskhead, sneek preview, else uncover that pressed aya
     }
     
     @IBAction func clickedCloseMask(_ sender: Any) {
@@ -188,12 +193,32 @@ class QPageView: UIViewController{
         // Do any additional setup after loading the view, typically from a nib.
         //print ( "QPageView viewDidLoad()" )
         loadPageImage()
-        createHifzColors()
         
         //createAyatButtons()
         becomeFirstResponder()
+        
         if let pageNumber = self.pageNumber{
             self.pageMap = QData.pageMap( pageNumber-1 )
+        }
+        
+        readData()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(readData), name: AppNotifications.dataUpdated, object: nil)
+        //relead data upon data change
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    
+    @objc func readData(){
+
+        if let pageNumber = self.pageNumber{
+            let _ = QData.isBookmarked(page: pageNumber-1 ){(is_true) in
+                self.isBookmarked = is_true
+            }
+            createHifzColors()
         }
     }
     

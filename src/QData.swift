@@ -571,9 +571,28 @@ class QData{
 
     // MARK: - Bookmarks data methods
     
-    static func bookmarks(sync: Bool,_ block: @escaping ([Int]?)->Void ) {
-        if let userID = Auth.auth().currentUser?.uid {
-            let ref = Database.database().reference().child("data/\(userID)/page_marks")
+    static var cachedBookmarks:[Int]?
+    
+    static func isBookmarked( page:Int, block: @escaping(Bool)->Void ){
+        if false == bookmarks(sync:false, {(list) in
+            //find the page in the list
+            if let list = list,
+               let _ = list.first(where:{(item) in item == page})
+            {
+                block(true)
+            }
+        })
+        {//user is not logged in not bookmarked
+            block(false)
+        }
+    }
+    
+    static func bookmarks(sync: Bool,_ block: @escaping([Int]?)->Void )->Bool {
+        if !sync, let bookmarks = cachedBookmarks {
+            block(bookmarks)
+        }
+        
+        if let ref = userData("page_marks") {
             if sync {
                 ref.keepSynced(true)
             }
@@ -585,23 +604,23 @@ class QData{
                 for child in snapshot.children.allObjects as! [DataSnapshot]{
                     list.append(Int(child.key)!)
                 }
+                cachedBookmarks = list
                 block(list)
             }) { (error) in
                 print( error )
                 block(nil)
             }
+            return true
         }
-        else{
-            print( "Not authenticated" )
-            block(nil)
-        }
+        
+        return false
     }
 
     static func createBookmark( page: Int, block: @escaping( DataSnapshot? )->Void )->Bool{
         if let pageMarks = userData("page_marks") {
             pageMarks.keepSynced(true)//update remote data if connected
             
-            pageMarks.observeSingleEvent(of: .childChanged) { (snapshot) in
+            pageMarks.observeSingleEvent(of: .childAdded) { (snapshot) in
                 NotificationCenter.default.post(
                     name: AppNotifications.dataUpdated, object: snapshot
                 )

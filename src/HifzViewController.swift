@@ -116,7 +116,11 @@ class HifzViewController: UITableViewController {
         
         becomeFirstResponder()
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override var canBecomeFirstResponder: Bool{
         get {
             return true
@@ -127,9 +131,6 @@ class HifzViewController: UITableViewController {
         print("UITableView.dumm() called")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
     
     @objc func onRefresh(){
         loadData(sync: true)
