@@ -182,7 +182,7 @@ class QPagesBrowser: UIViewController
     }
 
     func checkGotoPage(ayaPos:Int)->Bool{
-        let qData = QData.instance()
+        let qData = QData.instance
         let selectionPage = qData.pageIndex(ayaPosition: ayaPos)
         if selectionPage != self.currentPageIndx(){
             //TODO: scroll to ayaPos
@@ -222,19 +222,19 @@ class QPagesBrowser: UIViewController
     func updateTitle(){
         //reference the first QPageView
         let pageIndex = currentPageIndx()
-        let qData = QData.instance()
+        let qData = QData.instance
         //let suraNumber = qData.suraIndex( pageIndex: pageIndex ) + 1
         let partNumber = qData.partIndex( pageIndex: pageIndex ) + 1
         
         let suraName = qData.suraName(pageIndex: pageIndex)!
-        self.title = suraName
+        self.title = suraName.name
 
         //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
         let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
         self.nextPageButton.setTitle(pageInfo, for: .normal)
         
         //let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
-        self.suraName.text = suraName //+ maskedAya
+        self.suraName.text = suraName.name //+ maskedAya
         
         setNavigationButtonsColor()
     }
@@ -268,6 +268,14 @@ class QPagesBrowser: UIViewController
         return nil
     }
     
+    //TODO: support two pages view mode
+    func currentSuras()->SuraInfoList?{
+//        if let pageView = currentPageView(){
+//            //return pageView.sura
+//        }
+        return nil
+    }
+    
     func showSearch(){
         self.performSegue(withIdentifier: "PopupSearch", sender: self)
     }
@@ -281,45 +289,93 @@ class QPagesBrowser: UIViewController
         hideNavBar( navigationController?.navigationBar.isHidden == false)
     }
     
-    func handleAlertAction(_ id: String,_ selection: Int? = nil ){
+    // MARK: - Actions Alert
+    func handleAlertAction(_ id: String,_ selection: Any? = nil ){
         switch id {
         case "revise":
             if SelectStart != -1 {
                 self.setMaskStart(SelectStart)
             }else{
-                let qData = QData.instance()
+                let qData = QData.instance
                 self.setMaskStart( qData.ayaPosition(pageIndex: self.currentPageIndx()))
             }
             break
+            
         case "bookmark":
             if false == QData.createBookmark(page: self.currentPageIndx(), block:{ (snapshot) in }) {
                 Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
             }
             break
+        
         case "addHifz":
-            showAlertActions([
-                alertAction("addHifzSelectSura","Fateha",1),
-                alertAction("addHifzSelectSura","Baqarah",2)
-            ], "Select Sura")
+            if let pageView = currentPageView(),
+               let pageMap = pageView.pageMap
+            {
+                let qData = QData.instance
+                let currPage = self.currentPageIndx()
+                
+                //Select all suras in the page ( TODO: filter out those in hifz already )
+                let suraInfoList = qData.pageSuraInfoList(
+                    currPage,
+                    pageMap: pageMap)
+                
+                if suraInfoList.count == 1{
+                    handleAlertAction("addHifzSelectSura", suraInfoList[0] )
+                }
+                else if suraInfoList.count > 1{
+                    let actions = suraInfoList.map{
+                        (suraInfo)->UIAlertAction? in
+                        if let suraName = qData.suraName(suraIndex: suraInfo.sura){
+                            return self.alertAction("addHifzSelectSura", suraName.name, suraInfo)
+                        }
+                        return nil
+                    }
+                    showAlertActions(actions, "Select Sura")
+                }
+            }
+            //Couldn't get the map
             break
         case "addHifzSelectSura":
-            print( "Selected Sura is \(selection!)" )
-            showAlertActions([
-                alertAction("addHifzSelectRange","Whole Sura",1),
-                alertAction("addHifzSelectRange","From Sura Start",2),
-                alertAction("addHifzSelectRange","To Sura End",3),
-                alertAction("addHifzSelectRange","Current Page",4)
-            ], "Select Range")
+            let qData = QData.instance
+            let currPage = currentPageIndx()
+            
+            if let suraInfo = selection as? SuraInfo {
+                let totalPages=suraInfo.endPage - suraInfo.page + 1
+                
+                let addHifzParams = AddHifzParams(sura: suraInfo.sura, page: currPage)
+                
+                if totalPages > 1 {//more than one page
+                    let suraName = qData.suraName(suraIndex: suraInfo.sura)
+                    var actions = [alertAction("addHifzSelectRange","Whole Sura",addHifzParams)]
+                    
+                    if currPage<suraInfo.endPage && currPage-suraInfo.page>0{
+                        actions.append(alertAction("addHifzSelectRange","From Sura Start", addHifzParams.fromSelect(.fromStart) ) )
+                    }
+                    if currPage>suraInfo.page && suraInfo.endPage-currPage>0{
+                        actions.append(alertAction("addHifzSelectRange","To Sura End", addHifzParams.fromSelect(.toEnd)))
+                    }
+
+                    actions.append(alertAction("addHifzSelectRange","Current Page",addHifzParams.fromSelect(.page)))
+
+                    showAlertActions(actions, "Add \(suraName!.name) to your hifz")
+                }
+                else{
+                    handleAlertAction("addHifzSelectRange",addHifzParams)
+                }
+                
+            }
             break
         case "addHifzSelectRange":
-            print( "Selected Range is \(selection!)" )
+            if let addHifzParams = selection as? AddHifzParams {
+                print( "Selected Range is \(addHifzParams)" )
+            }
             break
         default:
-            print( id )
+            print( "Unknown Action \(id)" )
         }
     }
     
-    func alertAction(_ id:String,_ title:String,_ selection:Int? = nil)->UIAlertAction{
+    func alertAction(_ id:String,_ title:String,_ selection:Any? = nil)->UIAlertAction{
         return UIAlertAction(title: title, style: .default, handler: { (action) in
             self.handleAlertAction(id, selection)
         })
@@ -346,8 +402,8 @@ class QPagesBrowser: UIViewController
     
     @IBAction func showMenu(_ sender: Any) {
         
-        let startRevise = alertAction("revise", "Revise")
-        let addToHifz = alertAction("addHifz", "Add to Hifz")
+        let startRevise = MaskStart == -1 ? alertAction("revise", "Revise") : nil
+        let addToHifz = alertAction("addHifz", "Add to Hifz") // check if hifzRange is active
         let bookmark = isBookmarked() ? nil : alertAction("bookmark", "Bookmark")
         
         showAlertActions([
@@ -366,7 +422,7 @@ class QPagesBrowser: UIViewController
     
     @objc func searchOpenAya(vc: SearchViewController){
         print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
-        let qData = QData.instance()
+        let qData = QData.instance
         let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
         gotoPage(pageNum: pageIndex+1)
         if let currPageView = currentPageView(){
@@ -420,32 +476,48 @@ class QPagesBrowser: UIViewController
     }
     
     var autoRotate = true
+    var orientation = UIInterfaceOrientationMask.all
     
     @IBAction func onPinchAction(_ sender: UIPinchGestureRecognizer) {
         if sender.state == .ended {
-            autoRotate = false
+            autoRotate = true
+
+            print ("Current Portrait is \(UIDevice.current.orientation.isPortrait)")
+
             if sender.scale > 1 {
-                AppDelegate.orientation = .landscape
-                //UIDevice.current.setValue(UIInterfaceOrientationMask.landscapeRight.rawValue, forKey: "orientation")
+                //AppDelegate.orientation = .landscape
+                orientation = .landscape
             }
             else{
-                AppDelegate.orientation = .portrait
-                //UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
+                //AppDelegate.orientation = .portrait
+                orientation = .portrait
             }
             
+            //DispatchQueue.main.async {// set in the UI thread
             UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
-            
-            //UIViewController.attemptRotationToDeviceOrientation()
+            UIViewController.attemptRotationToDeviceOrientation()
+            print ("New Portrait is \(UIDevice.current.orientation.isPortrait)")
+            //}
+
+            //Deprecated UIApplication.shared.setStatusBarOrientation(UIInterfaceOrientation.landscapeLeft, animated: true)
+            //print( self.shouldAutorotate )
         }
     }
-    
+
+    //Not called
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask{
+        return orientation
+    }
+
+    //Not called
     override var shouldAutorotate: Bool {
         return autoRotate
     }
 
-//    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
-//        return UIInterfaceOrientation.landscapeLeft
-//    }
+    //Not called
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+        return UIInterfaceOrientation.landscapeLeft
+    }
     
     
 //    @IBAction func onSwipePageDown(_ sender: UISwipeGestureRecognizer) {
@@ -467,16 +539,6 @@ class QPagesBrowser: UIViewController
             setMaskStart(-1)
         }
     }
-
-//
-//    var sio = UIInterfaceOrientationMask.all
-//
-//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask{
-//        get {
-//            return sio
-//        }
-//    }
-
 
     func hideSelection(){
         SelectStart = -1
@@ -544,7 +606,7 @@ class QPagesBrowser: UIViewController
             }
         }
         else{
-            let suraFirstPageIndex = QData.instance().suraFirstPageIndex(prevSuraPageIndex: currentPageIndx())
+            let suraFirstPageIndex = QData.instance.suraFirstPageIndex(prevSuraPageIndex: currentPageIndx())
             gotoPage( pageNum: suraFirstPageIndex + 1 )
         }
     }
@@ -567,7 +629,7 @@ class QPagesBrowser: UIViewController
             }
         }
         else{
-            let prevSuraPageIndex = QData.instance().suraFirstPageIndex(nextSuraPageIndex: currentPageIndx())
+            let prevSuraPageIndex = QData.instance.suraFirstPageIndex(nextSuraPageIndex: currentPageIndx())
             gotoPage( pageNum: prevSuraPageIndex + 1)
         }
     }

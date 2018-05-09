@@ -67,9 +67,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
+
+    //Invoked so many times
+    //Not invoked upon calling UIViewController.attemptRotationToDeviceOrientation() !!!!!
+    //or UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation") !!!
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return AppDelegate.orientation
+        //return AppDelegate.orientation
+        return .all
     }
 
     //MARK: - Google Sign In delegate methods

@@ -130,7 +130,7 @@ class HomeViewController: UITabBarController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier! == "OpenPagesBrowser" {
             if let vc = segue.destination as? QPagesBrowser{
-                let qData = QData.instance()
+                let qData = QData.instance
                 vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
             }
         }

@@ -78,7 +78,7 @@ class SearchResultsViewController: UIViewController,
     func doSearch(){
         resultsDescription.text = "Results for \(SearchText)"
 
-        let qData = QData.instance()
+        let qData = QData.instance
         
         self.results = qData.searchQuran(SearchText, max: 1000)
         
@@ -97,7 +97,7 @@ class SearchResultsViewController: UIViewController,
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchResultCell", for: indexPath)
-        let qData = QData.instance()
+        let qData = QData.instance
         let rowIndex = indexPath.row
         if self.results.count > rowIndex {
             let ayaPosition = results[rowIndex]
@@ -105,7 +105,9 @@ class SearchResultsViewController: UIViewController,
             if let textLabel = cell.textLabel{
                 if ayaPosition < 0 {// This is suraNumber in negative
                     let suraNumber = -ayaPosition
-                    textLabel.text = qData.suraName( suraIndex: suraNumber-1 )
+                    let suraName = qData.suraName( suraIndex: suraNumber-1 )
+                    let name = suraName?.name ?? "missing"
+                    textLabel.text = name
                     cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
                     if let textDetails = cell.detailTextLabel {
                         textDetails.text = ""
@@ -117,7 +119,7 @@ class SearchResultsViewController: UIViewController,
                     
                     if let textDetails = cell.detailTextLabel {
                         let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
-                        textDetails.text = qData.suraName(suraIndex:suraIndex)! + ": " +  String(ayaIndex+1)
+                        textDetails.text = qData.suraName(suraIndex:suraIndex)!.name + ": " +  String(ayaIndex+1)
                     }
                 }
             }
@@ -139,7 +141,7 @@ class SearchResultsViewController: UIViewController,
         
         if SelectStart != -1, let vc = segue.destination as? QPagesBrowser{
             removeExistingPageBrowserFromStack()
-            let qData = QData.instance()
+            let qData = QData.instance
             vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
         }
 

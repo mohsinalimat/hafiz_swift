@@ -11,7 +11,7 @@ import Firebase
 
 typealias NamedIntegers = [String:Int]
 typealias PageInfo = (suraIndex:Int, ayaIndex:Int, ayaPos:Int, ayaCount:Int)
-typealias SuraInfo = (page:Int, endPage:Int, totalAyat:Int, tanzeel:Int)
+typealias SuraInfo = (sura:Int, page:Int, endPage:Int, totalAyat:Int, tanzeel:Int)
 typealias PartInfo = (sura:Int, aya:Int, endSura:Int, endAya:Int, page:Int, endPage:Int)
 typealias AyaInfo = (sura:Int, aya:Int, page:Int)//unused
 typealias AyaFullInfo = (sura:Int, aya: Int,page: Int, sline:Int, spos:CGFloat, eline:Int, epos:CGFloat)
@@ -20,11 +20,35 @@ typealias HifzRange = (sura:Int, page:Int, count:Int, age:Double, revs:Int)
 typealias HifzList = [HifzRange]
 typealias SuraPageLocation = (sura:Int, page:Int, fromLine:Int, toLine: Int)
 typealias PageMap = [AyaFullInfo]
+typealias SuraInfoList = [SuraInfo]
+typealias SuraName = (sura:Int, name:String)
+typealias SuraNames = [SuraName]
+
+enum SelectAddHifz{
+    case all, fromStart, toEnd, page
+}
+
+struct AddHifzParams {
+    var sura:Int
+    var page:Int
+    var select:SelectAddHifz
+    init( sura:Int=0, page:Int=0, select:SelectAddHifz = .all){
+        self.sura = sura
+        self.page = page
+        self.select = select
+    }
+//    init( page:Int, suraInfo: SuraInfo ){
+//        self.init( sura: suraInfo.sura, page:page )
+//    }
+    func fromSelect(_ select: SelectAddHifz)->AddHifzParams{
+        return AddHifzParams(sura:self.sura,page:self.page,select:select)
+    }
+}
 
 class QData{
-    var suraInfo:[SuraInfo]?
+    var suraInfoList:SuraInfoList?
     var partInfo:[NamedIntegers]?
-    var pagesInfo:[PageInfo]?
+    var pageInfoList:[PageInfo]?
     var suraNames:NSArray?
     var quranData:NSArray?
     var normalizedQuranTextArray:NSArray?
@@ -35,21 +59,19 @@ class QData{
     static let lastPageIndex = 603
     
     enum Direction {
-        case forward
-        case backward
+        case forward, backward
     }
     
     enum Position {
-        case first
-        case inside
-        case last
+        case first, inside, last
     }
-
-    typealias AyaPagePosition = (page:Int, position:Position)
+    
+    typealias AyaPagePosition = ( page:Int, position:Position )
 
     init(){
         do{
             if let path = Bundle.main.url(forResource: "qdata", withExtension: "json") {
+
                 let jsonData = try Data(contentsOf: path)
                 
                 let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
@@ -57,23 +79,22 @@ class QData{
                 if let object = json as? [String: Any] {
 
                     // json is a [String:Any] dictionary
-                    self.suraInfo = []
+                    self.suraInfoList = []
                     
                     if let suras = object["sura_info"] as? [NamedIntegers] {
                         //process the data for quicker access
                         for n in 0..<suras.count{
-                            self.suraInfo?.append(self.suraInfo(n, suras:suras)!)
+                            self.suraInfoList?.append(self.suraInfo(n, suras:suras)!)
                         }
                     }
                     if let partInfo = object["parts"]{
                         self.partInfo = partInfo as? [NamedIntegers]
                     }
                     if let pagesInfo = object["pagesInfo"] as? [NamedIntegers]{
-                        self.pagesInfo = []
+                        self.pageInfoList = []
                         for n in 0..<pagesInfo.count{
-                            self.pagesInfo?.append( self.pageInfo(n, infoList: pagesInfo)! )
+                            self.pageInfoList?.append( self.pageInfo(n, infoList: pagesInfo)! )
                         }
-                        //self.pagesInfo = pagesInfo as? [NamedIntegers]
                     }
                 }
             }
@@ -84,23 +105,27 @@ class QData{
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleSignIn), name: AppNotifications.signedIn, object: nil)
     }
+
+    static var qData: QData?
     
+    class var instance:QData{
+        get{
+            if let inst = qData {
+                return inst
+            }
+            qData = QData()
+            return qData!
+        }
+    }
+
     @objc func handleSignIn(){
         //clear cached data
         QData.cachedHifzList = nil
+        QData.cachedBookmarks = nil
+        QData.cachedSortedHifzList = nil
     }
     
-    static var qData: QData?
-    
-    class func instance()->QData{
-        if let inst = qData {
-            return inst
-        }
-        qData = QData()
-        return qData!
-    }
-    
-    //Synchronous!
+    //Synchronous!, consider caching for smoother page navigation
     class func pageMap(_ pageIndex:Int)->PageMap{
         do{
             if let path = Bundle.main.url(forResource: "pg_map/pm_\(pageIndex+1)", withExtension: "json")
@@ -137,8 +162,21 @@ class QData{
         return nil //not found
     }
     
+    //Returns list of suras found in the page
+    func pageSuraInfoList(_ pageIndex: Int, pageMap: PageMap )->SuraInfoList{
+        var suraInfoList = SuraInfoList()
+        var lastSura = -1
+        for ayaInfo in pageMap{
+            if ayaInfo.sura != lastSura, let suraInfo = self.suraInfo(ayaInfo.sura) {
+                lastSura = ayaInfo.sura
+                suraInfoList.append( suraInfo )
+            }
+        }
+        return suraInfoList
+    }
+
     func pageInfo(_ pageIndex: Int )->PageInfo?{
-        if let pagesInfo = self.pagesInfo, pageIndex < pagesInfo.count {
+        if let pagesInfo = self.pageInfoList, pageIndex < pagesInfo.count {
             return pagesInfo[pageIndex]
         }
         return nil
@@ -208,7 +246,7 @@ class QData{
     
     func ayaLocation(_ index:Int )->(sura:Int,aya:Int){
         var suraStartIndex = 0
-        if let suras = self.suraInfo {
+        if let suras = self.suraInfoList {
             for suraIndex in 0..<114{
                 let suraInfo = suras[suraIndex]
                 if suraStartIndex + suraInfo.totalAyat > index {
@@ -222,7 +260,7 @@ class QData{
     
     func suraIndex( pageIndex: Int, direction: Direction = .forward )->Int{
         
-        if let suraInfoList = self.suraInfo {
+        if let suraInfoList = self.suraInfoList {
             
             let seq = (direction == .backward) ?
                         suraInfoList.reversed().enumerated() : suraInfoList.enumerated()
@@ -332,12 +370,22 @@ class QData{
         return nil
     }
     
-    func suraName( suraIndex: Int ) -> String? {
+    func suraName( suraIndex: Int ) -> SuraName? {
         
-        if let suraNames = readSuraNames(){
-            return suraNames[suraIndex] as? String
+        if let suraNames = readSuraNames(), let name = suraNames[suraIndex] as? String{
+            return SuraName(sura:suraIndex, name: name)
         }
         return nil
+    }
+    
+    func suraNames( suras: [Int] )-> SuraNames{
+        var names = SuraNames()
+        for sura in suras {
+            if let suraName = self.suraName( suraIndex: sura ){
+                names.append(suraName)
+            }
+        }
+        return names
     }
     
     func readSuraNames() -> NSArray?{
@@ -346,9 +394,10 @@ class QData{
                 suraNames = NSArray(contentsOfFile: path) //cache suraNames NSDictionary
             }
         }
-        return suraNames
+        return suraNames //cached list
     }
     
+    // MARK: - Search functions
     func readNormalizedSuraNames()-> [String]?{
         if normalizedSuraNames == nil {
             if let suraNames = readSuraNames(){
@@ -361,7 +410,6 @@ class QData{
                 }
             }
         }
-        
         return normalizedSuraNames
     }
     
@@ -407,7 +455,7 @@ class QData{
         return results
     }
     
-    func suraName( pageIndex: Int ) -> String? {
+    func suraName( pageIndex: Int ) -> SuraName? {
         let sIndex = suraIndex( pageIndex: pageIndex )
         return suraName( suraIndex: sIndex )
     }
@@ -430,7 +478,7 @@ class QData{
         let (suraIndex,ayaIndex) = self.ayaLocation(ayaPosition)
         let pageIndex = self.pageIndex(suraIndex: suraIndex)
         for p in pageIndex...QData.lastPageIndex {
-            let pageInfo = pagesInfo![p]
+            let pageInfo = pageInfoList![p]
             let pageSuraIndex = pageInfo.suraIndex
             let pageStartAyaIndex = pageInfo.ayaIndex
             if ( pageSuraIndex > suraIndex )
@@ -460,7 +508,7 @@ class QData{
     }
     
     func suraInfo(_ suraIndex: Int ) -> SuraInfo?{
-        if let suras = self.suraInfo, suraIndex<suras.count{
+        if let suras = self.suraInfoList, suraIndex<suras.count{
             return suras[suraIndex]
         }
         return nil
@@ -471,6 +519,7 @@ class QData{
             let sInfo = suras[suraIndex]
             
             return SuraInfo(
+                sura: suraIndex,
                 page:sInfo["sp"]! - 1,
                 endPage:sInfo["ep"]! - 1,
                 totalAyat: sInfo["ac"]!,
@@ -652,6 +701,14 @@ class QData{
         return false // not authenticated
     }
 
+    static func userData(_ key:String)->DatabaseReference?{
+        if let userID = Auth.auth().currentUser?.uid  {
+            let userData = Database.database().reference().child("data/\(userID)")
+            return userData.child(key)
+        }
+        return nil
+    }
+
     // MARK: - Hifz data methods
     
     static var cachedHifzList:HifzList?
@@ -669,13 +726,10 @@ class QData{
         }
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
-    
-    static func userData(_ key:String)->DatabaseReference?{
-        if let userID = Auth.auth().currentUser?.uid  {
-            let userData = Database.database().reference().child("data/\(userID)")
-            return userData.child(key)
-        }
-        return nil
+
+    static func addHifz(params:AddHifzParams, _ block: (HifzRange)->Void ){
+        //read all exiting ranges for the selected sura
+        //to check if we need to merge with or purge existing ranges
     }
     
     static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
@@ -816,7 +870,22 @@ class QData{
                 })
                 
                 block(sortedHifzRanges)
+                return
             }
+            
+            block(nil)
+        }
+    }
+    
+    static func suraHifzRanges(_ sura: Int, _ block: @escaping(HifzList?)->Void ){
+        hifzList(sortByAge: false, sync: false){ hifzList in
+            if let hifzList = hifzList {
+                let suraHifzList = hifzList.filter{ hifzRange in
+                    return sura == hifzRange.sura
+                }
+                block( suraHifzList )
+            }
+            block(nil)
         }
     }
 }

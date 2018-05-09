@@ -93,7 +93,7 @@ class TafseerViewController: UIViewController,
 
     func updatePicker(){
         tafseerSourceSelector!.selectRow(TafseerViewController.selectedTafseer, inComponent: 0, animated: true)
-        let qData = QData.instance()
+        let qData = QData.instance
         if let tafseerView = self.pageViewController!.viewControllers![0] as? TafseerAyaView{
             let (cSuraIndex, _) = qData.ayaLocation( ayaPosition )
             ayaPosition = tafseerView.AyaPosition!
@@ -107,14 +107,14 @@ class TafseerViewController: UIViewController,
     }
 
     func updateAyaPosition( sura:Int ){
-        let qData = QData.instance()
+        let qData = QData.instance
         let ayaPosition = qData.ayaPosition(sura: sura, aya: 0)
         gotoAya(ayaPosition)
         tafseerSourceSelector!.reloadComponent(2)//refresh Ayat
     }
     
     func updateAyaPosition( aya:Int){
-        let qData = QData.instance()
+        let qData = QData.instance
         let (sIndex,_) = qData.ayaLocation(self.ayaPosition) //read current sura
         let ayaPosition = qData.ayaPosition(sura: sIndex, aya: aya)//create new position
         gotoAya(ayaPosition)//update current position
@@ -177,7 +177,7 @@ class TafseerViewController: UIViewController,
         case 1:
             return 114
         default:
-            let qData = QData.instance()
+            let qData = QData.instance
             let (suraIndex, _) = qData.ayaLocation( ayaPosition )
             return qData.ayaCount(suraIndex: suraIndex)!
         }
@@ -188,7 +188,7 @@ class TafseerViewController: UIViewController,
         case 0:
             return TafseerSources[row]
         case 1:
-            return QData.instance().suraName(suraIndex: row)
+            return QData.instance.suraName(suraIndex: row)?.name
         default:
             return "\(row+1)"
         }

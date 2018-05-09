@@ -23,7 +23,7 @@ class TafseerAyaView: UIViewController, UIWebViewDelegate {
         // Do any additional setup after loading the view.
 
         AyaWebView.delegate = self
-        let qData = QData.instance()
+        let qData = QData.instance
         let (suraIndex,ayaIndex) = qData.ayaLocation( AyaPosition! )
         
         //let suraName = uQData.suraName(suraIndex:suraIndex)!
@@ -46,7 +46,7 @@ class TafseerAyaView: UIViewController, UIWebViewDelegate {
 //                    //TODO: too slow with large string, move it outside UI thread to avoid blocking
 //                    //let attrText = "<style>*{font-size:20px; direction:rtl}</style>\(body)".convertHtml()
 //                    let attrText = body.convertHtml()
-//                    DispatchQueue.main.async(){
+//                    DispatchQueue.main.async{
 //                        //Also slow
 //                        self.AyaView.attributedText = attrText
 //                        self.LoadingIndicator.stopAnimating()

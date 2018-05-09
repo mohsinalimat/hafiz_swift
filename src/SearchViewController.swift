@@ -72,7 +72,7 @@ class SearchViewController:
         if( searchText.count > 0 ){
             self.searchText = searchText
         }
-        let qData = QData.instance()
+        let qData = QData.instance
         
         self.results = qData.searchQuran(searchText, max: 10)
         
@@ -90,14 +90,16 @@ class SearchViewController:
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "SResult Item", for: indexPath)
-        let qData = QData.instance()
+        let qData = QData.instance
         if let results = self.results {
             let ayaPosition = results[indexPath.row]
             
             if let textLabel = cell.textLabel{
                 if ayaPosition < 0 {
                     let suraNumber = -ayaPosition
-                    textLabel.text = qData.suraName( suraIndex: suraNumber-1 )
+                    let suraName = qData.suraName( suraIndex: suraNumber-1 )
+                    let name = suraName?.name ?? "missing"
+                    textLabel.text = name
                     cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
                     if let textDetails = cell.detailTextLabel {
                         textDetails.text = ""
@@ -109,7 +111,7 @@ class SearchViewController:
 
                     if let textDetails = cell.detailTextLabel {
                         let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
-                        textDetails.text = qData.suraName(suraIndex:suraIndex)! + ": " +  String(ayaIndex+1)
+                        textDetails.text = qData.suraName(suraIndex:suraIndex)!.name + ": " +  String(ayaIndex+1)
                     }
                 }
             }
@@ -124,7 +126,7 @@ class SearchViewController:
         if let results = self.results {
             var ayaPosition = results[indexPath.row]
             if ayaPosition < 0 {
-                let qData = QData.instance()
+                let qData = QData.instance
                 let suraIndex = -ayaPosition-1
                 ayaPosition = qData.ayaPosition(sura: suraIndex, aya: 0)
             }
@@ -146,7 +148,7 @@ class SearchViewController:
 //    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //
 //        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser {
-//            let ayaPosition = viewCell.tag, qData = QData.instance()
+//            let ayaPosition = viewCell.tag, qData = QData.instance
 //
 //            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPosition) + 1
 //

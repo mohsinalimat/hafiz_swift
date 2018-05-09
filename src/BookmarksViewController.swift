@@ -41,7 +41,7 @@ class BookmarksViewController: UITableViewController {
 
     func loadData(sync: Bool = false){
         
-        QData.bookmarks(sync:sync){(list) in
+        let _ = QData.bookmarks(sync:sync){ (list) in
             if let pageMarks = list {
                 self.pageMarks = []
                 for page in pageMarks{
@@ -88,15 +88,16 @@ class BookmarksViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let qData = QData.instance()
+        let qData = QData.instance
         let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
         let rowIndex = indexPath.row
         if let pageMarks = self.pageMarks{
             let pageIndex = pageMarks[rowIndex]
             let suraIndex = qData.suraIndex(pageIndex: pageIndex)
-            let suraName = qData.suraName(suraIndex: suraIndex)!
-            cell.textLabel!.text = suraName
-            cell.detailTextLabel!.text = String(format:NSLocalizedString("PartInfo", comment: ""), pageIndex+1, suraIndex+1, suraName)
+            let suraName = qData.suraName(suraIndex: suraIndex)
+            let name = suraName?.name ?? "missing"
+            cell.textLabel!.text = name
+            cell.detailTextLabel!.text = String(format:NSLocalizedString("PartInfo", comment: ""), pageIndex+1, suraIndex+1, name)
             cell.tag = pageIndex + 1 //for segue use
         }else{
             cell.textLabel!.text = "Loading..."

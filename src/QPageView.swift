@@ -25,7 +25,7 @@ class QPageView: UIViewController{
     var pageInfo: PageInfo? { //lazy loading
         get{
             if _pageInfo == nil && pageIndex != -1{
-                self._pageInfo = QData.instance().pageInfo(pageIndex)
+                self._pageInfo = QData.instance.pageInfo(pageIndex)
             }
             return _pageInfo
         }
@@ -79,7 +79,7 @@ class QPageView: UIViewController{
         //retreatMask()
         
         if MaskStart != -1 {
-            let qData = QData.instance()
+            let qData = QData.instance
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
             let imageFrame = pageImageView.frame
@@ -99,21 +99,20 @@ class QPageView: UIViewController{
     }
 
     @IBAction func PageLongPressed(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .ended {
-            return
-        }
-        //print ("PageLongPressed() isMenuVisible=\(UIMenuController.shared.isMenuVisible)" )
-        if UIMenuController.shared.isMenuVisible{
-            return
-        }
-        let qData = QData.instance()
-        let pageImageView = sender.view!
-        let location = sender.location(in: pageImageView)
-        let imageFrame = pageImageView.frame
-        if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
-            let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
-            selectAya( aya: ayaPosition )
-            showAyaMenu(onView: self.selectHead)
+        if sender.state == .began {
+            print( "Press state is:\(sender.state.rawValue)")
+//            if UIMenuController.shared.isMenuVisible{
+//                return
+//            }
+            let qData = QData.instance
+            let pageImageView = sender.view!
+            let location = sender.location(in: pageImageView)
+            let imageFrame = pageImageView.frame
+            if let ayaInfo = qData.locateAya(pageMap: self.pageMap!, pageSize: imageFrame.size, location: location) {
+                let ayaPosition = qData.ayaPosition( sura: ayaInfo.sura, aya: ayaInfo.aya )
+                selectAya( aya: ayaPosition )
+                showAyaMenu(onView: self.selectHead)
+            }
         }
     }
     
@@ -137,7 +136,7 @@ class QPageView: UIViewController{
     }
     
     @objc func shareAya(){
-        let qData = QData.instance()
+        let qData = QData.instance
         if let ayaText = qData.ayaText(ayaPosition: clickedAya!.tag){
             print (ayaText)
         }
@@ -312,7 +311,7 @@ class QPageView: UIViewController{
                 
                 if let downloadedImage = UIImage(data: data){
                     //Apply the image data in the UI thread (similar to javascript:window.setTimeout())
-                    DispatchQueue.main.async() { () -> Void in
+                    DispatchQueue.main.async {
                         //Set the imageView source
                         self.pageImage.image = downloadedImage
                         self.pageLoadingIndicator.stopAnimating()
@@ -339,7 +338,7 @@ class QPageView: UIViewController{
         //if let pageNumber = self.pageNumber{
             //self.pageMap = QData.pageMap( pageNumber-1 )
             if let pageMap = self.getPageMap() {
-                let qData = QData.instance()
+                let qData = QData.instance
                 for ayaFullInfo in pageMap{
                     let btn = UIView()
                     btn.backgroundColor = Colors.ayaBtn
@@ -415,7 +414,7 @@ class QPageView: UIViewController{
         }
 
         if maskAyaPosition != -1 {
-            let qData = QData.instance()
+            let qData = QData.instance
             let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
             let currPageIndex = self.pageIndex
             if  currPageIndex < maskStartPage {
@@ -489,7 +488,7 @@ class QPageView: UIViewController{
                 return
             
             default:
-                let qData = QData.instance()
+                let qData = QData.instance
                 //if maskStart is at first Aya of a page different than current page, goto that page and return
                 let pageLocation = qData.ayaPagePosition(MaskStart)
                 let currPageIndex = self.pageIndex
@@ -550,7 +549,7 @@ class QPageView: UIViewController{
 
     func retreatMask(_ followPage: Bool){
         if MaskStart != -1 && MaskStart > 0{
-            let qData = QData.instance()
+            let qData = QData.instance
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 self.scrollToMaskStart()
@@ -592,7 +591,7 @@ class QPageView: UIViewController{
         if MaskStart == -1 {
             return
         }
-        let qData = QData.instance()
+        let qData = QData.instance
         let maskPageIndex = qData.pageIndex(ayaPosition:MaskStart)
         let currPageIndex = self.pageIndex
         if maskPageIndex > currPageIndex {
@@ -633,7 +632,7 @@ class QPageView: UIViewController{
     }
     
     func ayaStartPoint(_ ayaPosition:Int )->CGRect?{
-        let qData = QData.instance()
+        let qData = QData.instance
         
         if let pageMap = getPageMap(),
             let ayaMapInfo = qData.ayaMapInfo(ayaPosition, pageMap: pageMap),
@@ -756,7 +755,7 @@ class QPageView: UIViewController{
             }
 
             let imageRect = pageImage.frame
-            let qData = QData.instance()
+            let qData = QData.instance
             let lineHeight = imageRect.height/15
             let pageWidth = imageRect.width
             let pageHeight = imageRect.height

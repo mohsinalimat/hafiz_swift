@@ -68,11 +68,11 @@
                                             <action selector="nextPageClicked:" destination="703-4V-yAM" eventType="touchUpInside" id="J60-b1-g2c"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" translatesAutoresizingMaskIntoConstraints="NO" id="VoZ-dr-TOC" userLabel="Navigator">
-                                        <rect key="frame" x="211" y="0.0" width="109" height="32"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="VoZ-dr-TOC" userLabel="Navigator">
+                                        <rect key="frame" x="205.5" y="0.0" width="114.5" height="32"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" restorationIdentifier="prevSura" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2UJ-2K-SVB">
-                                                <rect key="frame" x="74" y="0.0" width="35" height="32"/>
+                                                <rect key="frame" x="79.5" y="0.0" width="35" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="iSR-88-Aek">
                                                         <variation key="heightClass=regular-widthClass=compact" constant="35"/>
@@ -84,8 +84,8 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sura" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tXa-kd-M9t" userLabel="SuraName">
-                                                <rect key="frame" x="44" y="0.0" width="30" height="32"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <rect key="frame" x="46" y="0.0" width="31.5" height="32"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>

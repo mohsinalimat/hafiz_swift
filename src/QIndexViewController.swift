@@ -30,7 +30,7 @@ class QIndexViewController: UITableViewController{
 
     override
     func tableView(_ tableView: UITableView, numberOfRowsInSection partIndex: Int) -> Int {
-        let qData = QData.instance()
+        let qData = QData.instance
         
         if let partInfo = qData.partInfo(partIndex: partIndex) {
             let rows = partInfo.endSura - partInfo.sura
@@ -48,7 +48,7 @@ class QIndexViewController: UITableViewController{
     override
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let qData = QData.instance()
+        let qData = QData.instance
         var cellID = "SuraStart"
 
         let partIndex = indexPath.section
@@ -90,7 +90,7 @@ class QIndexViewController: UITableViewController{
             cell.backgroundView = UIImageView(image:UIImage(named: "index_item_background")!)
         }
         if let suraName = qData.suraName(suraIndex: suraIndex) {
-            cell.textLabel!.text = "\(suraPrefix) \(suraName)";
+            cell.textLabel!.text = "\(suraPrefix) \(suraName.name)";
         }
         
         cell.detailTextLabel!.text = String(format:pagePrompt, pageNumber)
@@ -103,7 +103,7 @@ class QIndexViewController: UITableViewController{
         
         if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser
         {
-            let qData = QData.instance()
+            let qData = QData.instance
             let ayaPos = viewCell.tag
             qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
             //Reset previous selections and mask

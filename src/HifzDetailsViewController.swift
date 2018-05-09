@@ -58,9 +58,9 @@ class HifzDetailsViewController: UIViewController {
     
     func updateViews(){
         if let hifzRange = self.hifzRange{
-            let qData = QData.instance()
+            let qData = QData.instance
             let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
-            hifzTitle.text = qData.suraName(suraIndex: hifzRange.sura)
+            hifzTitle.text = qData.suraName(suraIndex: hifzRange.sura)?.name ?? "missing"
             firstAya.text = qData.ayaText(ayaPosition: ayaPos)
             hifzDetails.text = "\(hifzRange.count) pages from page \(hifzRange.page)\n\(hifzRange.age) days"
         }
@@ -75,7 +75,7 @@ class HifzDetailsViewController: UIViewController {
         if  let hifzRange = self.hifzRange,
             let pageBrowser = segue.destination as? QPagesBrowser
         {
-            let qData = QData.instance()
+            let qData = QData.instance
             let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
             
             pageBrowser.startingPage = hifzRange.page + 1

@@ -35,7 +35,7 @@ class HifzTableViewCell : UITableViewCell {
     }
     
     func updateHifzChart(){
-        let qData = QData.instance()
+        let qData = QData.instance
         
         if let hifzRange = self.hifzRange,
            let suraInfo = qData.suraInfo(hifzRange.sura)
@@ -180,9 +180,9 @@ class HifzViewController: UITableViewController {
             // Populate cell data...
             let rowIndex = indexPath.row
             let hRange = hifzRanges[rowIndex]
-            let qData = QData.instance()
-
-            cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)
+            let qData = QData.instance
+            
+            cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)?.name
             cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
             cell.lastRevision!.text = "\(Int(-hRange.age)) days"
             cell.setRange(hRange)
@@ -282,7 +282,7 @@ class HifzViewController: UITableViewController {
             let hRange = viewCell.hifzRange
         {
             
-            let qData = QData.instance()
+            let qData = QData.instance
             let ayaPos = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
             
             SelectStart = ayaPos
