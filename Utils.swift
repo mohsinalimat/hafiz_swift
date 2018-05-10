@@ -96,8 +96,9 @@ class Utils {
         host.present(alert, animated: true, completion: nil)
     }
     
-    static func timeStamp()->Int64{
-        return Int64(Date().timeIntervalSince1970*1000)
+    static func timeStamp(_ daysOffset: Double = 0)->Int64{
+        let dayLength:Double = 24*60*60*1000
+        return Int64( Date().timeIntervalSince1970*1000 + daysOffset * dayLength )
     }
 
 }

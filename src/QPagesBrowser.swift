@@ -367,7 +367,10 @@ class QPagesBrowser: UIViewController
             break
         case "addHifzSelectRange":
             if let addHifzParams = selection as? AddHifzParams {
-                print( "Selected Range is \(addHifzParams)" )
+                QData.addHifz(params: addHifzParams){
+                    hifzRange in
+                    print( "Added HifzRange \(hifzRange)")
+                }
             }
             break
         default:

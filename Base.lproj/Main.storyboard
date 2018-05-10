@@ -979,6 +979,9 @@
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Remove from Hifz"/>
+                                        <connections>
+                                            <action selector="removeFromHifz:" destination="DfT-l6-szp" eventType="touchUpInside" id="TSf-Sp-mDN"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1324,6 +1327,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="FTj-05-K0G"/>
         <segue reference="hY7-SJ-Dos"/>
-        <segue reference="xTL-Fx-IJt"/>
+        <segue reference="JMX-lt-Q6B"/>
     </inferredMetricsTieBreakers>
 </document>

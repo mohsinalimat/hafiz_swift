@@ -102,8 +102,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             }
             print( "AppDelegate Firebase signed in :)" )
             
+            if let hifzRef = QData.userData("hifz"){
+                hifzRef.observe(.childAdded, with: self.notifyDataChanged )
+                hifzRef.observe(.childRemoved, with: self.notifyDataChanged )
+                hifzRef.observe(.childChanged, with: self.notifyDataChanged )
+            }
+
+            if let pageMarks = QData.userData("page_marks"){
+                pageMarks.observe(.childAdded, with: self.notifyDataChanged )
+                pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
+                pageMarks.observe(.childChanged, with: self.notifyDataChanged )
+            }
+
             NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
         }
+    }
+    
+    @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
+        NotificationCenter.default.post(
+            name: AppNotifications.dataUpdated, object: snapshot
+        )
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {

@@ -101,9 +101,6 @@ class QPageView: UIViewController{
     @IBAction func PageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             print( "Press state is:\(sender.state.rawValue)")
-//            if UIMenuController.shared.isMenuVisible{
-//                return
-//            }
             let qData = QData.instance
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
@@ -119,6 +116,7 @@ class QPageView: UIViewController{
     @IBAction func MaskLongPressed(_ sender: Any) {
         //self.hideMask()
         //TODO: if maskhead, sneek preview, else uncover that pressed aya
+        
     }
     
     @IBAction func clickedCloseMask(_ sender: Any) {

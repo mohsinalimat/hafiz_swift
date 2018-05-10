@@ -28,22 +28,6 @@ enum SelectAddHifz{
     case all, fromStart, toEnd, page
 }
 
-struct AddHifzParams {
-    var sura:Int
-    var page:Int
-    var select:SelectAddHifz
-    init( sura:Int=0, page:Int=0, select:SelectAddHifz = .all){
-        self.sura = sura
-        self.page = page
-        self.select = select
-    }
-//    init( page:Int, suraInfo: SuraInfo ){
-//        self.init( sura: suraInfo.sura, page:page )
-//    }
-    func fromSelect(_ select: SelectAddHifz)->AddHifzParams{
-        return AddHifzParams(sura:self.sura,page:self.page,select:select)
-    }
-}
 
 class QData{
     var suraInfoList:SuraInfoList?
@@ -670,9 +654,9 @@ class QData{
             pageMarks.keepSynced(true)//update remote data if connected
             
             pageMarks.observeSingleEvent(of: .childAdded) { (snapshot) in
-                NotificationCenter.default.post(
-                    name: AppNotifications.dataUpdated, object: snapshot
-                )
+//                NotificationCenter.default.post(
+//                    name: AppNotifications.dataUpdated, object: snapshot
+//                )
                 block(snapshot)
             }
             
@@ -688,9 +672,9 @@ class QData{
             pageMarks.keepSynced(true)//update remote data if connected
             
             pageMarks.observeSingleEvent(of: .childRemoved) { (snapshot) in
-                NotificationCenter.default.post(
-                    name: AppNotifications.dataUpdated, object: snapshot
-                )
+//                NotificationCenter.default.post(
+//                    name: AppNotifications.dataUpdated, object: snapshot
+//                )
                 block(snapshot)
             }
             
@@ -727,22 +711,46 @@ class QData{
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
 
-    static func addHifz(params:AddHifzParams, _ block: (HifzRange)->Void ){
-        //read all exiting ranges for the selected sura
-        //to check if we need to merge with or purge existing ranges
-    }
-    
     static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
 
         let promtedHifz = HifzRange (
             sura: hifzRange.sura,
             page: hifzRange.page,
             count: hifzRange.count,
-            age: hifzRange.age,
+            age: 0,
             revs: hifzRange.revs + 1
         )
 
         return updateHifz( promtedHifz, block )
+    }
+    
+    static func deleteHifz( _ hifzList: HifzList,_ notify: Bool = true,_ block: @escaping(DataSnapshot?)->Void ){
+        if let hifz = userData("hifz"){
+            hifz.keepSynced(true)
+            
+            hifz.observeSingleEvent(of: .childRemoved){
+                snapshot in
+                
+                block(snapshot)
+                
+//                if notify {
+//                    NotificationCenter.default.post(
+//                        name: AppNotifications.dataUpdated, object: snapshot
+//                    )
+//                }
+                
+            }
+            
+            var dict:[AnyHashable:Any] = [:]
+            
+            hifzList.forEach{
+                hifzRange in
+                let hifzID = String(format:"%03d%03d",hifzRange.page,hifzRange.sura)
+                dict[hifzID] = NSNull()
+            }
+            
+            hifz.updateChildValues(dict)
+        }
     }
     
     //Update or create new Hifz
@@ -763,16 +771,16 @@ class QData{
             hifz.observeSingleEvent(of: .childChanged) { (snapshot) in
                 //TODO: check if snapshot.key matchs hifzID
                 //print("DB Child Changed: key=\(snapshot.key)")
-                NotificationCenter.default.post(
-                    name: AppNotifications.dataUpdated, object: snapshot
-                )
+//                NotificationCenter.default.post(
+//                    name: AppNotifications.dataUpdated, object: snapshot
+//                )
                 block(snapshot)
             }
             
             let dict : NSDictionary = [
                 "pages": hifzRange.count,
                 "revs": hifzRange.revs,
-                "ts": Utils.timeStamp()
+                "ts": Utils.timeStamp(-hifzRange.age)
             ]
             
             hifz.child( "\(hifzID)" ).setValue(dict)
@@ -877,7 +885,7 @@ class QData{
         }
     }
     
-    static func suraHifzRanges(_ sura: Int, _ block: @escaping(HifzList?)->Void ){
+    static func suraHifzList(_ sura: Int, _ block: @escaping(HifzList?)->Void ){
         hifzList(sortByAge: false, sync: false){ hifzList in
             if let hifzList = hifzList {
                 let suraHifzList = hifzList.filter{ hifzRange in
@@ -885,7 +893,120 @@ class QData{
                 }
                 block( suraHifzList )
             }
-            block(nil)
+            else{
+                block(nil)
+            }
         }
+    }
+    
+    static func addHifz(params:AddHifzParams, _ block: @escaping(HifzRange)->Void ){
+        //read all exiting ranges for the selected sura
+        //to check if we need to merge with or purge existing ranges
+        var firstPage = params.firstPage()
+        var lastPage = params.lastPage()
+        var pagesCount = lastPage - firstPage + 1
+        var hifzListToRemove = HifzList()
+        var newRange = HifzRange(sura:params.sura, page:firstPage, count:pagesCount, age:7, revs:0)
+
+        suraHifzList(params.sura){
+            hifzList in
+            hifzList?.forEach{
+                oldRange in
+                let hifzRangeLastPage = oldRange.page + oldRange.count - 1
+                if oldRange.page == firstPage && hifzRangeLastPage == lastPage{
+                    //totally matching ..|*******|..
+                    newRange.revs = oldRange.revs
+                    newRange.age = oldRange.age
+                }
+                else if oldRange.page >= firstPage && hifzRangeLastPage <= lastPage {
+                    //if totally inside, swallowed ..nnOnnnnOn..
+                    hifzListToRemove.append(oldRange)
+                }
+                else if oldRange.page > firstPage && oldRange.page <= lastPage+1 {
+                    //intersects or attaches from start    ..nnnnnOnnOOO..
+                    //expand the new range and remove the old
+                    hifzListToRemove.append(oldRange)
+                    pagesCount = oldRange.page + oldRange.count - firstPage
+                    newRange.count = pagesCount
+                    lastPage = firstPage + pagesCount - 1
+                }
+                else if hifzRangeLastPage >= firstPage-1 && oldRange.page <= lastPage+1 {
+                    //intersects or attaches at end ..OOOnnOnnnnn..
+                    //Expand the old range hifzListToRemove.append(hifzRange)
+                    pagesCount = firstPage + pagesCount - oldRange.page
+                    firstPage = oldRange.page
+                    newRange.page = firstPage
+                    newRange.count = pagesCount
+                }
+            }
+            
+            if hifzListToRemove.count > 0{
+                //TODO: read the revs of the deleted hifz and factor it in to the new hifz based on the
+                QData.deleteHifz(hifzListToRemove, false){snapshot in
+                    let _ = QData.updateHifz(newRange){snapshot in
+                        block(newRange)
+                    }
+                }
+            }else{
+                let _ = QData.updateHifz(newRange){snapshot in
+                    block(newRange)
+                }
+            }
+            
+
+        }
+
+    }
+}
+
+struct AddHifzParams {
+    var sura:Int
+    var page:Int
+    var select:SelectAddHifz
+    
+    init( sura:Int=0, page:Int=0, select:SelectAddHifz = .all){
+        self.sura = sura
+        self.page = page
+        self.select = select
+    }
+    
+    func fromSelect(_ select: SelectAddHifz)->AddHifzParams{
+        return AddHifzParams(sura:self.sura,page:self.page,select:select)
+    }
+    
+    func firstPage()->Int{
+        var ret = self.page
+        if select == .all || select == .fromStart {
+            if let suraInfo = QData.instance.suraInfo(self.sura){
+                ret = suraInfo.page
+            }
+        }
+        return ret
+    }
+
+    func lastPage()->Int{
+        var ret = self.page
+        if select == .all || select == .toEnd {
+            if let suraInfo = QData.instance.suraInfo(self.sura){
+                ret = suraInfo.endPage
+            }
+        }
+        return ret
+    }
+
+    func allPages()->[Int]{
+        
+        if self.select == .page {
+            return [self.page]
+        }
+        
+        var ret = [Int]()
+        let first = firstPage()
+        let last = lastPage()
+
+        for p in first...last{
+            ret.append(p)
+        }
+        return ret
     }
 }
