@@ -20,6 +20,7 @@ class QPageView: UIViewController{
     var isBookmarked: Bool?
     var pageNumber: Int? //will be set by the creator ViewController
     var pageMap: PageMap?
+    var hifzList: HifzList? // cached hifz ranges
     var _pageInfo: PageInfo?
     
     var pageInfo: PageInfo? { //lazy loading
@@ -208,9 +209,11 @@ class QPageView: UIViewController{
         NotificationCenter.default.removeObserver(self)
     }
 
-    
+    //Reset cache and redraw the data
     @objc func readData(){
 
+        self.hifzList = nil
+        
         if let pageNumber = self.pageNumber{
             let _ = QData.isBookmarked(page: pageNumber-1 ){(is_true) in
                 self.isBookmarked = is_true
@@ -678,7 +681,9 @@ class QPageView: UIViewController{
     
     func createHifzColors(){
         
-        QData.pageHifzRanges(pageIndex){ ( hifzList: [HifzRange]? ) in
+        QData.pageHifzRanges(self.pageIndex){ ( hifzList: HifzList? ) in
+            self.hifzList = hifzList // save in cache
+            
             //Remove existing subviews
             for view in self.hifzColors.subviews {
                 view.removeFromSuperview()

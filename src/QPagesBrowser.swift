@@ -290,6 +290,37 @@ class QPagesBrowser: UIViewController
     }
     
     // MARK: - Actions Alert
+    
+    @IBAction func showMenu(_ sender: Any) {
+        let qData = QData.instance
+        let startRevise = MaskStart == -1 ? alertAction("revise", "Revise") : nil
+        
+        var addUpdateHifzTitle = "Add/Update Hifz"
+        
+        if let pageView = self.currentPageView(),
+            let pageNumber = pageView.pageNumber,
+            let hifzList = pageView.hifzList,
+            let pageMap = pageView.pageMap
+        {
+            let suraInfoList = qData.pageSuraInfoList(pageNumber-1, pageMap: pageMap)
+            //Decide whether to show "add hifz", "add/update hifz" or "update hifz"
+            if hifzList.count == 0{
+                addUpdateHifzTitle = "Add to Hifz"
+            }else if hifzList.count == suraInfoList.count {
+                addUpdateHifzTitle = "Update Hifz"
+            }
+        }
+        
+        let addToHifz = alertAction("addUpdateHifz", addUpdateHifzTitle) // check if hifzRange is active
+        let bookmark = isBookmarked() ? nil : alertAction("bookmark", "Bookmark")
+        
+        showAlertActions([
+            startRevise,
+            addToHifz,
+            bookmark
+        ])
+    }
+
     func handleAlertAction(_ id: String,_ selection: Any? = nil ){
         switch id {
         case "revise":
@@ -306,27 +337,40 @@ class QPagesBrowser: UIViewController
                 Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
             }
             break
-        
-        case "addHifz":
+            
+        case "addUpdateHifz":
             if let pageView = currentPageView(),
-               let pageMap = pageView.pageMap
+                let pageMap = pageView.pageMap,
+                let hifzList = pageView.hifzList
             {
                 let qData = QData.instance
                 let currPage = self.currentPageIndx()
                 
-                //Select all suras in the page ( TODO: filter out those in hifz already )
+                //Select all suras in the page
                 let suraInfoList = qData.pageSuraInfoList(
                     currPage,
                     pageMap: pageMap)
                 
                 if suraInfoList.count == 1{
-                    handleAlertAction("addHifzSelectSura", suraInfoList[0] )
+                    //Skip the sura selection
+                    //If a hifzRange if found for the sura, send it instead of SuraInfo
+                    let suraInfo = suraInfoList.first
+                    let hifzRange = hifzList.first{
+                        range in
+                        return suraInfo?.sura == range.sura
+                    }
+                    handleAlertAction("addHifzSelectSura", hifzRange ?? suraInfo )
                 }
                 else if suraInfoList.count > 1{
-                    let actions = suraInfoList.map{
-                        (suraInfo)->UIAlertAction? in
+                    //show select sura alert
+                    let actions = suraInfoList.map{ (suraInfo)->UIAlertAction? in
                         if let suraName = qData.suraName(suraIndex: suraInfo.sura){
-                            return self.alertAction("addHifzSelectSura", suraName.name, suraInfo)
+                            //If a hifzRange if found for the sura, send it instead of SuraInfo
+                            let hifzRange = hifzList.first{
+                                range in
+                                return suraInfo.sura == range.sura
+                            }
+                            return self.alertAction("addHifzSelectSura", suraName.name, hifzRange ?? suraInfo)
                         }
                         return nil
                     }
@@ -335,11 +379,13 @@ class QPagesBrowser: UIViewController
             }
             //Couldn't get the map
             break
+            
         case "addHifzSelectSura":
             let qData = QData.instance
             let currPage = currentPageIndx()
             
             if let suraInfo = selection as? SuraInfo {
+                //suraInfo is selected
                 let totalPages=suraInfo.endPage - suraInfo.page + 1
                 
                 let addHifzParams = AddHifzParams(sura: suraInfo.sura, page: currPage)
@@ -354,15 +400,24 @@ class QPagesBrowser: UIViewController
                     if currPage>suraInfo.page && suraInfo.endPage-currPage>0{
                         actions.append(alertAction("addHifzSelectRange","To Sura End", addHifzParams.fromSelect(.toEnd)))
                     }
-
+                    
                     actions.append(alertAction("addHifzSelectRange","Current Page",addHifzParams.fromSelect(.page)))
-
+                    
                     showAlertActions(actions, "Add \(suraName!.name) to your hifz")
                 }
                 else{
                     handleAlertAction("addHifzSelectRange",addHifzParams)
                 }
                 
+            }
+            else if let hifzRange = selection as? HifzRange{
+                //HifzRange is selected
+                //Show "Revised today" or "Remove from Hifz"
+                let actions = [
+                    alertAction("revisedHifz", "Revised today", hifzRange),
+                    alertAction("removeHifz", "Remove from Hifz", hifzRange),
+                ]
+                showAlertActions(actions, "{Hifz Range Description}")
             }
             break
         case "addHifzSelectRange":
@@ -373,17 +428,35 @@ class QPagesBrowser: UIViewController
                 }
             }
             break
+        case "revisedHifz":
+            if let hifzRange = selection as? HifzRange{
+                let _ = QData.promoteHifz(hifzRange){
+                    snapshot in
+                    Utils.showMessage(self, title: "Revision saved", message: "Good Job :)")
+                }
+            }
+            break
+        case "removeHifz":
+            //TODO: show confirmation
+            //Utils.showMessage(self, title: "Remove {Hifz Description}", message: "Are you sure?")
+            if let hifzRange = selection as? HifzRange {
+                QData.deleteHifz([hifzRange]){
+                    snapshot in
+                }
+            }
+            break
         default:
             print( "Unknown Action \(id)" )
         }
     }
-    
+    // a utility function to create an action choice
     func alertAction(_ id:String,_ title:String,_ selection:Any? = nil)->UIAlertAction{
         return UIAlertAction(title: title, style: .default, handler: { (action) in
             self.handleAlertAction(id, selection)
         })
     }
     
+    // A utility function to present a group of action items in a slid in alert
     func showAlertActions(_ actions:[UIAlertAction?],_ title:String? = nil, msg:String? = nil){
         
         //create the controller
@@ -398,25 +471,12 @@ class QPagesBrowser: UIViewController
         
         //Add the cancel action
         alertController.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
-
+        
         //show the actions
         self.present(alertController, animated: true)
     }
-    
-    @IBAction func showMenu(_ sender: Any) {
-        
-        let startRevise = MaskStart == -1 ? alertAction("revise", "Revise") : nil
-        let addToHifz = alertAction("addHifz", "Add to Hifz") // check if hifzRange is active
-        let bookmark = isBookmarked() ? nil : alertAction("bookmark", "Bookmark")
-        
-        showAlertActions([
-            startRevise,
-            addToHifz,
-            bookmark
-        ])
-        
-    }
 
+    
     @objc func onDeviceRotated(){
         if (SelectStart != -1), let currPageView = currentPageView(){
             currPageView.scrollToSelectedAya()
