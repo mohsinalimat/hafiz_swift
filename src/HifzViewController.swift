@@ -19,6 +19,7 @@ class HifzTableViewCell : UITableViewCell {
     @IBOutlet weak var hifzChart: UIView!
     @IBOutlet weak var rangeLeading: UIView!
     @IBOutlet weak var rangeBody: UIView!
+    @IBOutlet weak var ayaView: UILabel!
     
     var hifzRange:HifzRange?
     
@@ -182,9 +183,13 @@ class HifzViewController: UITableViewController {
             let hRange = hifzRanges[rowIndex]
             let qData = QData.instance
             
-            cell.suraName!.text = qData.suraName(suraIndex: hRange.sura)?.name
-            cell.rangeDescription!.text = "\(hRange.count) pages from page \(hRange.page)"
-            cell.lastRevision!.text = "\(Int(-hRange.age)) days"
+            cell.suraName?.text = qData.suraName(suraIndex: hRange.sura)?.name
+            cell.rangeDescription?.text = "\(hRange.count) pages from page \(hRange.page)"
+            cell.lastRevision?.text = "\(Int(-hRange.age)) days"
+            let ayaPos = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
+            if let ayaText = qData.ayaText(ayaPosition: ayaPos){
+                cell.ayaView?.text = ayaText
+            }
             cell.setRange(hRange)
             return cell
         }

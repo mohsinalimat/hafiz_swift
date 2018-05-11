@@ -136,8 +136,27 @@ class QPageView: UIViewController{
     
     @objc func shareAya(){
         let qData = QData.instance
-        if let ayaText = qData.ayaText(ayaPosition: clickedAya!.tag){
-            print (ayaText)
+        
+        if let clickedAya=clickedAya,
+            let ayaText = qData.ayaText(ayaPosition: clickedAya.tag){
+            let ayaPosition = clickedAya.tag
+            let (sura,aya) = qData.ayaLocation(ayaPosition)
+            if let suraName = qData.suraName(suraIndex: sura){
+                let sharedText = "\(ayaText) (\(suraName.name):\(aya+1))"
+                //TODO: check using SKStoreProductViewController
+                let activityViewController = UIActivityViewController(
+                    //activityItems: ["itms-apps://itunes.com/apps/facebook"],
+                    activityItems: [sharedText],
+                    applicationActivities: nil
+                )
+                activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+                
+                // exclude some activity types from the list (optional)
+                //activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+                
+                // present the view controller
+                self.present(activityViewController, animated: true, completion: nil)
+            }
         }
     }
     

@@ -54,6 +54,10 @@ class QPagesBrowser: UIViewController
         self.pageViewController!.delegate = self
         self.pageViewController!.dataSource = self
         
+        
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPressNext))
+        nextSura.addGestureRecognizer(longGesture)
+        
 //
 //
         //self.addChildViewController(self.pageViewController!)//TODO: required?
@@ -135,6 +139,17 @@ class QPagesBrowser: UIViewController
     }
     
     // MARK: - New class methods
+
+    @objc func onLongPressNext(_ sender: UILongPressGestureRecognizer){
+        if MaskStart != -1, let pageView = currentPageView() {
+            if sender.state == .began {
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant + 60
+            }
+            else if sender.state == .ended{
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant - 60
+            }
+        }
+    }
 
     func gotoPage(pageNum:Int){
         let _ = checkGotoPage(pageNum: pageNum)
@@ -437,11 +452,17 @@ class QPagesBrowser: UIViewController
             }
             break
         case "removeHifz":
-            //TODO: show confirmation
-            //Utils.showMessage(self, title: "Remove {Hifz Description}", message: "Are you sure?")
             if let hifzRange = selection as? HifzRange {
-                QData.deleteHifz([hifzRange]){
-                    snapshot in
+                Utils.confirmMessage(
+                    self,
+                    "Confirm Remove Hifz",
+                    "{{hifzDescription}}", .yes_destructive
+                ){ isYes in
+                    if isYes {
+                        QData.deleteHifz([hifzRange]){
+                            snapshot in
+                        }
+                    }
                 }
             }
             break
@@ -651,7 +672,6 @@ class QPagesBrowser: UIViewController
             }
         }
     }
-    
     
     @IBAction func gotoNextSura(_ sender: Any) {
         hideNavBar()

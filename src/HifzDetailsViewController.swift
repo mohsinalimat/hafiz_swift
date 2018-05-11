@@ -37,13 +37,22 @@ class HifzDetailsViewController: UIViewController {
     
     @IBAction func removeFromHifz(_ sender: UIButton) {
         if let hifzRange = self.hifzRange {
-            QData.deleteHifz([hifzRange],true){snapshot in
-                Utils.showMessage(
-                    self,
-                    title: "Hifz Deleted",
-                    message: "This part has been deleted from your Hifz"
-                )
+            Utils.confirmMessage(
+                self,
+                "Confirm Remove Hifz",
+                "{{hifzDescription}}", .yes_destructive
+            ){ isYes in
+                if isYes {
+                    QData.deleteHifz([hifzRange],true){snapshot in
+                        Utils.showMessage(
+                            self,
+                            title: "Hifz Deleted",
+                            message: "This part has been deleted from your Hifz"
+                        )
+                    }
+                }
             }
+
         }
     }
     

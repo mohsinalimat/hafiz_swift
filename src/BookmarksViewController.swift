@@ -89,21 +89,30 @@ class BookmarksViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let qData = QData.instance
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
         let rowIndex = indexPath.row
-        if let pageMarks = self.pageMarks{
+        
+        if  let pageMarks = self.pageMarks,
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath) as? BookmarkTableCellView
+        {
             let pageIndex = pageMarks[rowIndex]
-            let suraIndex = qData.suraIndex(pageIndex: pageIndex)
+            let pageInfo = qData.pageInfo(pageIndex)!
+            let suraIndex = pageInfo.suraIndex
             let suraName = qData.suraName(suraIndex: suraIndex)
-            let name = suraName?.name ?? "missing"
-            cell.textLabel!.text = name
-            cell.detailTextLabel!.text = String(format:NSLocalizedString("PartInfo", comment: ""), pageIndex+1, suraIndex+1, name)
+            //let (sura,aya) = qData.aya
+
+            cell.suraName.text = suraName?.name ?? "missing"
+            cell.pageNumber.text = String(pageIndex+1)
+            cell.ayaLocation.text = "(\(suraIndex+1):\(pageInfo.ayaIndex+1))"
+            if let ayaText = qData.ayaText(ayaPosition: pageInfo.ayaPos){
+                cell.ayaText.text = ayaText
+            }
             cell.tag = pageIndex + 1 //for segue use
-        }else{
-            cell.textLabel!.text = "Loading..."
+            return cell
         }
         
-        return cell
+        let loadingCell = tableView.dequeueReusableCell(withIdentifier: "Loading", for: indexPath)
+        loadingCell.textLabel!.text = "Loading..."
+        return loadingCell
     }
     
     // Return right swipe edit actions
@@ -135,4 +144,12 @@ class BookmarksViewController: UITableViewController {
         
     }
 
+}
+
+class BookmarkTableCellView : UITableViewCell{
+    @IBOutlet weak var suraName: UILabel!
+    @IBOutlet weak var ayaLocation: UILabel!
+    @IBOutlet weak var ayaText: UILabel!
+    @IBOutlet weak var pageNumber: UILabel!
+    
 }

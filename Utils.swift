@@ -8,6 +8,10 @@
 
 import UIKit
 
+enum ConfirmationAlertType{
+    case yes, yes_destructive, ok
+}
+
 class Utils {
     static func getDataFromUrl(
         url: URL,
@@ -93,6 +97,34 @@ class Utils {
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
         
+        host.present(alert, animated: true, completion: nil)
+    }
+
+    static func confirmMessage(
+        _ host: UIViewController,
+        _ title:String,
+        _ message:String,
+        _ type:ConfirmationAlertType,
+        block: @escaping(Bool)->Void
+    )
+    {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle:UIAlertControllerStyle.alert
+        )
+        let yesTitle = (type == .yes || type == .yes_destructive ) ? "Yes" : "OK"
+        let noTitle = (type == .yes || type == .yes_destructive ) ? "No" : "Cancel"
+        let yesStyle:UIAlertActionStyle = (type == .yes_destructive) ? .destructive : .default
+
+        alert.addAction(UIAlertAction(title: yesTitle, style: yesStyle, handler: { _ in
+            block(true)
+        }))
+
+        alert.addAction(UIAlertAction(title: noTitle, style: .cancel, handler: { _ in
+            block(false)
+        }))
+
         host.present(alert, animated: true, completion: nil)
     }
     

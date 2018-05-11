@@ -1,6 +1,6 @@
 
 /* Class = "UITabBarItem"; title = "Index"; ObjectID = "1ru-mj-Mkc"; Note = "Index tab title"; */
-"1ru-mj-Mkc.title" = "الفهرس";
+"1ru-mj-Mkc.title" = "السور";
 
 /* Class = "UIButton"; normalTitle = "Button2"; ObjectID = "2B5-mV-VQG"; */
 "2B5-mV-VQG.normalTitle" = "Button2";
@@ -24,7 +24,7 @@
 "BcZ-EZ-Ktl.text" = "Title";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "Gzp-9i-J0B"; */
-"Gzp-9i-J0B.text" = "Detail";
+"Gzp-9i-J0B.text" = "بيانات";
 
 /* Class = "UIButton"; normalTitle = "Button1"; ObjectID = "HNy-i3-6H8"; */
 "HNy-i3-6H8.normalTitle" = "Button1";
@@ -36,7 +36,7 @@
 "M4V-CY-IJd.text" = "Subtitle";
 
 /* Class = "UINavigationItem"; title = "Home"; ObjectID = "MHQ-W5-P5q"; */
-"MHQ-W5-P5q.title" = "المدخل";
+"MHQ-W5-P5q.title" = "السور";
 
 /* Class = "UIButton"; normalTitle = "<< Next"; ObjectID = "N6s-jL-Je1"; */
 "N6s-jL-Je1.normalTitle" = "<< Next";
@@ -60,7 +60,7 @@
 "S4R-Ja-viH.title" = "عرض الصفحة";
 
 /* Class = "UITableViewController"; title = "Quran Index"; ObjectID = "UuV-Ke-L9r"; */
-"UuV-Ke-L9r.title" = "فهرس السور";
+"UuV-Ke-L9r.title" = "السور";
 
 /* Class = "UIButton"; normalTitle = "<<"; ObjectID = "YF8-bP-TUs"; */
 "YF8-bP-TUs.normalTitle" = "<<";

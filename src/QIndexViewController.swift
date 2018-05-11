@@ -60,6 +60,7 @@ class QIndexViewController: UITableViewController{
         var suraStartPage = 0
         var pageNumber = 0
         var suraPrefix = "\(suraIndex+1)"
+        var partStart = false
         //let backgroundView = UIImageView(image: UIImage(named: "Heart"))
 
         if let partInfo = qData.partInfo(partIndex: partIndex) {
@@ -77,23 +78,34 @@ class QIndexViewController: UITableViewController{
             if suraStartPage != partStartPage{
                 suraPrefix = "..."
                 cellID = "SuraResume"
+                partStart = true
             }
         }else{
             pageNumber = suraStartPage + 1
             ayaPos = qData.ayaPosition(sura: suraIndex, aya: 0)
         }
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        //cell.tag = pageNumber
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SuraStart", for: indexPath)
         cell.tag = ayaPos
-        if cellID == "SuraStart"{
-            cell.backgroundView = UIImageView(image:UIImage(named: "index_item_background")!)
-        }
+//        if cellID == "SuraStart"{
+//            cell.backgroundView = UIImageView(image:UIImage(named: "index_item_background")!)
+//        }
         if let suraName = qData.suraName(suraIndex: suraIndex) {
-            cell.textLabel!.text = "\(suraPrefix) \(suraName.name)";
+            if let suraCell = cell as? IndexTableViewCell{
+                suraCell.suraNumber.text = partStart ? "..." : String(suraIndex+1)
+                suraCell.pageNumber.text = String(pageNumber)
+                suraCell.suraName.text = suraName.name
+                if let ayaText = qData.ayaText(ayaPosition: ayaPos){
+                    suraCell.firstAya.text = ayaText
+                }
+                suraCell.backgroundImage.image = partStart ? nil : UIImage(named: "index_item_background")
+            }
+//            else{
+//                cell.textLabel?.text = "\(suraPrefix) \(suraName.name)";
+//                cell.detailTextLabel?.text = "\(pageNumber)" //String(format:pagePrompt, pageNumber)
+//            }
         }
         
-        cell.detailTextLabel!.text = String(format:pagePrompt, pageNumber)
         return cell;
     }
     
@@ -121,4 +133,13 @@ class QIndexViewController: UITableViewController{
         }
         return titles
     }
+}
+
+class IndexTableViewCell : UITableViewCell {
+    
+    @IBOutlet weak var suraNumber: UILabel!
+    @IBOutlet weak var suraName: UILabel!
+    @IBOutlet weak var pageNumber: UILabel!
+    @IBOutlet weak var firstAya: UILabel!
+    @IBOutlet weak var backgroundImage: UIImageView!
 }
