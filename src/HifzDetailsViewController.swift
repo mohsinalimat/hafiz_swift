@@ -69,7 +69,7 @@ class HifzDetailsViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
@@ -93,13 +93,13 @@ class HifzDetailsViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        if  let hifzRange = self.hifzRange,
-            let pageBrowser = segue.destination as? QPagesBrowser
+        if  let hifzRange = self.hifzRange
+            //,let pageBrowser = segue.destination as? QPagesBrowser
         {
             let qData = QData.instance
             let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
             
-            pageBrowser.startingPage = hifzRange.page + 1
+            //pageBrowser.startingPage = hifzRange.page + 1
             
             SelectStart = ayaPos
             SelectEnd = ayaPos

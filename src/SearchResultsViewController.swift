@@ -27,7 +27,7 @@ class SearchResultsViewController: UIViewController,
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -139,10 +139,10 @@ class SearchResultsViewController: UIViewController,
             SelectEnd = SelectStart
         }
         
-        if SelectStart != -1, let vc = segue.destination as? QPagesBrowser{
+        if let _ = segue.destination as? QPagesBrowser{
             removeExistingPageBrowserFromStack()
-            let qData = QData.instance
-            vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
+//            let qData = QData.instance
+//            vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
         }
 
     }

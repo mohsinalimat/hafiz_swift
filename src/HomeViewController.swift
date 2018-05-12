@@ -23,12 +23,17 @@ class HomeViewController: UITabBarController
         // GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signInSilently()
-        //navigationController?.navigationBar.topItem?.title = tabBar.selectedItem?.title
+        //let blankImage = UIImage()
+        
+//        navigationController?.navigationBar.setBackgroundImage(blankImage, for: .default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         //Show Navigation bar
-        navigationController?.navigationBar.isHidden = false
+        //navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -121,20 +126,12 @@ class HomeViewController: UITabBarController
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
     */
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier! == "OpenPagesBrowser" {
-            if let vc = segue.destination as? QPagesBrowser{
-                let qData = QData.instance
-                vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier! == "OpenPagesBrowser" {
+//            print( "Prepare segue OpenPagesBrowser" )
+//        }
+//    }
     
 }
 

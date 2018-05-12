@@ -10,63 +10,77 @@ import UIKit
 import MediaPlayer
 
 var MaskStart = -1
+
+/// The position of the selection start aya
 var SelectStart = -1
 var SelectEnd = -1
+
+enum AlertActions {
+    case revise, bookmark,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz
+}
 
 class QPagesBrowser: UIViewController
     ,UIPageViewControllerDelegate
     ,UIPageViewControllerDataSource
     {
-    
-    @IBOutlet weak var actionsLabel: UIBarButtonItem!
-    @IBOutlet weak var nextSura: UIButton!
-    @IBOutlet weak var prevSura: UIButton!
-    @IBOutlet weak var pagesContainer: UIView! //TODO: unused
-    @IBOutlet weak var suraName: UILabel!
-    @IBOutlet weak var nextPageButton: UIButton!
-    @IBOutlet weak var closeButton: UIButton!
-    
+
     //TODO: use 0 based numbering
     let firstPage = 1
     let lastPage = 604
     
     var pageViewController: UIPageViewController?
-    var startingPage:Int?
+    //var startingPage:Int?
     
+    var autoRotate = true
+    var orientation = UIInterfaceOrientationMask.all
+
+    // MARK: - Outlets
+    
+    @IBOutlet weak var navBarShowMenu: UIBarButtonItem!
+    @IBOutlet weak var goNextButton: UIButton!
+    @IBOutlet weak var goPrevButton: UIButton!
+    @IBOutlet weak var pagesContainer: UIView! //unused
+    @IBOutlet weak var footerSuraNameLabel: UILabel!
+    @IBOutlet weak var footerInfoButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
+    
+    
+
     // MARK: - UIViewController delegate methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        menuItems.addGestureRecognizer(UITapGestureRecognizer(target:self,action:#selector(hideMenu)))
-        menuItems.frame = self.view.frame
-
-//        closeBtn = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(hideMask))
+        // menuItems.addGestureRecognizer( UITapGestureRecognizer( target:self, action:#selector(hideMenu) ) )
+        // menuItems.frame = self.view.frame
 
         // Create Configure the page view controller and add it as a child view controller.
-//        self.pageViewController = UIPageViewController(transitionStyle: .scroll,
-//                                                       navigationOrientation: .horizontal,
-//                                                       options: nil)
+        // self.pageViewController = UIPageViewController(transitionStyle: .scroll,
+        //                                                navigationOrientation: .horizontal,
+        //                                                options: nil)
+
         // create a reference to the embedded UIPageViewController
         self.pageViewController = self.childViewControllers[0] as? UIPageViewController
         // Set this object as the delegate for the page view controller
         self.pageViewController!.delegate = self
         self.pageViewController!.dataSource = self
         
-        
-        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPressNext))
-        nextSura.addGestureRecognizer(longGesture)
-        
-//
-//
+        goNextButton.addGestureRecognizer(
+            UILongPressGestureRecognizer(target: self, action: #selector(onLongPressNext))
+        )
+
+        self.goPrevButton.addGestureRecognizer(
+            UILongPressGestureRecognizer(target: self, action: #selector(onLongPressPrev))
+        )
+
         //self.addChildViewController(self.pageViewController!)//TODO: required?
         //self.view.addSubview(self.pageViewController!.view)
         // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
         //var pageViewRect = self.view.bounds
         //pageViewRect.size.height = pageViewRect.height - 30
-//
-//        //If IPad, add 40 pixel padding around the view
+
+        //If IPad, add 40 pixel padding around the view
         //if UIDevice.current.userInterfaceIdiom == .pad {
         //    pageViewRect = pageViewRect.insetBy(dx: 40.0, dy: 40.0)
         //}
@@ -74,7 +88,8 @@ class QPagesBrowser: UIViewController
         //self.pageViewController!.view.frame = pageViewRect
         //self.pageViewController!.didMove(toParentViewController: self)//TODO: required?
         
-        gotoPage(pageNum: startingPage ?? 1)
+        //gotoPage(pageNum: startingPage ?? 1)
+        gotoPage(ayaPos: SelectStart)
         
         
         setNavigationButtonsColor()
@@ -84,7 +99,7 @@ class QPagesBrowser: UIViewController
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        hideNavBar()
+        //hideNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,15 +155,11 @@ class QPagesBrowser: UIViewController
     
     // MARK: - New class methods
 
-    @objc func onLongPressNext(_ sender: UILongPressGestureRecognizer){
-        if MaskStart != -1, let pageView = currentPageView() {
-            if sender.state == .began {
-                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant + 60
-            }
-            else if sender.state == .ended{
-                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant - 60
-            }
-        }
+    
+
+    func hideNavBar(_ hide:Bool = true ){
+        //navigationController?.navigationBar.isHidden = hide
+        navigationController?.setNavigationBarHidden(hide, animated: true)
     }
 
     func gotoPage(pageNum:Int){
@@ -159,13 +170,19 @@ class QPagesBrowser: UIViewController
         let _ = checkGotoPage(ayaPos: ayaPos)
     }
 
-    //TODO: create two pages if ipad landscape mode
+    
+    /// Navigate to a page, highlight and scroll to the selected aya
+    ///
+    /// - Parameter pageNum: page number (1 based)
+    /// - Returns: if a navigation took place
     func checkGotoPage( pageNum: Int )->Bool{
+        //TODO: create two pages if ipad landscape mode
         let currPageIndex = currentPageIndx()
         
         if  (currPageIndex+1 != pageNum),
             let pageViewController = self.pageViewController,
-            let startingViewController = viewControllerAtIndex( pageNum, storyboard: self.storyboard! ){
+            let startingViewController = viewControllerAtIndex( pageNum, storyboard: self.storyboard! )
+        {
         
             //pass inital set of page viewers
             //TODO: create two pages if ipad landscape mode
@@ -180,36 +197,54 @@ class QPagesBrowser: UIViewController
             
             updateTitle()
             
-            //scroll to selection
-            if SelectStart != -1 {
-                //Similar to window.setTimeout()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    if let curr_view = self.currentPageView() {
-                        curr_view.scrollToSelectedAya()
-                    }
+            if SelectStart == -1{
+                if let pageInfo = QData.instance.pageInfo(currPageIndex){
+                    SelectStart = pageInfo.ayaPos
+                    SelectEnd = SelectStart
                 }
             }
-
+            else{
+                //Scroll to selection
+                //Similar to window.setTimeout()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    startingViewController.scrollToSelectedAya()
+//                    if let curr_view = self.currentPageView() {
+//                        curr_view.scrollToSelectedAya()
+//                    }
+                }
+            }
+            
+            startingViewController.positionSelection()
+            
             return true
         }
         
         return false
     }
 
+    /// Navigate to the page containing the passed Aya if not in the current page
+    ///
+    /// - Parameter ayaPos: the absolute aya index
+    /// - Returns: whether or not a page navigation took place
     func checkGotoPage(ayaPos:Int)->Bool{
         let qData = QData.instance
         let selectionPage = qData.pageIndex(ayaPosition: ayaPos)
         if selectionPage != self.currentPageIndx(){
-            //TODO: scroll to ayaPos
             return checkGotoPage(pageNum: selectionPage+1)
         }
         return false
     }
 
-    // Creates a view controller for the given page number.
-    //TODO: return array of two view controllers, reuse existing view controllers if already created
+    /// Creates (or re-use recycled object) a page viewer for a given page number and initializes it
+    ///
+    /// - Parameters:
+    ///   - index: page index
+    ///   - storyboard: a reference to storyboard object to load UI resources from
+    /// - Returns: a view controller for a Quran page
+    
     func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> QPageView? {
-        
+        //TODO: return array of two view controllers, reuse existing view controllers if already created
+
         if(index < firstPage) || (index > lastPage) {
             return nil
         }
@@ -232,8 +267,9 @@ class QPagesBrowser: UIViewController
         return viewController.pageNumber!
     }
 
-    // Find the active QPageView and read its pageNumber, find the suraName and update the title
-    //Note viewControllers array holds one view in case of portrait and 2 in case of landscape showing two pages
+    /// Find the active QPageView and read its pageNumber, find the suraName and update the title
+    /// Note: viewControllers array holds one view in case of portrait and 2 in case of landscape showing two pages
+    
     func updateTitle(){
         //reference the first QPageView
         let pageIndex = currentPageIndx()
@@ -246,10 +282,10 @@ class QPagesBrowser: UIViewController
 
         //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
         let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
-        self.nextPageButton.setTitle(pageInfo, for: .normal)
+        self.footerInfoButton.setTitle(pageInfo, for: .normal)
         
         //let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
-        self.suraName.text = suraName.name //+ maskedAya
+        self.footerSuraNameLabel.text = suraName.name //+ maskedAya
         
         setNavigationButtonsColor()
     }
@@ -284,31 +320,181 @@ class QPagesBrowser: UIViewController
     }
     
     //TODO: support two pages view mode
-    func currentSuras()->SuraInfoList?{
+//    func currentSuras()->SuraInfoList?{
 //        if let pageView = currentPageView(){
 //            //return pageView.sura
 //        }
-        return nil
-    }
+//        return nil
+//    }
     
     func showSearch(){
         self.performSegue(withIdentifier: "PopupSearch", sender: self)
     }
 
-    // MARK: - Event Hanlders
-    
-    //Handle Navigation Bar actions
-    @IBOutlet var menuItems: UIView!
+    // MARK: - Event and Action Handlers
     
     @IBAction func onPageTap(_ sender: Any) {
         hideNavBar( navigationController?.navigationBar.isHidden == false)
     }
+
+    @IBAction func onClickNext(_ sender: Any) {
+        hideNavBar()
+        if MaskStart != -1 {
+            if let qPageView = currentPageView() {
+                qPageView.advanceMask(true)
+            }
+        }
+        else if SelectStart != -1 {
+            if !checkGotoPage(ayaPos: SelectStart){
+                if let currPageView = currentPageView(){
+                    currPageView.selectAya( aya: SelectStart+1 )
+                    gotoPage(ayaPos: SelectStart)
+                }
+            }
+        }
+        else{//goto next sura
+            let qData = QData.instance
+            let (sura,page) = qData.nextSura(fromPage: currentPageIndx())
+            let firstAya = qData.ayaPosition(sura: sura, aya: 0)
+            gotoPage( pageNum: page + 1 )
+            if let currPageView = currentPageView(){
+                currPageView.selectAya( aya: firstAya )
+            }
+        }
+    }
+
+    /// Handling "Next" navigation button long press gesture
+    ///
+    /// - Parameter sender: long press gesture object
+    @objc func onLongPressNext(_ sender: UILongPressGestureRecognizer){
+        if MaskStart != -1, let pageView = currentPageView() {
+            if sender.state == .began {
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant + 60
+            }
+            else if sender.state == .ended{
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant - 60
+            }
+        }else{
+            let qData = QData.instance
+            if sender.state == .began {
+                let (sura,page) = qData.nextSura(fromPage: currentPageIndx())
+                let firstAya = qData.ayaPosition(sura: sura, aya: 0)
+                
+                gotoPage( pageNum: page+1 )
+                
+                if let currPageView = currentPageView(){
+                    currPageView.selectAya( aya: firstAya )
+                }
+            }
+        }
+    }
     
+    @objc func onLongPressPrev(_ sender: UILongPressGestureRecognizer ){
+        if MaskStart == -1 {//no mask
+            let qData = QData.instance
+            if sender.state == .began {
+                let (sura,page) = qData.priorSura(fromPage: currentPageIndx())
+                let firstAya = qData.ayaPosition(sura: sura, aya: 0)
+                
+                gotoPage( pageNum: page+1 )
+                
+                if let currPageView = currentPageView(){
+                    currPageView.selectAya( aya: firstAya )
+                }
+            }
+        }
+
+    }
+
+    @IBAction func onClickPrevious(_ sender: Any) {
+        hideNavBar()
+        if MaskStart != -1 {
+            if let qPageView = self.currentPageView() {
+                qPageView.retreatMask( true )
+            }
+        }
+        else if SelectStart != -1 {
+            if !checkGotoPage(ayaPos: SelectStart){
+                if SelectStart > 1 {
+                    gotoPage(ayaPos:SelectStart-1)
+                    if let currPageView = currentPageView(){
+                        currPageView.selectAya( aya: SelectStart-1 )
+                    }
+                }
+            }
+        }
+        else{
+            let qData=QData.instance
+            let (sura,page) = qData.priorSura(fromPage: currentPageIndx())
+            let firstAya = qData.ayaPosition(sura: sura, aya: 0)
+            
+            gotoPage( pageNum: page+1 )
+            
+            if let currPageView = currentPageView(){
+                currPageView.selectAya( aya: firstAya )
+            }
+        }
+    }
+
+    @IBAction func clickClose(_ sender: Any) {
+        if MaskStart != -1 {//If mask is On, clear it first
+            setMaskStart(-1)
+            //hideSelection()
+        }
+//        else if SelectStart != -1 {
+//            if checkGotoPage(ayaPos: SelectStart){
+//                //If selection starts in different page, navigate to that page before hiding the selection
+//                if let currPageView = self.currentPageView(){
+//                    currPageView.scrollToSelectedAya()
+//                }
+//                return
+//            }
+//            hideSelection()
+//        }
+        else{//go back to calling viewController ( Home )
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @IBAction func navigationSearchClicked(_ sender: Any) {
+        showSearch()
+    }
+    
+    @IBAction func onMenuButtonClick(_ sender: Any) {
+        showActionsMenuAlert()
+    }
+    
+    @IBAction func onPinchAction(_ sender: UIPinchGestureRecognizer) {
+        if sender.state == .ended {
+            autoRotate = true
+            
+            print ("Current Portrait is \(UIDevice.current.orientation.isPortrait)")
+            
+            if sender.scale > 1 {
+                //AppDelegate.orientation = .landscape
+                orientation = .landscape
+            }
+            else{
+                //AppDelegate.orientation = .portrait
+                orientation = .portrait
+            }
+            
+            UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+            print ("New Portrait is \(UIDevice.current.orientation.isPortrait)")
+            
+            //Deprecated UIApplication.shared.setStatusBarOrientation(UIInterfaceOrientation.landscapeLeft, animated: true)
+            //print( self.shouldAutorotate )
+        }
+    }
+
     // MARK: - Actions Alert
     
-    @IBAction func showMenu(_ sender: Any) {
+    
+    func showActionsMenuAlert(){
+        
         let qData = QData.instance
-        let startRevise = MaskStart == -1 ? alertAction("revise", "Revise") : nil
+        let startRevise = MaskStart == -1 ? alertAction( .revise, "Revise") : nil
         
         var addUpdateHifzTitle = "Add/Update Hifz"
         
@@ -326,19 +512,19 @@ class QPagesBrowser: UIViewController
             }
         }
         
-        let addToHifz = alertAction("addUpdateHifz", addUpdateHifzTitle) // check if hifzRange is active
-        let bookmark = isBookmarked() ? nil : alertAction("bookmark", "Bookmark")
+        let addToHifz = alertAction(.addUpdateHifz, addUpdateHifzTitle) // check if hifzRange is active
+        let bookmark = isBookmarked() ? nil : alertAction( .bookmark , "Bookmark")
         
         showAlertActions([
             startRevise,
             addToHifz,
             bookmark
-        ])
-    }
+            ])
 
-    func handleAlertAction(_ id: String,_ selection: Any? = nil ){
+    }
+    func handleAlertAction(_ id: AlertActions,_ selection: Any? = nil ){
         switch id {
-        case "revise":
+        case .revise:
             if SelectStart != -1 {
                 self.setMaskStart(SelectStart)
             }else{
@@ -347,13 +533,13 @@ class QPagesBrowser: UIViewController
             }
             break
             
-        case "bookmark":
+        case .bookmark:
             if false == QData.createBookmark(page: self.currentPageIndx(), block:{ (snapshot) in }) {
                 Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
             }
             break
             
-        case "addUpdateHifz":
+        case .addUpdateHifz:
             if let pageView = currentPageView(),
                 let pageMap = pageView.pageMap,
                 let hifzList = pageView.hifzList
@@ -374,7 +560,7 @@ class QPagesBrowser: UIViewController
                         range in
                         return suraInfo?.sura == range.sura
                     }
-                    handleAlertAction("addHifzSelectSura", hifzRange ?? suraInfo )
+                    handleAlertAction( .addHifzSelectSura, hifzRange ?? suraInfo )
                 }
                 else if suraInfoList.count > 1{
                     //show select sura alert
@@ -385,7 +571,7 @@ class QPagesBrowser: UIViewController
                                 range in
                                 return suraInfo.sura == range.sura
                             }
-                            return self.alertAction("addHifzSelectSura", suraName.name, hifzRange ?? suraInfo)
+                            return self.alertAction( .addHifzSelectSura, suraName.name, hifzRange ?? suraInfo)
                         }
                         return nil
                     }
@@ -395,7 +581,7 @@ class QPagesBrowser: UIViewController
             //Couldn't get the map
             break
             
-        case "addHifzSelectSura":
+        case .addHifzSelectSura:
             let qData = QData.instance
             let currPage = currentPageIndx()
             
@@ -407,21 +593,21 @@ class QPagesBrowser: UIViewController
                 
                 if totalPages > 1 {//more than one page
                     let suraName = qData.suraName(suraIndex: suraInfo.sura)
-                    var actions = [alertAction("addHifzSelectRange","Whole Sura",addHifzParams)]
+                    var actions = [alertAction(.addHifzSelectRange,"Whole Sura",addHifzParams)]
                     
                     if currPage<suraInfo.endPage && currPage-suraInfo.page>0{
-                        actions.append(alertAction("addHifzSelectRange","From Sura Start", addHifzParams.fromSelect(.fromStart) ) )
+                        actions.append(alertAction(.addHifzSelectRange,"From Sura Start", addHifzParams.fromSelect(.fromStart) ) )
                     }
                     if currPage>suraInfo.page && suraInfo.endPage-currPage>0{
-                        actions.append(alertAction("addHifzSelectRange","To Sura End", addHifzParams.fromSelect(.toEnd)))
+                        actions.append(alertAction( .addHifzSelectRange,"To Sura End", addHifzParams.fromSelect(.toEnd)))
                     }
                     
-                    actions.append(alertAction("addHifzSelectRange","Current Page",addHifzParams.fromSelect(.page)))
+                    actions.append(alertAction(.addHifzSelectRange,"Current Page",addHifzParams.fromSelect(.page)))
                     
                     showAlertActions(actions, "Add \(suraName!.name) to your hifz")
                 }
                 else{
-                    handleAlertAction("addHifzSelectRange",addHifzParams)
+                    handleAlertAction(.addHifzSelectRange,addHifzParams)
                 }
                 
             }
@@ -429,13 +615,13 @@ class QPagesBrowser: UIViewController
                 //HifzRange is selected
                 //Show "Revised today" or "Remove from Hifz"
                 let actions = [
-                    alertAction("revisedHifz", "Revised today", hifzRange),
-                    alertAction("removeHifz", "Remove from Hifz", hifzRange),
+                    alertAction( .revisedHifz, "Revised today", hifzRange),
+                    alertAction(.removeHifz, "Remove from Hifz", hifzRange),
                 ]
                 showAlertActions(actions, "{Hifz Range Description}")
             }
             break
-        case "addHifzSelectRange":
+        case .addHifzSelectRange:
             if let addHifzParams = selection as? AddHifzParams {
                 QData.addHifz(params: addHifzParams){
                     hifzRange in
@@ -443,7 +629,8 @@ class QPagesBrowser: UIViewController
                 }
             }
             break
-        case "revisedHifz":
+            
+        case .revisedHifz:
             if let hifzRange = selection as? HifzRange{
                 let _ = QData.promoteHifz(hifzRange){
                     snapshot in
@@ -451,7 +638,8 @@ class QPagesBrowser: UIViewController
                 }
             }
             break
-        case "removeHifz":
+            
+        case .removeHifz:
             if let hifzRange = selection as? HifzRange {
                 Utils.confirmMessage(
                     self,
@@ -466,12 +654,14 @@ class QPagesBrowser: UIViewController
                 }
             }
             break
+            
         default:
             print( "Unknown Action \(id)" )
         }
     }
+
     // a utility function to create an action choice
-    func alertAction(_ id:String,_ title:String,_ selection:Any? = nil)->UIAlertAction{
+    func alertAction(_ id:AlertActions,_ title:String,_ selection:Any? = nil)->UIAlertAction{
         return UIAlertAction(title: title, style: .default, handler: { (action) in
             self.handleAlertAction(id, selection)
         })
@@ -496,13 +686,7 @@ class QPagesBrowser: UIViewController
         //show the actions
         self.present(alertController, animated: true)
     }
-
     
-    @objc func onDeviceRotated(){
-        if (SelectStart != -1), let currPageView = currentPageView(){
-            currPageView.scrollToSelectedAya()
-        }
-    }
     
     @objc func searchOpenAya(vc: SearchViewController){
         print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
@@ -516,107 +700,9 @@ class QPagesBrowser: UIViewController
     }
     
     @objc func searchViewResults(vc: SearchViewController){
-        //if let navController = navigationController{
-            //navController.popToRootViewController(animated: true)
             self.performSegue(withIdentifier: "OpenSearchResults", sender: self)
-        //}
     }
 
-    @objc func hideMenu(){
-        menuItems.removeFromSuperview()
-    }
-    
-    @IBAction func clickClose(_ sender: Any) {
-        if MaskStart != -1 {//If mask is On, clear it first
-            setMaskStart(-1)
-            hideSelection()
-        }
-        else if SelectStart != -1 {
-            if checkGotoPage(ayaPos: SelectStart){
-                //If selection starts in different page, navigate to that page before hiding the selection
-                if let currPageView = self.currentPageView(){
-                    currPageView.scrollToSelectedAya()
-                }
-                return
-            }
-            hideSelection()
-        }
-        else{//go back to calling viewController ( Home )
-            navigationController?.popViewController(animated: true)
-        }
-    }
-   
-    @IBAction func navigationSearchClicked(_ sender: Any) {
-        showSearch()
-    }
-    
-    @IBAction func nextPageClicked(_ sender: Any) {
-//        let curr_page_index = currentPageIndx() + 1
-//        if curr_page_index < lastPage {
-//            gotoPage(pageNum: curr_page_index+1)
-//        }
-        showMenu(sender)
-        
-    }
-    
-    var autoRotate = true
-    var orientation = UIInterfaceOrientationMask.all
-    
-    @IBAction func onPinchAction(_ sender: UIPinchGestureRecognizer) {
-        if sender.state == .ended {
-            autoRotate = true
-
-            print ("Current Portrait is \(UIDevice.current.orientation.isPortrait)")
-
-            if sender.scale > 1 {
-                //AppDelegate.orientation = .landscape
-                orientation = .landscape
-            }
-            else{
-                //AppDelegate.orientation = .portrait
-                orientation = .portrait
-            }
-            
-            //DispatchQueue.main.async {// set in the UI thread
-            UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
-            UIViewController.attemptRotationToDeviceOrientation()
-            print ("New Portrait is \(UIDevice.current.orientation.isPortrait)")
-            //}
-
-            //Deprecated UIApplication.shared.setStatusBarOrientation(UIInterfaceOrientation.landscapeLeft, animated: true)
-            //print( self.shouldAutorotate )
-        }
-    }
-
-    //Not called
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask{
-        return orientation
-    }
-
-    //Not called
-    override var shouldAutorotate: Bool {
-        return autoRotate
-    }
-
-    //Not called
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
-        return UIInterfaceOrientation.landscapeLeft
-    }
-    
-    
-//    @IBAction func onSwipePageDown(_ sender: UISwipeGestureRecognizer) {
-//        if sender.state == .ended {
-//            hideNavBar(false)
-//        }
-//    }
-    
-    @IBOutlet var contextMenu: UIView!
-    
-    @IBAction func showContextMenu(_ sender: Any) {
-//        self.view.addSubview(contextMenu)
-//        contextMenu.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
-    }
-    
     // MARK: - Mask methods
     @objc func hideMask(){
         if MaskStart != -1 {
@@ -632,16 +718,18 @@ class QPagesBrowser: UIViewController
             currentPageViewController.positionSelection()
         }
     }
+    
+    /// Update the colors of the footer navigation arrows and close buttons based on the mask status
     func setNavigationButtonsColor(){
         var bgColor = UIColor.clear
         if MaskStart != -1 {
             bgColor = QPageView.Colors.maskNavBg
         }
-        else if SelectStart != -1 {
-            bgColor = QPageView.Colors.selectNavBg
-        }
-        nextSura.backgroundColor = bgColor
-        prevSura.backgroundColor = bgColor
+//        else if SelectStart != -1 {
+//            bgColor = QPageView.Colors.selectNavBg
+//        }
+        goNextButton.backgroundColor = bgColor
+        goPrevButton.backgroundColor = bgColor
         closeButton.backgroundColor = bgColor
     }
     
@@ -666,60 +754,36 @@ class QPagesBrowser: UIViewController
         if let currPageView = currentPageView(){
             let maskPageIndex = currPageView.positionMask()
             if followPage && maskPageIndex != currentPageIndx() {
-                gotoPage(pageNum: maskPageIndex+1)//TODO: check
+                gotoPage(pageNum: maskPageIndex+1)
             }else{
                 currPageView.updateViewConstraints()
             }
         }
     }
     
-    @IBAction func gotoNextSura(_ sender: Any) {
-        hideNavBar()
-        if MaskStart != -1 {
-            if let qPageView = currentPageView() {
-                qPageView.advanceMask(true)
-            }
+    // MARK: - Orientation and rotation
+    
+    @objc func onDeviceRotated(){
+        if (SelectStart != -1), let currPageView = currentPageView(){
+            currPageView.scrollToSelectedAya()
         }
-        else if SelectStart != -1 {
-            if !checkGotoPage(ayaPos: SelectStart){
-                if let currPageView = currentPageView(){
-                    currPageView.selectAya( aya: SelectStart+1 )
-                    gotoPage(ayaPos:SelectStart)
-                }
-            }
-        }
-        else{
-            let suraFirstPageIndex = QData.instance.suraFirstPageIndex(prevSuraPageIndex: currentPageIndx())
-            gotoPage( pageNum: suraFirstPageIndex + 1 )
-        }
+    }
+
+    //Not called
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask{
+        return orientation
     }
     
-    @IBAction func gotoPrevSura(_ sender: Any) {
-        hideNavBar()
-        if MaskStart != -1 {
-            if let qPageView = self.currentPageView() {
-                qPageView.retreatMask( true )
-            }
-        }
-        else if SelectStart != -1 {
-            if !checkGotoPage(ayaPos: SelectStart){
-                if SelectStart > 1 {
-                    gotoPage(ayaPos:SelectStart-1)
-                    if let currPageView = currentPageView(){
-                        currPageView.selectAya( aya: SelectStart-1 )
-                    }
-                }
-            }
-        }
-        else{
-            let prevSuraPageIndex = QData.instance.suraFirstPageIndex(nextSuraPageIndex: currentPageIndx())
-            gotoPage( pageNum: prevSuraPageIndex + 1)
-        }
+    //Not called
+    override var shouldAutorotate: Bool {
+        return autoRotate
     }
     
-    func hideNavBar(_ hide:Bool = true ){
-        navigationController?.navigationBar.isHidden = hide
+    //Not called
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+        return UIInterfaceOrientation.landscapeLeft
     }
+
     
     // MARK: - pageViewController data source methods
     
@@ -761,7 +825,6 @@ class QPagesBrowser: UIViewController
             spineLocationFor orientation: UIInterfaceOrientation
         ) -> UIPageViewControllerSpineLocation
     {
-        //updateTitle()
         
         if (orientation == .portrait)
             || (orientation == .portraitUpsideDown)
@@ -829,14 +892,4 @@ class QPagesBrowser: UIViewController
     
 }
 
-//class PageAlertAction : UIAlertAction {
-//    var id:String?
-//    convenience init(id:String, title: String?, style: UIAlertActionStyle, handler: ((PageAlertAction) -> Swift.Void)? = nil){
-//        self.init(title:title,style:style,handler:{(action) in
-//            if let handler = handler, let action = action as PageAlertAction{
-//                handler( action )
-//            }
-//        })
-//    }
-//
-//}
+

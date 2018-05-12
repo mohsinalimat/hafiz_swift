@@ -153,7 +153,8 @@ class HifzViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backgroundColor = .brown
+        //self.navigationController?.navigationBar.backgroundColor = self.view.backgroundColor
+        self.navigationController?.navigationBar.backgroundColor = .green
     }
     
     override func didReceiveMemoryWarning() {
@@ -282,7 +283,7 @@ class HifzViewController: UITableViewController {
         }
         
         //Segue to QPageBrowser
-        if  let qPagesBrowser = segue.destination as? QPagesBrowser,
+        if  //let qPagesBrowser = segue.destination as? QPagesBrowser,
             let viewCell = sender as? HifzTableViewCell,
             let hRange = viewCell.hifzRange
         {
@@ -297,7 +298,7 @@ class HifzViewController: UITableViewController {
                 MaskStart = ayaPos
             }
             
-            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
+            //qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
         }
         
     }

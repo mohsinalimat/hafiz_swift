@@ -296,35 +296,47 @@ class QData{
         return suraIndex
     }
     
-    func suraFirstPageIndex( prevSuraPageIndex: Int ) -> Int{
-        var prevSuraIndex = suraIndex(pageIndex:prevSuraPageIndex)
+    /// Returns the next sura relative to a specific page
+    /// It skips suras that are in the same page if found
+    ///
+    /// - Parameter prevSuraPage: the page to seek forward from
+    /// - Returns: following sura and its first page index
+    func nextSura( fromPage: Int ) -> (sura:Int,page:Int){
+        var prevSuraIndex = suraIndex(pageIndex:fromPage)
         if(prevSuraIndex>=113){
-            return 0
+            return (sura:0,page:0)
         }
         var pgIndex:Int
         
         repeat{
             prevSuraIndex += 1
             pgIndex = pageIndex ( suraIndex: prevSuraIndex )
-        } while (pgIndex == prevSuraPageIndex)
+        } while (pgIndex == fromPage)
         
-        return pgIndex
+        return (sura:prevSuraIndex, page:pgIndex)
     }
 
-    func suraFirstPageIndex( nextSuraPageIndex: Int ) -> Int{
-        var nextSuraIndex = suraIndex( pageIndex:nextSuraPageIndex, direction: .backward )
+    
+    /// Returns the prior sura relative to a specific page
+    /// It skips suras that are in the same page if found
+    ///
+    /// - Parameter nextSuraPage: the page to seek backward from
+    /// - Returns: prior sura and its first page index
+    func priorSura( fromPage: Int ) -> (sura:Int,page:Int){
+        var nextSuraIndex = suraIndex( pageIndex:fromPage, direction: .backward )
+        
         if(nextSuraIndex==0){
-            return pageIndex( suraIndex: 113 )
+            return (sura:113, page:pageIndex( suraIndex: 113 ))
         }
         
         var pgIndex:Int
         
         repeat{
             nextSuraIndex -= 1
-            pgIndex = pageIndex ( suraIndex: nextSuraIndex )
-        } while (pgIndex == nextSuraPageIndex)
+            pgIndex = pageIndex( suraIndex: nextSuraIndex )
+        } while (pgIndex == fromPage)
         
-        return pgIndex
+        return (sura:nextSuraIndex, page:pgIndex)
     }
     
     func readQuranData() -> NSArray? {

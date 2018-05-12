@@ -64,7 +64,7 @@ class TafseerViewController: UIViewController,
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     // MARK: Class methods

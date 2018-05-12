@@ -1,4 +1,4 @@
-    //
+//
 //  DataViewController.swift
 //  test
 //
@@ -243,13 +243,8 @@ class QPageView: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         //print ( "QPageView viewWillAppear(pg:\(pageNumber!)) " )
-        //navigationController?.navigationBar.isHidden = true
+
         pageTapGesture.isEnabled = (MaskStart != -1)
-        self.maskBodyHeight.constant = self.view.frame.height // to prevent flickering when changing page
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            self.positionMask(followPage: false)
-            self.viewDidLayoutSubviews()
-        }
         if let pageNumber = self.pageNumber {
             let bgImage = (pageNumber % 2 == 0) ? "left_page" : "right_page"
             pageBackground.image = UIImage(named: bgImage)!
@@ -257,7 +252,7 @@ class QPageView: UIViewController{
     }
     
     override func viewDidLayoutSubviews() {
-        //print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
+        print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
         //positionAyatButtons()
         positionMask(followPage: false)
         positionSelection()
@@ -265,7 +260,7 @@ class QPageView: UIViewController{
     }
     
     override func viewWillLayoutSubviews() {
-        //print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
+        print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -419,71 +414,67 @@ class QPageView: UIViewController{
 
     //Rearrange the mask and aya buttons views and return the mask start page
     func positionMask()->Int{
-        let maskAyaPosition = MaskStart
         maskBody.isHidden = true
         maskHead.isHidden = true
 
-        if let buttonsView = self.buttonsView{
-            for(_, btn) in buttonsView.subviews.enumerated(){
-                let ayaId = btn.tag
-                btn.backgroundColor = (ayaId == MaskStart) ? Colors.maskedAyaBtn : Colors.ayaBtn
-                if let txtBtn = btn as? UITextView{
-                    txtBtn.textColor = ayaId == MaskStart ? .white : .brown
-                }
-            }
+        let maskAyaPosition = MaskStart
+
+        if maskAyaPosition == -1{
+            return -1 // mask is hidden
         }
+        
+        let qData = QData.instance
+        let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
+        let currPageIndex = self.pageIndex
+        if  currPageIndex < maskStartPage {
+            return maskStartPage// active page is before masked page, nothing to show
+        }
+        //somthing to show
+        maskBody.isHidden = false
+        let imageRect = pageImage.frame
 
-        if maskAyaPosition != -1 {
-            let qData = QData.instance
-            let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
-            let currPageIndex = self.pageIndex
-            if  currPageIndex < maskStartPage {
-                return maskStartPage// before masked page
-            }
-            maskBody.isHidden = false
-            maskHead.isHidden = false
-            let imageRect = pageImage.frame
-            if( currPageIndex > maskStartPage ){
-                maskHead.isHidden = true
-                //maskBody.frame = imageRect
-                maskBodyHeight.constant = imageRect.size.height
-                return maskStartPage
-            }
-            
-            if  let pageMap = self.getPageMap(),
-                let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: pageMap){
-                
-                let pageHeight = imageRect.size.height
-                let lineHeight = CGFloat(pageHeight / 15)
-                //btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
-                let lineWidth = CGFloat(imageRect.size.width)
-                maskHeadHeight.constant = lineHeight
-                
-                var headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
-
-                if headStartX < lineWidth / 20{
-                    headStartX = 0
-                }
-               
-                //Extend the mask .1 of the lineHeight width, if sneekView is not ON
-                let extensionWidth = lineHeight/10 //lineWidth/9.65/3
-                let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
-                
-                var sneekViewAdjustedWidth = sneekViewWidth
-                if headStartX + sneekViewAdjustedWidth > lineWidth {
-                    sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
-                }
-                //print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
-                maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
-                //print("PositionMaskHead \(headStartX)")
-                let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
-                //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
-                maskBodyHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
-            }
+        if( currPageIndex > maskStartPage ){
+            //mask started in an earlier page, active page is totally covered
+            //maskHead.isHidden = true
+            maskBodyHeight.constant = imageRect.size.height
             return maskStartPage
         }
         
-        return -1
+        maskHead.isHidden = false
+
+        if  let pageMap = self.getPageMap(),
+            let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: pageMap){
+            
+            let pageHeight = imageRect.size.height
+            let lineHeight = CGFloat(pageHeight / 15)
+            //btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
+            let lineWidth = CGFloat(imageRect.size.width)
+            maskHeadHeight.constant = lineHeight
+            
+            var headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
+
+            if headStartX < lineWidth / 20{
+                headStartX = 0
+            }
+           
+            //Extend the mask .1 of the lineHeight width, if sneekView is not ON
+            let extensionWidth = lineHeight/10 //lineWidth/9.65/3
+            let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
+            
+            var sneekViewAdjustedWidth = sneekViewWidth
+            if headStartX + sneekViewAdjustedWidth > lineWidth {
+                sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
+            }
+            //print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
+            maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
+            //print("PositionMaskHead \(headStartX)")
+            let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
+            //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
+            maskBodyHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
+            //print( "pageHeight=\(pageHeight)")
+        }
+        
+        return maskStartPage
     }
 
     func parentBrowserView()->QPagesBrowser?{
@@ -671,9 +662,13 @@ class QPageView: UIViewController{
         return nil
     }
     
-    //TODO: move this method to QPagesBrowers
+    
+    /// Set the current selected Aya and highlight it in the page and scroll to it if required
+    ///
+    /// - Parameter aya: aya absolute position
     func selectAya( aya: Int ){
-        
+        //TODO: move this method to QPagesBrowers
+
         if (aya+1) > QData.totalAyat {
             return
         }

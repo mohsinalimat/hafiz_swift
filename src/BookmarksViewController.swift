@@ -55,7 +55,8 @@ class BookmarksViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backgroundColor = .blue
+        
+        self.navigationController?.navigationBar.backgroundColor = UIColor.darkGray
 //        QData.bookmarks({(list) in
 //            if let pageMarks = list {
 //                self.pageMarks = []
@@ -106,7 +107,7 @@ class BookmarksViewController: UITableViewController {
             if let ayaText = qData.ayaText(ayaPosition: pageInfo.ayaPos){
                 cell.ayaText.text = ayaText
             }
-            cell.tag = pageIndex + 1 //for segue use
+            cell.tag = pageInfo.ayaPos //for segue use
             return cell
         }
         
@@ -137,11 +138,11 @@ class BookmarksViewController: UITableViewController {
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let qPagesBrowser = segue.destination as! QPagesBrowser
+        //let qPagesBrowser = segue.destination as! QPagesBrowser
         if let viewCell = sender as? UITableViewCell {
-            qPagesBrowser.startingPage = viewCell.tag
+            SelectStart = viewCell.tag
+            SelectEnd = SelectStart
         }
-        
     }
 
 }

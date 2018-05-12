@@ -18,7 +18,9 @@ class QIndexViewController: UITableViewController{
 
     override
     func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backgroundColor = UIColor(red: 51/256, green: 102/256, blue: 51/256, alpha: 1)
+        self.navigationController?.navigationBar.backgroundColor = .orange
+
+        //self.navigationController?.navigationBar.backgroundColor = UIColor(red: 51/256, green: 102/256, blue: 51/256, alpha: 1)
     }
 
     // MARK: - Table view data source delegates
@@ -49,17 +51,17 @@ class QIndexViewController: UITableViewController{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let qData = QData.instance
-        var cellID = "SuraStart"
+        //var cellID = "SuraStart"
 
         let partIndex = indexPath.section
         let suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
 
-        let pagePrompt = NSLocalizedString("Pg", comment: "")
+        //let pagePrompt = NSLocalizedString("Pg", comment: "")
         var ayaPos = 0
         var partStartPage = 0
         var suraStartPage = 0
         var pageNumber = 0
-        var suraPrefix = "\(suraIndex+1)"
+        //var suraPrefix = "\(suraIndex+1)"
         var partStart = false
         //let backgroundView = UIImageView(image: UIImage(named: "Heart"))
 
@@ -76,8 +78,8 @@ class QIndexViewController: UITableViewController{
             //first row in the section, it could be a part or a sura
             pageNumber = partStartPage + 1
             if suraStartPage != partStartPage{
-                suraPrefix = "..."
-                cellID = "SuraResume"
+                //suraPrefix = "..."
+                //cellID = "SuraResume"
                 partStart = true
             }
         }else{
@@ -113,11 +115,12 @@ class QIndexViewController: UITableViewController{
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser
+        if let viewCell = sender as? UITableViewCell
+           //,let qPagesBrowser = segue.destination as? QPagesBrowser
         {
-            let qData = QData.instance
+            //let qData = QData.instance
             let ayaPos = viewCell.tag
-            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
+            //qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPos) + 1
             //Reset previous selections and mask
             MaskStart = -1
             SelectStart = ayaPos
