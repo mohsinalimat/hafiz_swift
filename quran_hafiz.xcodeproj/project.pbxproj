@@ -95,6 +95,7 @@
 			children = (
 				2D1B62CA208BB2F100C2DD28 /* LayerView.swift */,
 				2DD8D7601FA69F73008DD81D /* Utils.swift */,
+				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -103,7 +104,6 @@
 			isa = PBXGroup;
 			children = (
 				2DF0E099202634BC00B3C493 /* SearchViewController.swift */,
-				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
 				2DA603AA2096CF0B004FC9AD /* SearchResultsViewController.swift */,
 			);
 			name = Search;

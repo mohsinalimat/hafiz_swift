@@ -15,13 +15,11 @@ var MaskStart = -1
 var SelectStart = -1
 var SelectEnd = -1
 
-enum AlertActions {
-    case revise, bookmark,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz
-}
 
 class QPagesBrowser: UIViewController
     ,UIPageViewControllerDelegate
     ,UIPageViewControllerDataSource
+    ,UIActionAlertsManager
     {
 
     //TODO: use 0 based numbering
@@ -45,7 +43,6 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var closeButton: UIButton!
     
     
-
     // MARK: - UIViewController delegate methods
     
     override func viewDidLoad() {
@@ -490,11 +487,10 @@ class QPagesBrowser: UIViewController
 
     // MARK: - Actions Alert
     
-    
     func showActionsMenuAlert(){
         
         let qData = QData.instance
-        let startRevise = MaskStart == -1 ? alertAction( .revise, "Revise") : nil
+        let startRevise = MaskStart == -1 ? alertAction( .revise, "Revise" ) : nil
         
         var addUpdateHifzTitle = "Add/Update Hifz"
         
@@ -519,10 +515,12 @@ class QPagesBrowser: UIViewController
             startRevise,
             addToHifz,
             bookmark
-            ])
+        ])
 
     }
-    func handleAlertAction(_ id: AlertActions,_ selection: Any? = nil ){
+    
+    // MARK: - UIActionAlertsManager delegate methods
+    func handleAlertAction(_ id: AlertActions,_ selection: Any?){
         switch id {
         case .revise:
             if SelectStart != -1 {
@@ -621,6 +619,7 @@ class QPagesBrowser: UIViewController
                 showAlertActions(actions, "{Hifz Range Description}")
             }
             break
+
         case .addHifzSelectRange:
             if let addHifzParams = selection as? AddHifzParams {
                 QData.addHifz(params: addHifzParams){
@@ -654,40 +653,12 @@ class QPagesBrowser: UIViewController
                 }
             }
             break
-            
+        
         default:
-            print( "Unknown Action \(id)" )
+            break
         }
     }
 
-    // a utility function to create an action choice
-    func alertAction(_ id:AlertActions,_ title:String,_ selection:Any? = nil)->UIAlertAction{
-        return UIAlertAction(title: title, style: .default, handler: { (action) in
-            self.handleAlertAction(id, selection)
-        })
-    }
-    
-    // A utility function to present a group of action items in a slid in alert
-    func showAlertActions(_ actions:[UIAlertAction?],_ title:String? = nil, msg:String? = nil){
-        
-        //create the controller
-        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .actionSheet)
-        
-        //loop to add all actions
-        actions.forEach{(action) in
-            if let action = action {
-                alertController.addAction(action)
-            }
-        }
-        
-        //Add the cancel action
-        alertController.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
-        
-        //show the actions
-        self.present(alertController, animated: true)
-    }
-    
-    
     @objc func searchOpenAya(vc: SearchViewController){
         print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
         let qData = QData.instance

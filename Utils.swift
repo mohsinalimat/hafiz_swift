@@ -132,5 +132,6 @@ class Utils {
         let dayLength:Double = 24*60*60*1000
         return Int64( Date().timeIntervalSince1970*1000 + daysOffset * dayLength )
     }
+    
 
 }

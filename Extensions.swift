@@ -8,18 +8,24 @@
 
 import UIKit
 
+public enum AlertActions {
+    case revise, bookmark,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz
+    case signOut, signIn, changeLang
+    case arabic, english
+}
+
+
 extension String {
     func extract(_ pattern: String ) -> [String]{
         let s = self
         let ns = NSString(string:self)
         let regex = try! NSRegularExpression(pattern: pattern,options:[.dotMatchesLineSeparators,.caseInsensitive])
         let results = regex.matches(in:s, options:[], range: NSMakeRange(0, s.utf16.count))
-        return results.map {
-            result in
-            //result.rangeAt(<#T##idx: Int##Int#>)
+        return results.map { result in
+            //result.rangeAt(idx:Int)
             //ns.substring(with: result.range)
             //TODO: Enum all ranges
-     	       ns.substring(with: result.range(at: 1))
+            ns.substring(with: result.range(at: 1))
         }
     }
     
@@ -108,3 +114,55 @@ extension UIView {
     }
 }
 
+public protocol UIActionAlertsManager {
+    
+    /// Delegate would implement the actions invoked by UIActionsAlert
+    ///
+    /// - Parameters:
+    ///   - id: action ID
+    ///   - selection: any associated object
+    func handleAlertAction(_ id: AlertActions,_ selection: Any? )
+}
+
+extension UIViewController{
+    /// A utility function to present a group of action items in a slid in alert
+    ///
+    /// - Parameters:
+    ///   - actions: List of actions for user to select from
+    ///   - title: Optional sheet text
+    ///   - msg: Optional sheet message text
+    func showAlertActions( _ actions:[UIAlertAction?],_ title:String? = nil, msg:String? = nil){
+        
+        //create the controller
+        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .actionSheet)
+        
+        //loop to add all actions
+        actions.forEach{(action) in
+            if let action = action {
+                alertController.addAction(action)
+            }
+        }
+        
+        //Add the cancel action
+        alertController.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+        
+        //show the actions
+        self.present(alertController, animated: true)
+    }
+    
+    /// A utility function to create an action object
+    ///
+    /// - Parameters:
+    ///   - id: Action ID enum choice
+    ///   - title: The text to display in the list
+    ///   - selection: An associated data
+    /// - Returns: the action item to append to UIAlertController
+    func alertAction(_ id:AlertActions,_ title:String,_ selection:Any? = nil)->UIAlertAction{
+        return UIAlertAction(title: title, style: .default, handler: { (action) in
+            if let manager = self as? UIActionAlertsManager{
+                manager.handleAlertAction(id, selection)
+            }
+        })
+    }
+
+}

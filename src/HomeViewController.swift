@@ -15,7 +15,9 @@ class HomeViewController: UITabBarController
     ,UIPopoverPresentationControllerDelegate
     ,GIDSignInDelegate
     ,GIDSignInUIDelegate
+    ,UIActionAlertsManager
 {
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,38 +80,54 @@ class HomeViewController: UITabBarController
         }
     }
     
-    
+    // MARK: - UIActionAlertsManager delegate methods
+    func handleAlertAction(_ id: AlertActions, _ selection: Any?) {
+        switch id{
+        case .signOut:
+            GIDSignIn.sharedInstance().signOut()
+            GIDSignIn.sharedInstance().disconnect()
+            GIDSignIn.sharedInstance().signIn()
+            break
+        case .signIn:
+            GIDSignIn.sharedInstance().signIn()
+            break
+        case .changeLang:
+            self.showAlertActions([
+                alertAction(.arabic, "Arabic", "ar"),
+                alertAction(.english, "Enblish", "en")
+                ],
+                "Select Language"
+            )
+            break
+        case .arabic, .english:
+            if let langCode = selection as? String{
+                Utils.confirmMessage(self, "App Restart Required", "In order to change the language, the App must be closed and reopened", .yes){
+                    isYes in
+                    if isYes {
+                        UserDefaults.standard.set([langCode], forKey: "AppleLanguages")
+                        UserDefaults.standard.synchronize()
+                        exit(EXIT_SUCCESS)
+                    }
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+
     @IBAction func openActions(_ sender: Any) {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        //change the title according to signin status
-        var login:UIAlertAction?
+        var actions = [UIAlertAction]()
         
         if let user = Auth.auth().currentUser,let email = user.email {
-            login = UIAlertAction(title: "Sign Out \(email)", style: .default) { (action) in
-                GIDSignIn.sharedInstance().signOut()
-                GIDSignIn.sharedInstance().disconnect()
-                GIDSignIn.sharedInstance().signIn()
-            }
+            actions.append(alertAction(.signOut, "Sign Out \(email)"))
         }else{
-            login = UIAlertAction(title: "Sign In", style: .default) { (action) in
-                GIDSignIn.sharedInstance().signIn()
-            }
-        }
-        let changeLanguage = UIAlertAction(title: "Change Language", style: .default) { (action) in
-            print(action)
+            actions.append(alertAction(.signIn, "Sign In"))
         }
 
-        let close = UIAlertAction(title: "Close", style: .cancel) { (action) in
-            print(action)
-        }
+        actions.append(alertAction(.changeLang, "Change Language"))
 
-        alert.addAction(login!)
-        alert.addAction(changeLanguage)
-        alert.addAction(close)
-        self.present(alert, animated: true) {
-            print( "Alert Show animation completed" )
-        }
+        self.showAlertActions(actions)
     }
 
     // MARK: - GIDSignInDelegate methods

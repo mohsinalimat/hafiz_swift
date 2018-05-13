@@ -154,7 +154,8 @@ class HifzViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         //self.navigationController?.navigationBar.backgroundColor = self.view.backgroundColor
-        self.navigationController?.navigationBar.backgroundColor = .green
+        //self.navigationController?.navigationBar.backgroundColor = .green
+        self.navigationController?.navigationBar.backgroundColor = UIColor(hue: 82/360, saturation: 0.79, brightness: 0.3, alpha: 1)
     }
     
     override func didReceiveMemoryWarning() {
