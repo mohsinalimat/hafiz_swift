@@ -11,3 +11,11 @@
 "PartInfo" = "Page %d - Sura %d - %@";
 "FooterInfo" = "p%d:p%d";
 "FooterSuraName" = "%d-%@%@";
+"ar.muyassar" = "Muyassar";
+"ar.jalalayn" = "Jalalayn";
+"en.yusufali" = "English";
+"tr.golpinarli" = "Turkish";
+"fr.hamidullah" = "French";
+"de.bubenheim" = "Deutch";
+"id.indonesian" = "Indonesian";
+"ms.basmeih" = "Malayu";

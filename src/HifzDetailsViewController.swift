@@ -83,7 +83,7 @@ class HifzDetailsViewController: UIViewController {
             let ayaPos = qData.ayaPosition(pageIndex: hifzRange.page, suraIndex: hifzRange.sura)
             hifzTitle.text = qData.suraName(suraIndex: hifzRange.sura)?.name ?? "missing"
             firstAya.text = qData.ayaText(ayaPosition: ayaPos)
-            hifzDetails.text = "\(hifzRange.count) pages from page \(hifzRange.page)\n\(hifzRange.age) days"
+            hifzDetails.text = QData.describe(hifzTitle: hifzRange)
         }
     }
 

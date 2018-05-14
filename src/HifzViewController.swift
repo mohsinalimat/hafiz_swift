@@ -88,8 +88,13 @@ class HifzTableViewCell : UITableViewCell {
     }
 
     @objc func removeHifz(){
-        if let vc = self.parentViewController as? HifzViewController{
-            Utils.confirmMessage(vc, "Delete {{hifz range}} from your hifz", "Are you sure?", .yes_destructive){
+        if  let vc = self.parentViewController as? HifzViewController,
+            let hifzRange = self.hifzRange,
+            let suraName = QData.instance.suraName(suraIndex: hifzRange.sura) {
+            
+            let desc = QData.describe(hifzTitle: hifzRange)
+            
+            Utils.confirmMessage(vc, "Delete \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
                 isYes in
                 QData.deleteHifz([self.hifzRange!]){ snapshot in
                     //notification will refresh the list
@@ -222,8 +227,8 @@ class HifzViewController: UITableViewController {
             let qData = QData.instance
             
             cell.suraName?.text = qData.suraName(suraIndex: hRange.sura)?.name
-            cell.rangeDescription?.text = "\(hRange.count) pages from page \(hRange.page)"
-            cell.lastRevision?.text = "\(Int(-hRange.age)) days"
+            cell.rangeDescription?.text = QData.describe(hifzTitle: hRange)
+            cell.lastRevision?.text = QData.describe(hifzAge: hRange)
             let ayaPos = qData.ayaPosition(pageIndex: hRange.page, suraIndex: hRange.sura)
             if let ayaText = qData.ayaText(ayaPosition: ayaPos){
                 cell.ayaView?.text = ayaText

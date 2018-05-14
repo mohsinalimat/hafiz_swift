@@ -9,16 +9,11 @@
 import UIKit
 
 let TafseerSources = [
-    "KORTOBY",
-    "TABARY",
-    "GALALEEN",
-    "KATHEER",
-    "en_yusufali",
-    "tr_ozturk",
-    "fr_hamidullah",
-    "de_bubenheim",
-    "id_muntakhab",
-    "ms_basmeih"
+    "ar.muyassar",
+    "ar.jalalayn",
+    "en.yusufali",
+    "id.indonesian",
+    "tr.golpinarli"
 ]
 
 class TafseerViewController: UIViewController,
@@ -43,21 +38,27 @@ class TafseerViewController: UIViewController,
         super.viewDidLoad()
         
         //Create horizontal pager
-        pageViewController = UIPageViewController(transitionStyle: .scroll,
-                                                       navigationOrientation: .horizontal,
-                                                       options: nil)
-        //Setup the pager delegate and dataSource
-        pageViewController!.delegate = self
-        pageViewController!.dataSource = self
+        pageViewController = UIPageViewController(
+            transitionStyle: .scroll,
+            navigationOrientation: .vertical,
+            options: nil
+        )
         
-        //make it child of the current controller for UIViewController.parent to work
-        self.addChildViewController(pageViewController!)
+        //Setup the pager delegate and dataSource
+        if let pvc = pageViewController,
+            let pvframe = PageViewFrame
+        {
+            pvc.delegate = self
+            pvc.dataSource = self
+            pvc.view.semanticContentAttribute = .forceRightToLeft
 
-        //locate the pager inside a dedicated frame
-        PageViewFrame.addSubview(pageViewController!.view)
-        pageViewController!.view.frame = PageViewFrame!.bounds
-        pageViewController!.view.semanticContentAttribute = .forceRightToLeft
+            //make it child of the current controller for UIViewController.parent to work
+            self.addChildViewController(pvc)
 
+            //locate the pager inside a dedicated frame
+            pvframe.addSubview(pvc.view)
+            pvc.view.frame = pvframe.bounds
+        }
 
         //Show initial pager page
         gotoAya(ayaPosition)
@@ -69,12 +70,12 @@ class TafseerViewController: UIViewController,
 
     // MARK: Class methods
     func gotoAya(_ ayaPosition: Int ){
-        
+        //TODO: support two pages
         let viewControllers = [ createAyaView(ayaPosition) ]
         
         pageViewController!.setViewControllers(
            viewControllers,
-           direction: (self.ayaPosition >= ayaPosition) ? .forward : .reverse,
+           direction: (self.ayaPosition >= ayaPosition) ? .reverse : .forward,
             //direction: .forward
            animated: true,
            completion: nil)
@@ -84,25 +85,27 @@ class TafseerViewController: UIViewController,
         updatePicker()
     }
     
-    func createAyaView(_ ayaIndex: Int)->TafseerAyaView{
-        let tafseerAyaView = self.storyboard?.instantiateViewController(withIdentifier: "TafseerAyaView") as! TafseerAyaView
-        tafseerAyaView.AyaPosition = ayaIndex
-        tafseerAyaView.selectedTafseer = TafseerViewController.selectedTafseer
-        return tafseerAyaView
+    func createAyaView(_ ayaIndex: Int)->UIViewController{
+        let viewController = storyboard!.instantiateViewController(withIdentifier: "TafseerAyaView")
+        if let tafseerAyaView = viewController as? TafseerAyaView{
+            tafseerAyaView.ayaPosition = ayaIndex
+            tafseerAyaView.selectedTafseer = TafseerSources[TafseerViewController.selectedTafseer]
+        }
+        return viewController
     }
 
     func updatePicker(){
-        tafseerSourceSelector!.selectRow(TafseerViewController.selectedTafseer, inComponent: 0, animated: true)
+        tafseerSourceSelector.selectRow(TafseerViewController.selectedTafseer, inComponent: 0, animated: true)
         let qData = QData.instance
-        if let tafseerView = self.pageViewController!.viewControllers![0] as? TafseerAyaView{
+        if let tafseerView = pageViewController!.viewControllers![0] as? TafseerAyaView{
             let (cSuraIndex, _) = qData.ayaLocation( ayaPosition )
-            ayaPosition = tafseerView.AyaPosition!
+            ayaPosition = tafseerView.ayaPosition!
             let (suraIndex,ayaIndex) = qData.ayaLocation( ayaPosition )
-            tafseerSourceSelector!.selectRow(suraIndex, inComponent: 1, animated: true)
+            tafseerSourceSelector.selectRow(suraIndex, inComponent: 1, animated: true)
             if cSuraIndex != suraIndex {
-                tafseerSourceSelector!.reloadComponent(2)
+                tafseerSourceSelector.reloadComponent(2)//reload verse list
             }
-            tafseerSourceSelector!.selectRow(ayaIndex, inComponent: 2, animated: true)
+            tafseerSourceSelector.selectRow(ayaIndex, inComponent: 2, animated: true)
         }
     }
 
@@ -110,10 +113,10 @@ class TafseerViewController: UIViewController,
         let qData = QData.instance
         let ayaPosition = qData.ayaPosition(sura: sura, aya: 0)
         gotoAya(ayaPosition)
-        tafseerSourceSelector!.reloadComponent(2)//refresh Ayat
+        tafseerSourceSelector.reloadComponent(2)//refresh Ayat
     }
     
-    func updateAyaPosition( aya:Int){
+    func updateAyaPosition( aya:Int ){
         let qData = QData.instance
         let (sIndex,_) = qData.ayaLocation(self.ayaPosition) //read current sura
         let ayaPosition = qData.ayaPosition(sura: sIndex, aya: aya)//create new position
@@ -135,19 +138,31 @@ class TafseerViewController: UIViewController,
 
     // MARK: pageViewController delegate methods
 
-    func pageViewController(_ pageViewController: UIPageViewController, spineLocationFor orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        spineLocationFor orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation
+    {
         return .min
     }
     
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        didFinishAnimating finished: Bool,
+        previousViewControllers: [UIViewController],
+        transitionCompleted completed: Bool)
+    {
         updatePicker()
     }
     
 
     // MARK: pageViewController data source methods
     
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let ayaView = viewController as? TafseerAyaView, let ayaIndex = ayaView.AyaPosition {
+    func pageViewController(
+            _ pageViewController: UIPageViewController,
+            viewControllerAfter viewController: UIViewController) -> UIViewController?
+    {
+        if let ayaView = viewController as? TafseerAyaView,
+            let ayaIndex = ayaView.ayaPosition {
             if ayaIndex < lastAya {
                 return createAyaView(ayaIndex+1)
             }
@@ -155,8 +170,11 @@ class TafseerViewController: UIViewController,
         return nil
     }
 
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let ayaView = viewController as? TafseerAyaView, let ayaIndex = ayaView.AyaPosition {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        viewControllerBefore viewController: UIViewController) -> UIViewController?
+    {
+        if let ayaView = viewController as? TafseerAyaView, let ayaIndex = ayaView.ayaPosition {
             if ayaIndex > firstAya {
                 return createAyaView(ayaIndex-1)
             }
@@ -186,7 +204,7 @@ class TafseerViewController: UIViewController,
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch component{
         case 0:
-            return TafseerSources[row]
+            return NSLocalizedString(TafseerSources[row], comment: "")
         case 1:
             return QData.instance.suraName(suraIndex: row)?.name
         default:
@@ -207,16 +225,6 @@ class TafseerViewController: UIViewController,
             updateAyaPosition( aya: row )
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

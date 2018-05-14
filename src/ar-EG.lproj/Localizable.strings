@@ -11,4 +11,11 @@
 "PartInfo" = "صفحة %d - سورة %d - %@";
 "FooterInfo" = "ج%d:ص%d";
 "FooterSuraName" = "%d-%@%@";//unused
-
+"ar.muyassar" = "الميسر";
+"ar.jalalayn" = "الجلالين";
+"en.yusufali" = "English";
+"tr.golpinarli" = "Turkish";
+"fr.hamidullah" = "French";
+"de.bubenheim" = "Deutch";
+"id.indonesian" = "Indonesian";
+"ms.basmeih" = "Malayu";

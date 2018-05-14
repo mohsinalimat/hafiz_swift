@@ -42,7 +42,7 @@ class HomeViewController: UITabBarController
         //Show Navigation bar
         //navigationController?.navigationBar.isHidden = false
         navigationController?.setNavigationBarHidden(false, animated: true)
-
+        updateSignInButtonTitle()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -118,11 +118,23 @@ class HomeViewController: UITabBarController
             break
         case .changeLang:
             self.showAlertActions([
-                alertAction(.arabic, "Arabic", "ar"),
-                alertAction(.english, "Enblish", "en")
+                alertAction(.arabic, "عربي", "ar"),
+                alertAction(.english, "English", "en")
                 ],
                 "Select Language"
             )
+            break
+        case .shareTheApp:
+            QData.publicDataValue("appstore"){ val in
+                if let appstore = val {
+                    let activityViewController = UIActivityViewController(
+                        activityItems: ["Try out this App",appstore],
+                        applicationActivities: nil
+                    )
+                    activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+                    self.present(activityViewController, animated: true, completion: nil)
+                }
+            }
             break
         case .arabic, .english:
             if let langCode = selection as? String{
@@ -147,16 +159,11 @@ class HomeViewController: UITabBarController
     }
 
     @IBAction func openActions(_ sender: Any) {
-        var actions = [UIAlertAction]()
+        let actions = [
+            alertAction(.changeLang, "Change Language"),
+            alertAction(.shareTheApp, "Share this App")
+        ]
         
-        if let user = Auth.auth().currentUser,let email = user.email {
-            actions.append(alertAction(.signOut, "Sign Out \(email)"))
-        }else{
-            actions.append(alertAction(.signIn, "Sign In"))
-        }
-
-        actions.append(alertAction(.changeLang, "Change Language"))
-
         self.showAlertActions(actions)
     }
 

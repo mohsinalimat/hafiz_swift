@@ -76,6 +76,7 @@ class QPageView: UIViewController{
     @IBOutlet weak var buttonsView: LayerView!
     @IBOutlet weak var pageScroller: UIScrollView!
     @IBOutlet weak var pageBackground: UIImageView!
+    @IBOutlet var downloadErrorView: UIView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
@@ -123,6 +124,11 @@ class QPageView: UIViewController{
     
     @IBAction func clickedCloseMask(_ sender: Any) {
         setMaskStart(-1)
+    }
+    
+    @IBAction func retryDownloadImage(_ sender: Any) {
+        downloadErrorView.removeFromSuperview()
+        downloadPageImage()
     }
     
     // MARK: - selector functions
@@ -210,7 +216,7 @@ class QPageView: UIViewController{
         
         // Do any additional setup after loading the view, typically from a nib.
         //print ( "QPageView viewDidLoad()" )
-        loadPageImage()
+        downloadPageImage()
         
         //createAyatButtons()
         becomeFirstResponder()
@@ -299,7 +305,7 @@ class QPageView: UIViewController{
         return self.pageMap
     }
     
-    func loadPageImage(){
+    func downloadPageImage(){
         if let pageNumber = self.pageNumber {
             let imagesDir = "qpages_1260"
             let imageName = String(format: "page%03d.png", pageNumber)
@@ -320,8 +326,13 @@ class QPageView: UIViewController{
                     Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
                         
                         guard let data = data, error == nil else {
-                            //TODO: show an error and a retry button
-                            print( "Failed to download image \(imageUrl.absoluteString)" )
+                            //show an error and a retry button
+                            //print( "Failed to download image \(imageUrl.absoluteString)" )
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+                                self.pageLoadingIndicator.stopAnimating()
+                                self.view.addSubview(self.downloadErrorView)
+                                self.downloadErrorView.frame = self.view.frame
+                            }
                             return
                         }
                         

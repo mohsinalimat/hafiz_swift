@@ -532,12 +532,17 @@ class QPagesBrowser: UIViewController
             break
             
         case .bookmark:
-            if false == QData.createBookmark(page: self.currentPageIndx(), block:{ (snapshot) in }) {
-                Utils.showMessage(self, title: "Authentication", message: "Sign In is required for this feature")
+            if !QData.checkSignedIn(self){
+                break
             }
+            
+            let _ = QData.createBookmark(page: self.currentPageIndx()){snapshot in}
             break
             
         case .addUpdateHifz:
+            if !QData.checkSignedIn(self){
+                break
+            }
             if let pageView = currentPageView(),
                 let pageMap = pageView.pageMap,
                 let hifzList = pageView.hifzList
@@ -616,7 +621,10 @@ class QPagesBrowser: UIViewController
                     alertAction( .revisedHifz, "Revised today", hifzRange),
                     alertAction(.removeHifz, "Remove from Hifz", hifzRange),
                 ]
-                showAlertActions(actions, "{Hifz Range Description}")
+                let desc = QData.describe(hifzTitle: hifzRange)
+                if let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
+                    showAlertActions(actions, "\(suraName.name) (\(desc))")
+                }
             }
             break
 

@@ -10,7 +10,7 @@ import UIKit
 
 public enum AlertActions {
     case revise, bookmark,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz
-    case signOut, signIn, changeLang
+    case signOut, signIn, changeLang, shareTheApp
     case arabic, english
 }
 

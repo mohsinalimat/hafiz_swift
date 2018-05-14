@@ -695,6 +695,17 @@ class QData{
         return false // not authenticated
     }
 
+    static func publicDataValue(_ key: String, block: @escaping(String?)->Void )->Void{
+        let ref = Database.database().reference().child("public/\(key)")
+        ref.observeSingleEvent(of: .value){ snapshot in
+            if let val = snapshot.value as? String{
+                block(val)
+            }else{
+                block(nil)
+            }
+        }
+    }
+    
     static func userData(_ key:String)->DatabaseReference?{
         if let userID = Auth.auth().currentUser?.uid  {
             let userData = Database.database().reference().child("data/\(userID)")
@@ -992,8 +1003,23 @@ class QData{
         GIDSignIn.sharedInstance().signIn()
     }
     
+    static func checkSignedIn(_ vc: UIViewController,_ msg:String? = nil)->Bool{
+        if QData.signedIn{
+            return true
+        }
+        Utils.confirmMessage( vc, msg ?? "Sign In required to proceed", "Would you like to sign in now?", .yes){
+            isYes in
+            if isYes{
+                QData.signIn( vc )
+            }
+        }
+        return false
+    }
+    
     static func signOut(_ vc: UIViewController){
-        Utils.confirmMessage(vc, "This will sign you out", "Are you sure?", .yes){  isYes in
+        let email = Auth.auth().currentUser?.email ?? "current user"
+        
+        Utils.confirmMessage(vc, "This will sign out \(email)", "Are you sure?", .yes){  isYes in
             if isYes {
                 do {
                     try Auth.auth().signOut() //signout from Firebase
@@ -1006,7 +1032,82 @@ class QData{
             }
         }
     }
+    
+    static var cachedTafseer:(name:String,data:[String]?) = (name:"none",data:nil)
+    
+    static func getTafseer(_ aya:Int,_ source:String? = nil)->String?{
+        let tafSource = source ?? "ar.muyassar"
+        
+        if cachedTafseer.name == tafSource, let data = cachedTafseer.data{
+            return data[aya]
+        }
+        
+        do{
+            if let path = Bundle.main.url(forResource: "tafseer/\(tafSource)", withExtension: "txt") {
+                let tdata = try Data(contentsOf: path) //TODO: cache this data for next calls
+                if let tafText = String(data: tdata, encoding: .utf8){
+                    let list = tafText.components(separatedBy: "\n")
+                    cachedTafseer = (name:tafSource,data:list)
+                    return list[aya]
+                }
+            }
+        }
+        catch let err as NSError {
+            print (err)
+        }
+        return nil
+    }
+    
+    static func describe(hifzAge hRange: HifzRange)->String{
+        if hRange.revs == 0{
+            return "--"
+        }
+        
+        let days = Int(hRange.age)
+        switch(days){
+        case 0:
+            return "today"
+        case 1:
+            return "yesterday"
+        default:
+            return "\(days) days ago"
+        }
+    }
 
+    static func describe(hifzTitle hRange: HifzRange)->String{
+        if let suraInfo = QData.instance.suraInfo(hRange.sura){
+            let page_offset = hRange.page - suraInfo.page
+            let total_sura_pages = suraInfo.endPage - suraInfo.page + 1
+
+            if hRange.count == total_sura_pages{//whole sura
+                return "all pages: \(hRange.count)"
+            }
+            
+            if page_offset == 0{//start sura
+                if hRange.count == 1{
+                    return "the first page"
+                }
+                return "\(hRange.count) of \(total_sura_pages) pages" // from start
+            }
+            
+            if hRange.page + hRange.count == suraInfo.endPage + 1{ // end range
+                if hRange.count == 1{
+                    return "last page"
+                }
+                return "from page: \(page_offset) - pages: \(hRange.count)"
+            }
+            
+            // mid range
+            if hRange.count == 1{
+                return "the page: \(page_offset)"
+            }
+            
+            return "from: \(page_offset) - pages: \(hRange.count)"
+        }
+        return "from: \(hRange.page) - pages: \(hRange.count)"
+    }
+
+    
 }
 
 struct AddHifzParams {
