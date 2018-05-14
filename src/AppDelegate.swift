@@ -77,7 +77,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
 
     //MARK: - Google Sign In delegate methods
-    
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
         // ...
         if let error = error {
@@ -118,12 +117,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         }
     }
     
-    @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
-        NotificationCenter.default.post(
-            name: AppNotifications.dataUpdated, object: snapshot
-        )
-    }
-    
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         // Perform any operations when the user disconnects from app here.
         // ...
@@ -132,9 +125,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             print( error )
             return
         }
-        
+
+        print( "AppDelegate Signed out" )
+
+        NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
+        NotificationCenter.default.post(name: AppNotifications.dataUpdated, object: user)
+
         // User is signed out
         // broadcast a notification to refresh the data
+    }
+
+    @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
+        NotificationCenter.default.post(
+            name: AppNotifications.dataUpdated, object: snapshot
+        )
     }
 
 }

@@ -8,6 +8,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class BookmarksViewController: UITableViewController {
 
@@ -20,9 +21,9 @@ class BookmarksViewController: UITableViewController {
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
-        loadData()
+        readData()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.signedIn, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onSignInUpdate), name: AppNotifications.signedIn, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
     }
@@ -31,41 +32,54 @@ class BookmarksViewController: UITableViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    @objc func onSignInUpdate(){
+        if QData.signedIn{
+            readData()
+        }else{
+            self.pageMarks = nil
+            setNoDataView(signInReqView)
+            tableView.reloadData()
+        }
+    }
+
     @objc func onRefresh(){
-        loadData(sync:true)
+        if !QData.signedIn{
+            self.tableView.refreshControl!.endRefreshing()
+            return
+        }
+        readData(sync:true)
     }
 
     @objc func onDataUpdated(){
-        loadData(sync: false)
+        readData(sync: false)
     }
 
-    func loadData(sync: Bool = false){
-        
-        let _ = QData.bookmarks(sync:sync){ (list) in
-            if let pageMarks = list {
-                self.pageMarks = []
-                for page in pageMarks{
-                    self.pageMarks!.append(page)
-                }
-                self.tableView.reloadData()
-                self.tableView.refreshControl!.endRefreshing()
-            }
-        }
+    func readData(sync: Bool = false){
+        if QData.signedIn {
+            setNoDataView(nil)
 
+            let _ = QData.bookmarks(sync:sync){ (list) in
+                if let pageMarks = list {
+                    self.pageMarks = []
+                    for page in pageMarks{
+                        self.pageMarks!.append(page)
+                    }
+                    self.tableView.reloadData()
+                    self.tableView.refreshControl!.endRefreshing()
+                }
+            }
+        }else{
+            setNoDataView( signInReqView )
+        }
+    }
+    
+    func setNoDataView(_ vw: UIView? ){
+        tableView.backgroundView = vw
+        tableView.separatorStyle = vw == nil ? .singleLine : .none
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        
         self.navigationController?.navigationBar.backgroundColor = UIColor.darkGray
-//        QData.bookmarks({(list) in
-//            if let pageMarks = list {
-//                self.pageMarks = []
-//                for page in pageMarks{
-//                    self.pageMarks!.append(page)
-//                }
-//                self.tableView.reloadData()
-//            }
-//        })
     }
 
     
@@ -73,18 +87,32 @@ class BookmarksViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBOutlet var noDataView: UIView!
+    @IBOutlet var signInReqView: UIView!
+    @IBAction func signInClicked(_ sender: Any) {
+        QData.signIn(self)
+    }
+    
 
     // MARK: - Table view data source delegates
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        //return the number of sections
+        if let pageMarks = self.pageMarks {
+            setNoDataView( pageMarks.count == 0 ? noDataView:nil)
+            return pageMarks.count == 0 ? 0 : 1
+        }
+        return QData.signedIn ? 1 : 0
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let pageMarks = self.pageMarks{
             return pageMarks.count
         }
-        return 1
+
+        return QData.signedIn ? 1:0 //to show loading
     }
 
     
@@ -124,8 +152,8 @@ class BookmarksViewController: UITableViewController {
                 (rowAction, indexPath) in
                 
                 if let page = self.pageMarks?.remove(at: indexPath.row){
-                    tableView.deleteRows(at: [indexPath], with: .fade)
                     let _ = QData.deleteBookmark(page: page){(snapshot) in
+                        //tableView.deleteRows(at: [indexPath], with: .fade)
                         print( "Bookmark deleted")
                     }//dataUpdated event will refresh the table
                 }

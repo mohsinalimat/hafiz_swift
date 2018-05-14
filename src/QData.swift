@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 import Firebase
 
 typealias NamedIntegers = [String:Int]
@@ -684,9 +685,6 @@ class QData{
             pageMarks.keepSynced(true)//update remote data if connected
             
             pageMarks.observeSingleEvent(of: .childRemoved) { (snapshot) in
-//                NotificationCenter.default.post(
-//                    name: AppNotifications.dataUpdated, object: snapshot
-//                )
                 block(snapshot)
             }
             
@@ -839,6 +837,14 @@ class QData{
         }
     }
     
+    
+    static var signedIn:Bool{
+        if let _ = Auth.auth().currentUser?.uid {
+            return true
+        }
+        return false
+    }
+    
     //Read hifz ranges from Firebase
     static func hifzList( sortByAge:Bool, sync:Bool, _ block: @escaping(HifzList?)->Void ){
         
@@ -964,11 +970,43 @@ class QData{
                     block(newRange)
                 }
             }
-            
-
         }
-
     }
+    
+    private static var _pageImagesBaseURL:String?
+    
+    static func pageImagesBaseURL(_ block: @escaping(String?)->Void ){
+        if let cached = QData._pageImagesBaseURL {
+            block( cached )
+        }
+        
+        Database.database().reference().child("public/images").observeSingleEvent(of: .value){
+            (snapshot) in
+            _pageImagesBaseURL = snapshot.value as? String
+            block( _pageImagesBaseURL )
+        }
+    }
+    
+    static func signIn(_ vc: UIViewController){
+        //TODO: implement different sign in providers
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    static func signOut(_ vc: UIViewController){
+        Utils.confirmMessage(vc, "This will sign you out", "Are you sure?", .yes){  isYes in
+            if isYes {
+                do {
+                    try Auth.auth().signOut() //signout from Firebase
+                    GIDSignIn.sharedInstance().signOut()
+                    GIDSignIn.sharedInstance().disconnect()
+                }
+                catch let error as NSError{
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+
 }
 
 struct AddHifzParams {
@@ -1021,4 +1059,5 @@ struct AddHifzParams {
         }
         return ret
     }
+    
 }

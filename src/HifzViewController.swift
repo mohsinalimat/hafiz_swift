@@ -8,7 +8,7 @@
 //
 
 import UIKit
-
+import GoogleSignIn
 
 class HifzTableViewCell : UITableViewCell {
     
@@ -65,6 +65,7 @@ class HifzTableViewCell : UITableViewCell {
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return action == #selector(reviseHifz)
             || action == #selector(readHifz)
+            || action == #selector(removeHifz)
             || action == #selector(viewHifzDetails)
     }
 
@@ -86,16 +87,24 @@ class HifzTableViewCell : UITableViewCell {
         }
     }
 
+    @objc func removeHifz(){
+        if let vc = self.parentViewController as? HifzViewController{
+            Utils.confirmMessage(vc, "Delete {{hifz range}} from your hifz", "Are you sure?", .yes_destructive){
+                isYes in
+                QData.deleteHifz([self.hifzRange!]){ snapshot in
+                    //notification will refresh the list
+                }
+            }
+        }
+    }
 
-//    @objc func dummy(sender: Any?){
-//        //Utils.showMessage(nil, title: "Dummy", message: "Menu Command")
-//        print ("Cell.dummy(sender) called")
-//    }
+
 }
 
 class HifzViewController: UITableViewController {
 
     var hifzRanges:HifzList?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,12 +117,12 @@ class HifzViewController: UITableViewController {
         refreshControl.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
         
         //relead data upon signed In user is changed
-        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.signedIn, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onSignInUpdate), name: AppNotifications.signedIn, object: nil)
         
         //relead data upon data change
         NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
 
-        loadData()
+        readData()
         
         becomeFirstResponder()
     }
@@ -128,33 +137,55 @@ class HifzViewController: UITableViewController {
         }
     }
     
-    @objc func dummy(){
-        print("UITableView.dumm() called")
+    @IBOutlet var noDataView: UIView!
+    @IBOutlet var signInReqView: UIView!
+    
+    @IBAction func signInClicked(_ sender: Any) {
+        QData.signIn(self)
     }
     
-    
-    @objc func onRefresh(){
-        loadData(sync: true)
-    }
-    
-    @objc func onDataUpdated(){
-        QData.hifzList(sortByAge: true, sync: true){(ranges) in
-            self.hifzRanges = ranges
-            self.tableView.reloadData()
+    @objc func onSignInUpdate(){
+        if QData.signedIn{
+            readData()
+        }else{
+            self.hifzRanges = nil
+            setNoDataView(signInReqView)
+            tableView.reloadData()
         }
     }
     
-    func loadData( sync:Bool = false ){
-        QData.hifzList(sortByAge: true, sync: sync){(ranges) in
-            self.hifzRanges = ranges
-            self.tableView.reloadData()
+    @objc func onRefresh(){
+        if !QData.signedIn{
             self.tableView.refreshControl!.endRefreshing()
+            return
+        }
+        readData(sync: true)
+    }
+    
+    @objc func onDataUpdated(){
+        readData(sync: false)
+    }
+    
+    func setNoDataView(_ vw: UIView? ){
+        tableView.backgroundView = vw
+        tableView.separatorStyle = vw == nil ? .singleLine : .none
+    }
+    
+    func readData( sync:Bool = false ){
+        if QData.signedIn{
+            setNoDataView(nil)
+            QData.hifzList(sortByAge: true, sync: sync){(ranges) in
+                self.hifzRanges = ranges
+                self.tableView.reloadData()
+                self.tableView.refreshControl!.endRefreshing()
+            }
+        }else{
+            setNoDataView(signInReqView)
+            tableView.reloadData()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //self.navigationController?.navigationBar.backgroundColor = self.view.backgroundColor
-        //self.navigationController?.navigationBar.backgroundColor = .green
         self.navigationController?.navigationBar.backgroundColor = UIColor(hue: 82/360, saturation: 0.79, brightness: 0.3, alpha: 1)
     }
     
@@ -167,14 +198,19 @@ class HifzViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         //return the number of sections
-        return 1
+        if let hifzRanges = self.hifzRanges {
+            setNoDataView( hifzRanges.count == 0 ? noDataView:nil)
+            return hifzRanges.count == 0 ? 0 : 1
+        }
+        return QData.signedIn ? 1 : 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let hifzRanges = self.hifzRanges {
             return hifzRanges.count
         }
-        return 1
+        
+        return QData.signedIn ? 1 : 0 //to show loading
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -209,7 +245,8 @@ class HifzViewController: UITableViewController {
             UIMenuController.shared.menuItems =  [
                 UIMenuItem(title: "Read", action: #selector(HifzTableViewCell.readHifz)),
                 UIMenuItem(title: "Revise", action: #selector(HifzTableViewCell.reviseHifz)),
-                UIMenuItem(title: "Details", action: #selector(HifzTableViewCell.viewHifzDetails))
+                //UIMenuItem(title: "Details", action: #selector(HifzTableViewCell.viewHifzDetails))
+                UIMenuItem(title: "Remove", action: #selector(HifzTableViewCell.removeHifz))
             ]
             cell.updateRangeColor()
             return true
@@ -225,6 +262,7 @@ class HifzViewController: UITableViewController {
         return action == #selector(HifzTableViewCell.readHifz)
             || action == #selector(HifzTableViewCell.viewHifzDetails)
             || action == #selector(HifzTableViewCell.reviseHifz)
+            || action == #selector(HifzTableViewCell.removeHifz)
     }
 
     //UIMenuController will call the cell view to check if the action is supported,
@@ -252,9 +290,9 @@ class HifzViewController: UITableViewController {
                     tableView.deleteRows(at: [indexPath], with: .fade)
                     let _ = QData.promoteHifz(hifzRange, {(snapshot) in })//dataUpdated event will refresh the table
                 }
-            }),
-            
-            UITableViewRowAction(style: .normal, title: "Edit", handler: {
+            })
+//Temporary unlink the details page
+            ,UITableViewRowAction(style: .normal, title: "Edit", handler: {
                 (rowAction, indexPath) in
                 if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell {
                     self.performSegue(withIdentifier: "ViewHifzDetails", sender: cell)

@@ -214,7 +214,7 @@
                                 <rect key="frame" x="0.0" y="302.5" width="320" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N6s-jL-Je1">
-                                        <rect key="frame" x="8" y="-4" width="143" height="43"/>
+                                        <rect key="frame" x="8" y="-5" width="143" height="43"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="&lt;&lt; Next"/>
                                         <connections>
@@ -222,7 +222,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gNU-SZ-zXv">
-                                        <rect key="frame" x="176" y="-4" width="136" height="43"/>
+                                        <rect key="frame" x="176" y="-5" width="136" height="43"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Previous &gt;&gt;"/>
                                         <connections>
@@ -356,10 +356,10 @@
                                                 </connections>
                                             </imageView>
                                             <view hidden="YES" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="twD-Hm-5Yj" userLabel="maskHead">
-                                                <rect key="frame" x="0.0" y="210" width="190" height="40"/>
+                                                <rect key="frame" x="0.0" y="478" width="270" height="40"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-I2-sYk" userLabel="closeMask">
-                                                        <rect key="frame" x="150" y="0.0" width="40" height="40"/>
+                                                        <rect key="frame" x="230" y="0.0" width="40" height="40"/>
                                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="hZw-I2-sYk" secondAttribute="height" multiplier="1:1" id="kpf-Fe-8ZC"/>
@@ -377,7 +377,7 @@
                                                 <gestureRecognizers/>
                                                 <constraints>
                                                     <constraint firstItem="hZw-I2-sYk" firstAttribute="height" secondItem="twD-Hm-5Yj" secondAttribute="height" id="9Nw-2Q-YmV"/>
-                                                    <constraint firstAttribute="height" constant="40" id="AgW-KI-1tc" userLabel="maskHeadHeight"/>
+                                                    <constraint firstAttribute="height" constant="40" id="AgW-KI-1tc" userLabel="-maskHeadHeight"/>
                                                     <constraint firstAttribute="trailing" secondItem="hZw-I2-sYk" secondAttribute="trailing" id="eEn-Ci-Tsp"/>
                                                     <constraint firstItem="hZw-I2-sYk" firstAttribute="centerY" secondItem="twD-Hm-5Yj" secondAttribute="centerY" id="qcI-Uv-3s9"/>
                                                 </constraints>
@@ -387,14 +387,14 @@
                                                 </connections>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" translatesAutoresizingMaskIntoConstraints="NO" id="bhi-gQ-9oN" userLabel="maskBody">
-                                                <rect key="frame" x="0.0" y="250" width="290" height="318"/>
+                                                <rect key="frame" x="0.0" y="518" width="290" height="50"/>
                                                 <color key="backgroundColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <bool key="isElement" value="YES"/>
                                                 </accessibility>
                                                 <gestureRecognizers/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="318" id="dii-DT-rcp" userLabel="maskBodyHeight"/>
+                                                    <constraint firstAttribute="height" constant="50" id="dii-DT-rcp" userLabel="-maskBodyHeight"/>
                                                 </constraints>
                                                 <connections>
                                                     <outletCollection property="gestureRecognizers" destination="knn-RY-dRG" appends="YES" id="dfj-Gy-Zet"/>
@@ -460,7 +460,7 @@
                                             <constraint firstItem="qhd-Yp-BeK" firstAttribute="leading" secondItem="xth-OK-GBf" secondAttribute="leading" id="Hmx-FN-6cQ"/>
                                             <constraint firstAttribute="bottom" secondItem="bhi-gQ-9oN" secondAttribute="bottom" id="IVy-Im-6pb"/>
                                             <constraint firstItem="foT-G9-mTN" firstAttribute="width" secondItem="xth-OK-GBf" secondAttribute="width" id="KbW-qE-7h1"/>
-                                            <constraint firstAttribute="trailing" secondItem="twD-Hm-5Yj" secondAttribute="trailing" constant="100" id="LGF-VM-sh5" userLabel="MaskHeadStartX"/>
+                                            <constraint firstAttribute="trailing" secondItem="twD-Hm-5Yj" secondAttribute="trailing" constant="20" id="LGF-VM-sh5" userLabel="-MaskHeadStartX"/>
                                             <constraint firstItem="foT-G9-mTN" firstAttribute="top" secondItem="xth-OK-GBf" secondAttribute="top" id="Lkk-fo-pDd"/>
                                             <constraint firstItem="CTD-Pf-l6U" firstAttribute="centerX" secondItem="xth-OK-GBf" secondAttribute="centerX" id="MSl-jd-fQi"/>
                                             <constraint firstItem="twD-Hm-5Yj" firstAttribute="bottom" secondItem="bhi-gQ-9oN" secondAttribute="top" id="NDl-fY-QhS"/>
@@ -678,6 +678,11 @@
                 <tabBarController autoresizesArchivedViewToFullSize="NO" id="ieL-D3-J43" userLabel="Home" customClass="HomeViewController" customModule="quran_hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" title="Suras" id="MHQ-W5-P5q">
+                        <barButtonItem key="leftBarButtonItem" title="Sign In" id="9xF-iA-K7x">
+                            <connections>
+                                <action selector="signInButtonClicked:" destination="ieL-D3-J43" id="SxY-3o-McL"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="action" id="0bd-nA-znH">
                                 <connections>
@@ -697,6 +702,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </tabBar>
                     <connections>
+                        <outlet property="signInBarButton" destination="9xF-iA-K7x" id="MZ9-4m-ZfP"/>
                         <segue destination="UuV-Ke-L9r" kind="relationship" relationship="viewControllers" id="KaB-Pf-7w8"/>
                         <segue destination="jHV-wq-GPS" kind="relationship" relationship="viewControllers" id="gzs-dl-DIh"/>
                         <segue destination="BUi-sJ-PCq" kind="relationship" relationship="viewControllers" id="jCk-Sf-hUv"/>
@@ -908,10 +914,59 @@
                             </fragment>
                         </attributedString>
                     </tabBarItem>
+                    <connections>
+                        <outlet property="noDataView" destination="SAT-8L-1uC" id="bEt-bG-e7e"/>
+                        <outlet property="signInReqView" destination="SjG-Br-Gzf" id="AuG-Pb-P1a"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeK-gX-SeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="SAT-8L-1uC" userLabel="NoData">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You having created any bookmark yet" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bql-f7-xJ3" userLabel="Msg">
+                            <rect key="frame" x="24" y="23" width="192" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="bql-f7-xJ3" firstAttribute="width" secondItem="SAT-8L-1uC" secondAttribute="width" multiplier="0.8" id="DXF-Bk-xxJ"/>
+                        <constraint firstAttribute="centerY" secondItem="bql-f7-xJ3" secondAttribute="bottom" id="Jwu-ka-BiY"/>
+                        <constraint firstItem="bql-f7-xJ3" firstAttribute="centerX" secondItem="SAT-8L-1uC" secondAttribute="centerX" id="fKU-Vi-rLu"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" id="SjG-Br-Gzf" userLabel="SignIn">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You need to Sign In to an account in order to add bookmarks" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6x-i7-xQi" userLabel="Msg">
+                            <rect key="frame" x="24" y="3" width="192" height="61"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aKx-do-BCm" userLabel="doSignIn">
+                            <rect key="frame" x="97" y="74" width="47" height="30"/>
+                            <state key="normal" title="Sign In"/>
+                            <connections>
+                                <action selector="signInClicked:" destination="BUi-sJ-PCq" eventType="touchUpInside" id="lkw-q5-nc8"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="aKx-do-BCm" firstAttribute="centerX" secondItem="SjG-Br-Gzf" secondAttribute="centerX" id="Ft0-CI-hfk"/>
+                        <constraint firstItem="E6x-i7-xQi" firstAttribute="centerX" secondItem="SjG-Br-Gzf" secondAttribute="centerX" id="XTz-zH-Uxz"/>
+                        <constraint firstItem="aKx-do-BCm" firstAttribute="top" secondItem="E6x-i7-xQi" secondAttribute="bottom" constant="10" id="rrm-Xa-8oK"/>
+                        <constraint firstItem="E6x-i7-xQi" firstAttribute="width" secondItem="SjG-Br-Gzf" secondAttribute="width" multiplier="0.8" id="vfF-jF-jGj"/>
+                        <constraint firstAttribute="centerY" secondItem="E6x-i7-xQi" secondAttribute="bottom" id="zpO-1g-hue"/>
+                    </constraints>
+                </view>
             </objects>
-            <point key="canvasLocation" x="-774" y="498"/>
+            <point key="canvasLocation" x="-774" y="890"/>
         </scene>
         <!--Hifz Details-->
         <scene sceneID="RJV-3r-Ue2">
@@ -1208,13 +1263,60 @@
                         </attributedString>
                     </tabBarItem>
                     <connections>
+                        <outlet property="noDataView" destination="1iX-Kq-3r3" id="Amr-6J-Z2Z"/>
+                        <outlet property="signInReqView" destination="9Pj-Hc-osg" id="CHL-0h-RT7"/>
                         <segue destination="DfT-l6-szp" kind="show" identifier="ViewHifzDetails" id="oQe-sT-ZCQ"/>
                         <segue destination="703-4V-yAM" kind="show" identifier="ReadHifz" id="xTL-Fx-IJt"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnA-In-VyK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" restorationIdentifier="SingInRequired" id="1iX-Kq-3r3" userLabel="NoData">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You haven't added any pages or suras to your hifz list" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHA-tK-68e" userLabel="Msg">
+                            <rect key="frame" x="24" y="3" width="192" height="61"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="kHA-tK-68e" firstAttribute="width" secondItem="1iX-Kq-3r3" secondAttribute="width" multiplier="0.8" id="BmR-56-mKL"/>
+                        <constraint firstAttribute="centerY" secondItem="kHA-tK-68e" secondAttribute="bottom" id="Qpk-hm-oMG"/>
+                        <constraint firstItem="kHA-tK-68e" firstAttribute="centerX" secondItem="1iX-Kq-3r3" secondAttribute="centerX" id="bxm-qc-c3Z"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" restorationIdentifier="SingInRequired" id="9Pj-Hc-osg" userLabel="SignIn">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You need to Sign In to an account in order to manage and track your Hifz" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WJG-i9-mWX" userLabel="Msg">
+                            <rect key="frame" x="24" y="-17.5" width="192" height="81.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KMb-3I-u9Y" userLabel="doSignIn">
+                            <rect key="frame" x="96" y="74" width="47" height="30"/>
+                            <state key="normal" title="Sign In"/>
+                            <connections>
+                                <action selector="signInClicked:" destination="jHV-wq-GPS" eventType="touchUpInside" id="MnN-E3-Au9"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="KMb-3I-u9Y" firstAttribute="centerX" secondItem="9Pj-Hc-osg" secondAttribute="centerX" id="F93-pb-4Ak"/>
+                        <constraint firstItem="KMb-3I-u9Y" firstAttribute="top" secondItem="WJG-i9-mWX" secondAttribute="bottom" constant="10" id="Ip9-Ks-RGy"/>
+                        <constraint firstItem="WJG-i9-mWX" firstAttribute="width" secondItem="9Pj-Hc-osg" secondAttribute="width" multiplier="0.8" id="VDy-LC-AP4"/>
+                        <constraint firstAttribute="centerY" secondItem="WJG-i9-mWX" secondAttribute="bottom" id="uCR-JA-gt9"/>
+                        <constraint firstItem="WJG-i9-mWX" firstAttribute="centerX" secondItem="9Pj-Hc-osg" secondAttribute="centerX" id="ytZ-da-Oos"/>
+                    </constraints>
+                </view>
             </objects>
-            <point key="canvasLocation" x="-774.375" y="-244.01408450704227"/>
+            <point key="canvasLocation" x="-774" y="-65"/>
         </scene>
         <!--Suras-->
         <scene sceneID="g14-Qx-qBK">
@@ -1234,10 +1336,10 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="index_item_background" translatesAutoresizingMaskIntoConstraints="NO" id="Iq6-tL-QOV">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gtg-AX-qIB">
-                                            <rect key="frame" x="16" y="14.5" width="27" height="21"/>
+                                            <rect key="frame" x="16" y="16.5" width="27" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1249,13 +1351,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Aya" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uwb-yk-Hhc">
-                                            <rect key="frame" x="51" y="28" width="192" height="15"/>
+                                            <rect key="frame" x="51" y="32" width="192" height="15"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PgNo." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mSD-KC-wqW">
-                                            <rect key="frame" x="257" y="16.5" width="42" height="18"/>
+                                            <rect key="frame" x="257" y="18.5" width="42" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -1378,8 +1480,8 @@
         <image name="left_page" width="33" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="FTj-05-K0G"/>
-        <segue reference="hY7-SJ-Dos"/>
-        <segue reference="7eF-O5-dQo"/>
+        <segue reference="Po2-Nt-YPQ"/>
+        <segue reference="G6v-7F-wGi"/>
+        <segue reference="Yoy-kt-B5E"/>
     </inferredMetricsTieBreakers>
 </document>

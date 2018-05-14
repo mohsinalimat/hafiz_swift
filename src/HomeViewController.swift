@@ -25,10 +25,17 @@ class HomeViewController: UITabBarController
         // GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signInSilently()
-        //let blankImage = UIImage()
         
-//        navigationController?.navigationBar.setBackgroundImage(blankImage, for: .default)
-//        navigationController?.navigationBar.shadowImage = UIImage()
+        updateSignInButtonTitle()
+        
+        //let blankImage = UIImage()
+        //navigationController?.navigationBar.setBackgroundImage(blankImage, for: .default)
+        //navigationController?.navigationBar.shadowImage = UIImage()
+    }
+    
+    @objc func updateSignInButtonTitle()
+    {
+        signInBarButton.title = QData.signedIn ? "Sign Out" : "Sign In"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,6 +60,14 @@ class HomeViewController: UITabBarController
             name: AppNotifications.searchViewResults,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateSignInButtonTitle),
+            name: AppNotifications.signedIn,
+            object: nil
+        )
+
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -64,6 +79,18 @@ class HomeViewController: UITabBarController
         self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)
     }
 
+    @IBOutlet weak var signInBarButton: UIBarButtonItem!
+    
+    @IBAction func signInButtonClicked(_ sender: UIBarButtonItem) {
+        if QData.signedIn {
+            QData.signOut(self)
+        }else{
+            QData.signIn(self)
+        }
+        updateSignInButtonTitle()
+    }
+    
+    
     @objc func searchViewResults(vc: SearchViewController){
         self.performSegue(withIdentifier: "OpenSearchResults", sender: self)
     }
@@ -84,12 +111,10 @@ class HomeViewController: UITabBarController
     func handleAlertAction(_ id: AlertActions, _ selection: Any?) {
         switch id{
         case .signOut:
-            GIDSignIn.sharedInstance().signOut()
-            GIDSignIn.sharedInstance().disconnect()
-            GIDSignIn.sharedInstance().signIn()
+            QData.signOut(self)
             break
         case .signIn:
-            GIDSignIn.sharedInstance().signIn()
+            QData.signIn(self)
             break
         case .changeLang:
             self.showAlertActions([
@@ -101,7 +126,12 @@ class HomeViewController: UITabBarController
             break
         case .arabic, .english:
             if let langCode = selection as? String{
-                Utils.confirmMessage(self, "App Restart Required", "In order to change the language, the App must be closed and reopened", .yes){
+                Utils.confirmMessage(
+                    self,
+                    "App Restart Required",
+                    "In order to change the language, the App must be closed and reopened",
+                    .yes )
+                {
                     isYes in
                     if isYes {
                         UserDefaults.standard.set([langCode], forKey: "AppleLanguages")

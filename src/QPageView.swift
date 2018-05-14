@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class QPageView: UIViewController{
 
@@ -312,24 +313,28 @@ class QPageView: UIViewController{
                 return
             }
             
-            let imageUrl = URL(string:"http://www.egylist.com/\(imagesDir)/\(imageName)")!
-
-            Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
-                
-                guard let data = data, error == nil else {
-                    //TODO: show an error and a retry button
-                    print( "Failed to download image \(imageUrl.absoluteString)" )
-                    return
-                }
-                
-                Utils.saveData(dir: imagesDir, file:imageName, data: data)
-                
-                if let downloadedImage = UIImage(data: data){
-                    //Apply the image data in the UI thread (similar to javascript:window.setTimeout())
-                    DispatchQueue.main.async {
-                        //Set the imageView source
-                        self.pageImage.image = downloadedImage
-                        self.pageLoadingIndicator.stopAnimating()
+            QData.pageImagesBaseURL(){ baseURL in
+                if let baseURL = baseURL{
+                    let imageUrl = URL(string:"\(baseURL)/\(imagesDir)/\(imageName)")!
+                    
+                    Utils.getDataFromUrl(url: imageUrl) { (data, response, error) in
+                        
+                        guard let data = data, error == nil else {
+                            //TODO: show an error and a retry button
+                            print( "Failed to download image \(imageUrl.absoluteString)" )
+                            return
+                        }
+                        
+                        Utils.saveData(dir: imagesDir, file:imageName, data: data)
+                        
+                        if let downloadedImage = UIImage(data: data){
+                            //Apply the image data in the UI thread (similar to javascript:window.setTimeout())
+                            DispatchQueue.main.async {
+                                //Set the imageView source
+                                self.pageImage.image = downloadedImage
+                                self.pageLoadingIndicator.stopAnimating()
+                            }
+                        }
                     }
                 }
             }
@@ -414,36 +419,48 @@ class QPageView: UIViewController{
 
     //Rearrange the mask and aya buttons views and return the mask start page
     func positionMask()->Int{
-        maskBody.isHidden = true
-        maskHead.isHidden = true
+        maskBody.isHidden = false
+        maskHead.isHidden = false
 
-        let maskAyaPosition = MaskStart
+        //let maskAyaPosition = MaskStart
 
-        if maskAyaPosition == -1{
+        if MaskStart == -1{
+            maskBodyHeight.constant = 0
+            maskHeadStartX.constant = 0
+            maskHeadHeight.constant = 0
+            btnCloseMask.isHidden = true
             return -1 // mask is hidden
         }
         
         let qData = QData.instance
-        let maskStartPage = qData.pageIndex(ayaPosition: maskAyaPosition)
+        let maskStartPage = qData.pageIndex(ayaPosition: MaskStart)
         let currPageIndex = self.pageIndex
         if  currPageIndex < maskStartPage {
+            maskBodyHeight.constant = 0
+            maskHeadStartX.constant = 0
+            maskHeadHeight.constant = 0
+            btnCloseMask.isHidden = true
             return maskStartPage// active page is before masked page, nothing to show
         }
         //somthing to show
-        maskBody.isHidden = false
+        //maskBody.isHidden = false
         let imageRect = pageImage.frame
 
         if( currPageIndex > maskStartPage ){
             //mask started in an earlier page, active page is totally covered
             //maskHead.isHidden = true
+            //maskHeadStartX.constant = 0
+            maskHeadHeight.constant = 0
+            btnCloseMask.isHidden = true
             maskBodyHeight.constant = imageRect.size.height
             return maskStartPage
         }
         
-        maskHead.isHidden = false
+        btnCloseMask.isHidden = false
+        //maskHead.isHidden = false
 
         if  let pageMap = self.getPageMap(),
-            let ayaMapInfo = qData.ayaMapInfo(maskAyaPosition, pageMap: pageMap){
+            let ayaMapInfo = qData.ayaMapInfo(MaskStart, pageMap: pageMap){
             
             let pageHeight = imageRect.size.height
             let lineHeight = CGFloat(pageHeight / 15)
