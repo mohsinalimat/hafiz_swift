@@ -1085,7 +1085,7 @@ class QData{
             
             if page_offset == 0{//start sura
                 if hRange.count == 1{
-                    return "the first page"
+                    return "first page"
                 }
                 return "\(hRange.count) of \(total_sura_pages) pages" // from start
             }
@@ -1094,7 +1094,7 @@ class QData{
                 if hRange.count == 1{
                     return "last page"
                 }
-                return "from page: \(page_offset) - pages: \(hRange.count)"
+                return "from: \(page_offset) - pages: \(hRange.count)"
             }
             
             // mid range

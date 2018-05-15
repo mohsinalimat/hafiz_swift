@@ -96,14 +96,12 @@ class HifzTableViewCell : UITableViewCell {
             
             Utils.confirmMessage(vc, "Delete \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
                 isYes in
-                QData.deleteHifz([self.hifzRange!]){ snapshot in
-                    //notification will refresh the list
+                if isYes {
+                    QData.deleteHifz([self.hifzRange!]){ snapshot in }
                 }
             }
         }
     }
-
-
 }
 
 class HifzViewController: UITableViewController {

@@ -27,7 +27,8 @@ class SearchResultsViewController: UIViewController,
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        Utils.showNavBar(self)
+        //navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {

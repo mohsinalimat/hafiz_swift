@@ -18,7 +18,7 @@ class QIndexViewController: UITableViewController{
 
     override
     func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backgroundColor = .orange
+        self.navigationController?.navigationBar.backgroundColor = .blue
 
         //self.navigationController?.navigationBar.backgroundColor = UIColor(red: 51/256, green: 102/256, blue: 51/256, alpha: 1)
     }

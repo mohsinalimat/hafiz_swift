@@ -69,7 +69,8 @@ class HifzDetailsViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        //navigationController?.setNavigationBarHidden(false, animated: true)
+        Utils.showNavBar(self)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     

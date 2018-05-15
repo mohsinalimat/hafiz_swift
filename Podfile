@@ -11,4 +11,6 @@ target 'quran_hafiz' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'GoogleSignIn'
+  
+  pod 'FirebaseUI'
 end

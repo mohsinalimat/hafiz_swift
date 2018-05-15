@@ -17,7 +17,8 @@ class QPageView: UIViewController{
         static var maskNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 0, alpha: 0.12) }
         static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
     }
-
+    
+    var newMask = true
     var isBookmarked: Bool?
     var pageNumber: Int? //will be set by the creator ViewController
     var pageMap: PageMap?
@@ -429,7 +430,7 @@ class QPageView: UIViewController{
     }
 
     //Rearrange the mask and aya buttons views and return the mask start page
-    func positionMask()->Int{
+    func positionMask( animate: Bool = false )->Int{
         maskBody.isHidden = false
         maskHead.isHidden = false
 
@@ -470,36 +471,50 @@ class QPageView: UIViewController{
         btnCloseMask.isHidden = false
         //maskHead.isHidden = false
 
+        
         if  let pageMap = self.getPageMap(),
             let ayaMapInfo = qData.ayaMapInfo(MaskStart, pageMap: pageMap){
-            
+            let f=CGFloat(0)
+            var (maskHeadHeight, maskHeadStartX,maskBodyHeight) = (f,f,f)
+
             let pageHeight = imageRect.size.height
             let lineHeight = CGFloat(pageHeight / 15)
-            //btnCloseMask.layer.cornerRadius = btnCloseMask.frame.height / 2
             let lineWidth = CGFloat(imageRect.size.width)
-            maskHeadHeight.constant = lineHeight
+            maskHeadHeight = lineHeight
             
             var headStartX = CGFloat(ayaMapInfo.spos) * lineWidth / 1000
-
+            
             if headStartX < lineWidth / 20{
                 headStartX = 0
             }
-           
+            
             //Extend the mask .1 of the lineHeight width, if sneekView is not ON
             let extensionWidth = lineHeight/10 //lineWidth/9.65/3
-            let extendedMask = (sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
+            let extendedMask = (self.sneekViewWidth==0) ? (headStartX > extensionWidth ? extensionWidth : 0) : 0
             
-            var sneekViewAdjustedWidth = sneekViewWidth
+            var sneekViewAdjustedWidth = self.sneekViewWidth
             if headStartX + sneekViewAdjustedWidth > lineWidth {
                 sneekViewAdjustedWidth = lineWidth - headStartX // uncover the whole line
             }
-            //print ("sneeKWidth=\(sneekViewWidth), sneekAdjusted=\(sneekViewAdjustedWidth)")
-            maskHeadStartX.constant = headStartX + sneekViewAdjustedWidth - extendedMask
-            //print("PositionMaskHead \(headStartX)")
+            maskHeadStartX = headStartX + sneekViewAdjustedWidth - extendedMask
             let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
-            //print( "Aya\(ayaMapInfo["aya"]!) - Covered Lines\(coveredLines)" )
-            maskBodyHeight.constant = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
-            //print( "pageHeight=\(pageHeight)")
+            maskBodyHeight = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
+
+            if !self.newMask {//don't animate in the first positioning, to avoid flickering
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.maskHeadHeight.constant = maskHeadHeight
+                    self.maskHeadStartX.constant = maskHeadStartX
+                    self.maskBodyHeight.constant = maskBodyHeight
+                    self.view.layoutIfNeeded()
+                })
+            }else{
+                self.newMask = false
+                self.maskHeadHeight.constant = maskHeadHeight
+                self.maskHeadStartX.constant = maskHeadStartX
+                self.maskBodyHeight.constant = maskBodyHeight
+                self.view.layoutIfNeeded()
+            }
+
         }
         
         return maskStartPage
@@ -642,9 +657,17 @@ class QPageView: UIViewController{
         }
     }
     
+    func showNavBar(show:Bool = true){
+        if let parent = self.parentBrowserView(){
+            parent.showNavBar(show)
+        }
+    }
+    
     func showAyaMenu(onView:UIView){
         print("showAyaMenu()")
-        navigationController?.navigationBar.isHidden = true
+        showNavBar(show: false)
+        //Utils.showNavBar(self, false)
+        //navigationController?.setNavigationBarHidden(true, animated: true)
         becomeFirstResponder()//required to show the menu!!
         clickedAya = onView
         let ayaPosition = onView.tag
@@ -780,9 +803,14 @@ class QPageView: UIViewController{
     }
     
     func positionSelection(){
+        if selectHead == nil {
+            return
+        }
+        
         selectHead.isHidden = true
         selectBody.isHidden = true
         selectEnd.isHidden = true
+        
         if SelectStart == -1 {
             return
         }

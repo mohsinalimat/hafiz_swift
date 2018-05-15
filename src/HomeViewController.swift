@@ -41,7 +41,8 @@ class HomeViewController: UITabBarController
     override func viewWillAppear(_ animated: Bool) {
         //Show Navigation bar
         //navigationController?.navigationBar.isHidden = false
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        Utils.showNavBar(self)
+        //navigationController?.setNavigationBarHidden(false, animated: true)
         updateSignInButtonTitle()
     }
 

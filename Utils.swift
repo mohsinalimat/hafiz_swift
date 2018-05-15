@@ -28,6 +28,11 @@ class Utils {
         downloadTask.resume()
     }
     
+    static func showNavBar(_ vc:UIViewController,_ show:Bool = true ){
+        //vc.navigationController?.setNavigationBarHidden(!show, animated: true)
+        vc.navigationController?.navigationBar.isHidden = !show
+    }
+    
     static func pathURL(dir :String, file: String?)->URL?{
         
         do{

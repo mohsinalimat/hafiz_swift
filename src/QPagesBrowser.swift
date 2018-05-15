@@ -41,6 +41,9 @@ class QPagesBrowser: UIViewController
     @IBOutlet weak var footerSuraNameLabel: UILabel!
     @IBOutlet weak var footerInfoButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet var navbar: UIView!
+    @IBOutlet weak var navBarTitle: UILabel!
+    @IBOutlet weak var navBarBackButton: UIButton!
     
     
     // MARK: - UIViewController delegate methods
@@ -101,7 +104,7 @@ class QPagesBrowser: UIViewController
     
     override func viewWillAppear(_ animated: Bool) {
         //print("QPagesBrowser willAppear")
-        hideNavBar()
+        navigationController?.navigationBar.isHidden = true //there should be a better way to do that
         
         let nCenter = NotificationCenter.default
 
@@ -140,7 +143,7 @@ class QPagesBrowser: UIViewController
 
     override func viewWillDisappear(_ animated: Bool) {
         print("QPagesBrowser willDisappear")
-        hideNavBar()
+        //showNavBar()
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -153,10 +156,41 @@ class QPagesBrowser: UIViewController
     // MARK: - New class methods
 
     
+    var navBarShown = false
+    
+    func showNavBar(_ show:Bool = true, animated:Bool = true ){
+        //Utils.showNavBar(self, !hide)
+        //navigationController?.setNavigationBarHidden(hide, animated: true)
+        if show{
+            view.addSubview(navbar)
+            navbar.frame = view.frame
+            navbar.frame.size.height = (self.navigationController?.navigationBar.frame.height)! +
+                (self.navigationController?.navigationBar.frame.origin.y)!
 
-    func hideNavBar(_ hide:Bool = true ){
-        //navigationController?.navigationBar.isHidden = hide
-        navigationController?.setNavigationBarHidden(hide, animated: true)
+            if animated {
+                navbar.frame.origin.y = -navbar.frame.size.height
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.navbar.frame.origin.y = 0
+                })
+            }
+            
+        }
+        else{
+            if animated {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut,
+                    animations: {
+                        self.navbar.frame.origin.y = -self.navbar.frame.size.height
+                    },
+                    completion:{ finished in
+                        self.navbar.removeFromSuperview()
+                    }
+                )
+            }
+            else{
+                navbar.removeFromSuperview()
+            }
+        }
+        navBarShown = show
     }
 
     func gotoPage(pageNum:Int){
@@ -276,6 +310,14 @@ class QPagesBrowser: UIViewController
         
         let suraName = qData.suraName(pageIndex: pageIndex)!
         self.title = suraName.name
+        
+        navBarTitle.text = suraName.name
+        navBarBackButton.titleLabel?.text = "Back"
+        if UIView.userInterfaceLayoutDirection(
+            for: navbar.semanticContentAttribute) == .rightToLeft
+        {
+            navBarBackButton.setImage(UIImage(named: "Back RTL"), for: .normal)
+        }
 
         //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
         let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
@@ -331,11 +373,11 @@ class QPagesBrowser: UIViewController
     // MARK: - Event and Action Handlers
     
     @IBAction func onPageTap(_ sender: Any) {
-        hideNavBar( navigationController?.navigationBar.isHidden == false)
+        showNavBar( navBarShown == false ) //toggle the bar
     }
 
     @IBAction func onClickNext(_ sender: Any) {
-        hideNavBar()
+        showNavBar(false)
         if MaskStart != -1 {
             if let qPageView = currentPageView() {
                 qPageView.advanceMask(true)
@@ -404,7 +446,7 @@ class QPagesBrowser: UIViewController
     }
 
     @IBAction func onClickPrevious(_ sender: Any) {
-        hideNavBar()
+        showNavBar(false)
         if MaskStart != -1 {
             if let qPageView = self.currentPageView() {
                 qPageView.retreatMask( true )
@@ -459,6 +501,10 @@ class QPagesBrowser: UIViewController
     
     @IBAction func onMenuButtonClick(_ sender: Any) {
         showActionsMenuAlert()
+    }
+    
+    @IBAction func onClickBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func onPinchAction(_ sender: UIPinchGestureRecognizer) {
@@ -675,7 +721,7 @@ class QPagesBrowser: UIViewController
         if let currPageView = currentPageView(){
             currPageView.selectAya(aya: SelectStart)
         }
-        hideNavBar()
+        showNavBar(false)
     }
     
     @objc func searchViewResults(vc: SearchViewController){
@@ -725,13 +771,13 @@ class QPagesBrowser: UIViewController
             currPageView.pageTapGesture.isEnabled = ( ayaId != -1 )
         }
         
-        hideNavBar()
+        showNavBar(false)
         updateTitle()
     }
     
     func positionMask(_ followPage: Bool ){
         if let currPageView = currentPageView(){
-            let maskPageIndex = currPageView.positionMask()
+            let maskPageIndex = currPageView.positionMask(animate:followPage)
             if followPage && maskPageIndex != currentPageIndx() {
                 gotoPage(pageNum: maskPageIndex+1)
             }else{
@@ -743,6 +789,7 @@ class QPagesBrowser: UIViewController
     // MARK: - Orientation and rotation
     
     @objc func onDeviceRotated(){
+        showNavBar(false)
         if (SelectStart != -1), let currPageView = currentPageView(){
             currPageView.scrollToSelectedAya()
         }
@@ -866,7 +913,7 @@ class QPagesBrowser: UIViewController
         transitionCompleted completed: Bool
     ) {
         updateTitle()
-        hideNavBar()
+        showNavBar(false)
     }
     
 }
