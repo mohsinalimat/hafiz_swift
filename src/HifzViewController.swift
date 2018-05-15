@@ -93,8 +93,8 @@ class HifzTableViewCell : UITableViewCell {
             let suraName = QData.instance.suraName(suraIndex: hifzRange.sura) {
             
             let desc = QData.describe(hifzTitle: hifzRange)
-            
-            Utils.confirmMessage(vc, "Delete \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
+            //TODO: duplicate code
+            Utils.confirmMessage(vc, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
                 isYes in
                 if isYes {
                     QData.deleteHifz([self.hifzRange!]){ snapshot in }
@@ -286,7 +286,7 @@ class HifzViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         return [
-            UITableViewRowAction(style: .destructive, title: "Revised", handler: {
+            UITableViewRowAction(style: .normal, title: "Revised today", handler: {
                 (rowAction, indexPath) in
                 
                 if let hifzRange = self.hifzRanges?.remove(at: indexPath.row){
@@ -295,12 +295,12 @@ class HifzViewController: UITableViewController {
                 }
             })
 //Temporary unlink the details page
-            ,UITableViewRowAction(style: .normal, title: "Edit", handler: {
-                (rowAction, indexPath) in
-                if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell {
-                    self.performSegue(withIdentifier: "ViewHifzDetails", sender: cell)
-                }
-            })
+//            ,UITableViewRowAction(style: .normal, title: "Edit", handler: {
+//                (rowAction, indexPath) in
+//                if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell {
+//                    self.performSegue(withIdentifier: "ViewHifzDetails", sender: cell)
+//                }
+//            })
         ]
     }
     

@@ -6,6 +6,7 @@
   Copyright © 2017 Ramy Eldesoky. All rights reserved.
 */
 "Sura" = "سورة: %d";
+"SuraName" = "سورة: %@";
 "Pg" = "ص: %d";
 "Part" = "جزء %d";
 "PartInfo" = "صفحة %d - سورة %d - %@";

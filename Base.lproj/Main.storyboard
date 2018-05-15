@@ -339,20 +339,20 @@
         <!--Tafseer Browser-->
         <scene sceneID="IVQ-cT-Ipg">
             <objects>
-                <viewController id="im7-xJ-McY" userLabel="Tafseer Browser" customClass="TafseerViewController" customModule="Quran_Hafiz" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Translations" id="im7-xJ-McY" userLabel="Tafseer Browser" customClass="TafseerViewController" customModule="Quran_Hafiz" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WgS-wk-GQW"/>
                         <viewControllerLayoutGuide type="bottom" id="fIJ-VD-jnW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZWI-xC-xlp">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="623"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JfJ-lY-KJM" userLabel="Tafseer">
-                                <rect key="frame" x="20" y="0.0" width="374" height="403.33333333333331"/>
+                                <rect key="frame" x="20" y="0.0" width="374" height="373.66666666666669"/>
                             </view>
                             <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fYZ-fC-Vdg" userLabel="Navigator">
-                                <rect key="frame" x="0.0" y="403.33333333333331" width="414" height="35"/>
+                                <rect key="frame" x="0.0" y="373.66666666666669" width="414" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N6s-jL-Je1">
                                         <rect key="frame" x="339" y="0.0" width="55" height="35"/>
@@ -392,7 +392,7 @@
                                 </constraints>
                             </view>
                             <pickerView contentMode="scaleToFill" horizontalHuggingPriority="50" horizontalCompressionResistancePriority="50" translatesAutoresizingMaskIntoConstraints="NO" id="ho1-5a-Ibi" userLabel="Selector">
-                                <rect key="frame" x="0.0" y="438.33333333333331" width="414" height="233.66666666666669"/>
+                                <rect key="frame" x="0.0" y="408.66666666666669" width="414" height="214.33333333333331"/>
                                 <color key="backgroundColor" white="0.91556352890000003" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="im7-xJ-McY" id="Hy8-4f-RPM"/>
@@ -642,6 +642,11 @@
                             <constraint firstItem="nPN-Xg-4mg" firstAttribute="bottom" secondItem="EPS-s9-h4K" secondAttribute="top" id="ert-LI-nIF"/>
                             <constraint firstItem="Pf1-Oh-TKB" firstAttribute="centerX" secondItem="ZwX-cT-FIQ" secondAttribute="centerX" id="x97-Di-ij9"/>
                         </constraints>
+                        <variation key="heightClass=compact">
+                            <mask key="subviews">
+                                <exclude reference="GsP-mw-ZgN"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="btnCloseMask" destination="hZw-I2-sYk" id="evB-jr-4jZ"/>
@@ -1584,6 +1589,9 @@
                             </fragment>
                         </attributedString>
                     </tabBarItem>
+                    <connections>
+                        <segue destination="im7-xJ-McY" kind="show" identifier="ShowTafseer" id="MRI-6V-i3y"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Zs-PW-RVD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1632,6 +1640,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="Po2-Nt-YPQ"/>
         <segue reference="G6v-7F-wGi"/>
-        <segue reference="eSs-M1-dto"/>
+        <segue reference="MRI-6V-i3y"/>
+        <segue reference="7eF-O5-dQo"/>
     </inferredMetricsTieBreakers>
 </document>

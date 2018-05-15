@@ -503,7 +503,12 @@ class QData{
         }
         return nil
     }
-    
+
+    func suraInfo( ayaPos: Int ) -> SuraInfo?{
+        let sura = self.suraIndex(ayaPosition: ayaPos)
+        return suraInfo(sura)
+    }
+
     func suraInfo(_ suraIndex: Int ) -> SuraInfo?{
         if let suras = self.suraInfoList, suraIndex<suras.count{
             return suras[suraIndex]
@@ -619,11 +624,11 @@ class QData{
     
     static var cachedBookmarks:[Int]?
     
-    static func isBookmarked( page:Int, block: @escaping(Bool)->Void ){
+    static func isBookmarked(_ aya:Int, block: @escaping(Bool)->Void ){
         if false == bookmarks(sync:false, {(list) in
             //find the page in the list
             if let list = list,
-               let _ = list.first(where:{(item) in item == page})
+               let _ = list.first(where:{(item) in item == aya})
             {
                 block(true)
             }
@@ -633,12 +638,23 @@ class QData{
         }
     }
     
+    static func bookmark(_ vc: UIViewController,_ aya: Int ){
+        if QData.checkSignedIn(vc){
+            let _ = QData.createBookmark(aya: aya){snapshot in
+                Utils.showMessage(vc,
+                                  title: "Bookmark Added",
+                                  message: "You can find it at the top of the Bookmarks tab"
+                )
+            }
+        }
+    }
+    
     static func bookmarks(sync: Bool,_ block: @escaping([Int]?)->Void )->Bool {
         if !sync, let bookmarks = cachedBookmarks {
             block(bookmarks)
         }
         
-        if let ref = userData("page_marks") {
+        if let ref = userData("aya_marks") {
             if sync {
                 ref.keepSynced(true)
             }
@@ -662,33 +678,30 @@ class QData{
         return false
     }
 
-    static func createBookmark( page: Int, block: @escaping( DataSnapshot? )->Void )->Bool{
-        if let pageMarks = userData("page_marks") {
+    static func createBookmark( aya: Int, block: @escaping( DataSnapshot? )->Void )->Bool{
+        if let pageMarks = userData("aya_marks") {
             pageMarks.keepSynced(true)//update remote data if connected
             
             pageMarks.observeSingleEvent(of: .childAdded) { (snapshot) in
-//                NotificationCenter.default.post(
-//                    name: AppNotifications.dataUpdated, object: snapshot
-//                )
                 block(snapshot)
             }
             
             
-            pageMarks.child(String(page)).setValue( -Utils.timeStamp() ) //store current timestamp in negative for reverse sorting
+            pageMarks.child(String(aya)).setValue( -Utils.timeStamp() ) //store current timestamp in negative for reverse sorting
             return true
         }
         return false // not authenticated
     }
     
-    static func deleteBookmark( page: Int, block: @escaping( DataSnapshot? ) -> Void )->Bool{
-        if let pageMarks = userData("page_marks") {
+    static func deleteBookmark( aya: Int, block: @escaping( DataSnapshot? ) -> Void )->Bool{
+        if let pageMarks = userData("aya_marks") {
             pageMarks.keepSynced(true)//update remote data if connected
             
             pageMarks.observeSingleEvent(of: .childRemoved) { (snapshot) in
                 block(snapshot)
             }
             
-            pageMarks.child(String(page)).removeValue()
+            pageMarks.child(String(aya)).removeValue()
             
             return true
         }
@@ -732,7 +745,7 @@ class QData{
         return UIColor(red: 1, green: 0.1, blue: 0.1, alpha: alpha)
     }
 
-    static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
+    static func promoteHifz(_ hifzRange: HifzRange,_ block: @escaping(HifzRange)->Void )->Bool{
 
         let promtedHifz = HifzRange (
             sura: hifzRange.sura,
@@ -751,15 +764,7 @@ class QData{
             
             hifz.observeSingleEvent(of: .childRemoved){
                 snapshot in
-                
                 block(snapshot)
-                
-//                if notify {
-//                    NotificationCenter.default.post(
-//                        name: AppNotifications.dataUpdated, object: snapshot
-//                    )
-//                }
-                
             }
             
             var dict:[AnyHashable:Any] = [:]
@@ -775,7 +780,7 @@ class QData{
     }
     
     //Update or create new Hifz
-    static func updateHifz(_ hifzRange: HifzRange,_ block: @escaping(DataSnapshot?)->Void )->Bool{
+    static func updateHifz(_ hifzRange: HifzRange,_ block: @escaping(HifzRange)->Void )->Bool{
 
         let df = DateFormatter()
         df.dateFormat = "YYYY-MM-dd"
@@ -789,13 +794,18 @@ class QData{
             let hifzSura = String(format:"%03d",hifzRange.sura)
             let hifzID = "\(hifzPage)\(hifzSura)"
 
-            hifz.observeSingleEvent(of: .childChanged) { (snapshot) in
-                //TODO: check if snapshot.key matchs hifzID
-                //print("DB Child Changed: key=\(snapshot.key)")
-//                NotificationCenter.default.post(
-//                    name: AppNotifications.dataUpdated, object: snapshot
-//                )
-                block(snapshot)
+            //To solve the difference between .childAdded vs .childChanged
+            let removeOld:[AnyHashable:Any] = [hifzID:NSNull()]
+            hifz.updateChildValues(removeOld)
+
+            hifz.observeSingleEvent(of: .childAdded) { (snapshot) in
+                //Check if snapshot.key matchs hifzID, it always returns the first item in the list
+//                if(snapshot.key == hifzID){
+//                    print("Hifz: got the right node \(snapshot.key) = \(hifzID) ")
+//                }else{
+//                    print("Hifz:Error: got the wrong node \(snapshot.key) instead of \(hifzID) ")
+//                }
+                block(hifzRange)
             }
             
             let dict : NSDictionary = [
@@ -941,13 +951,13 @@ class QData{
             hifzList in
             hifzList?.forEach{
                 oldRange in
-                let hifzRangeLastPage = oldRange.page + oldRange.count - 1
-                if oldRange.page == firstPage && hifzRangeLastPage == lastPage{
+                let oldRangeLastPage = oldRange.page + oldRange.count - 1
+                if oldRange.page == firstPage && oldRangeLastPage == lastPage{
                     //totally matching ..|*******|..
                     newRange.revs = oldRange.revs
                     newRange.age = oldRange.age
                 }
-                else if oldRange.page >= firstPage && hifzRangeLastPage <= lastPage {
+                else if oldRange.page > firstPage && oldRangeLastPage <= lastPage {
                     //if totally inside, swallowed ..nnOnnnnOn..
                     hifzListToRemove.append(oldRange)
                 }
@@ -959,7 +969,7 @@ class QData{
                     newRange.count = pagesCount
                     lastPage = firstPage + pagesCount - 1
                 }
-                else if hifzRangeLastPage >= firstPage-1 && oldRange.page <= lastPage+1 {
+                else if oldRangeLastPage >= firstPage-1 && oldRange.page <= lastPage+1 {
                     //intersects or attaches at end ..OOOnnOnnnnn..
                     //Expand the old range hifzListToRemove.append(hifzRange)
                     pagesCount = firstPage + pagesCount - oldRange.page
@@ -972,13 +982,13 @@ class QData{
             if hifzListToRemove.count > 0{
                 //TODO: read the revs of the deleted hifz and factor it in to the new hifz based on the
                 QData.deleteHifz(hifzListToRemove, false){snapshot in
-                    let _ = QData.updateHifz(newRange){snapshot in
-                        block(newRange)
+                    let _ = QData.updateHifz(newRange){hifzRange in
+                        block(hifzRange)
                     }
                 }
             }else{
-                let _ = QData.updateHifz(newRange){snapshot in
-                    block(newRange)
+                let _ = QData.updateHifz(newRange){hifzRange in
+                    block(hifzRange)
                 }
             }
         }
@@ -991,7 +1001,7 @@ class QData{
             block( cached )
         }
         
-        Database.database().reference().child("public/images").observeSingleEvent(of: .value){
+        Database.database().reference().child("public/images_url").observeSingleEvent(of: .value){
             (snapshot) in
             _pageImagesBaseURL = snapshot.value as? String
             block( _pageImagesBaseURL )

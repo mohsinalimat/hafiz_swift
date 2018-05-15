@@ -12,7 +12,7 @@ import GoogleSignIn
 
 class BookmarksViewController: UITableViewController {
 
-    var pageMarks:[Int]?
+    var ayaMarks:[Int]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class BookmarksViewController: UITableViewController {
         if QData.signedIn{
             readData()
         }else{
-            self.pageMarks = nil
+            self.ayaMarks = nil
             setNoDataView(signInReqView)
             tableView.reloadData()
         }
@@ -59,10 +59,10 @@ class BookmarksViewController: UITableViewController {
             setNoDataView(nil)
 
             let _ = QData.bookmarks(sync:sync){ (list) in
-                if let pageMarks = list {
-                    self.pageMarks = []
-                    for page in pageMarks{
-                        self.pageMarks!.append(page)
+                if let ayaMarks = list {
+                    self.ayaMarks = []
+                    for ayaPos in ayaMarks{
+                        self.ayaMarks!.append(ayaPos)
                     }
                     self.tableView.reloadData()
                     self.tableView.refreshControl!.endRefreshing()
@@ -99,7 +99,7 @@ class BookmarksViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         //return the number of sections
-        if let pageMarks = self.pageMarks {
+        if let pageMarks = self.ayaMarks {
             setNoDataView( pageMarks.count == 0 ? noDataView:nil)
             return pageMarks.count == 0 ? 0 : 1
         }
@@ -108,7 +108,7 @@ class BookmarksViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let pageMarks = self.pageMarks{
+        if let pageMarks = self.ayaMarks{
             return pageMarks.count
         }
 
@@ -120,22 +120,20 @@ class BookmarksViewController: UITableViewController {
         let qData = QData.instance
         let rowIndex = indexPath.row
         
-        if  let pageMarks = self.pageMarks,
+        if  let ayaMarks = self.ayaMarks,
             let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath) as? BookmarkTableCellView
         {
-            let pageIndex = pageMarks[rowIndex]
-            let pageInfo = qData.pageInfo(pageIndex)!
-            let suraIndex = pageInfo.suraIndex
-            let suraName = qData.suraName(suraIndex: suraIndex)
-            //let (sura,aya) = qData.aya
-
+            let ayaPos = ayaMarks[rowIndex]
+            let (sura,aya) = qData.ayaLocation(ayaPos)
+            let suraName = qData.suraName(suraIndex: sura)
+            let pageNumber = qData.pageIndex(ayaPosition: ayaPos)+1
             cell.suraName.text = suraName?.name ?? "missing"
-            cell.pageNumber.text = String(pageIndex+1)
-            cell.ayaLocation.text = "(\(suraIndex+1):\(pageInfo.ayaIndex+1))"
-            if let ayaText = qData.ayaText(ayaPosition: pageInfo.ayaPos){
+            cell.pageNumber.text = "\(pageNumber)"
+            cell.ayaLocation.text = "(\(aya+1))"
+            if let ayaText = qData.ayaText(ayaPosition: ayaPos){
                 cell.ayaText.text = ayaText
             }
-            cell.tag = pageInfo.ayaPos //for segue use
+            cell.tag = ayaPos //for segue use
             return cell
         }
         
@@ -151,8 +149,8 @@ class BookmarksViewController: UITableViewController {
             UITableViewRowAction(style: .destructive, title: "Remove", handler: {
                 (rowAction, indexPath) in
                 
-                if let page = self.pageMarks?.remove(at: indexPath.row){
-                    let _ = QData.deleteBookmark(page: page){(snapshot) in
+                if let ayaPos = self.ayaMarks?.remove(at: indexPath.row){
+                    let _ = QData.deleteBookmark(aya: ayaPos){(snapshot) in
                         //tableView.deleteRows(at: [indexPath], with: .fade)
                         print( "Bookmark deleted")
                     }//dataUpdated event will refresh the table

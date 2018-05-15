@@ -142,6 +142,10 @@ class QPageView: UIViewController{
         setMaskStart( clickedAya!.tag )
     }
     
+    @objc func bookmark(){
+        QData.bookmark(self, SelectStart)
+    }
+    
     @objc func shareAya(){
         let qData = QData.instance
         
@@ -242,12 +246,12 @@ class QPageView: UIViewController{
 
         self.hifzList = nil
         
-        if let pageNumber = self.pageNumber{
-            let _ = QData.isBookmarked(page: pageNumber-1 ){(is_true) in
-                self.isBookmarked = is_true
-            }
-            createHifzColors()
-        }
+//        if let pageNumber = self.pageNumber{
+//            let _ = QData.isBookmarked(pageNumber-1 ){(is_true) in
+//                self.isBookmarked = is_true
+//            }
+//        }
+        createHifzColors()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -276,6 +280,7 @@ class QPageView: UIViewController{
         if( action == #selector(showTafseer)
             || action == #selector(maskSelectedAya)
             || action == #selector(shareAya)
+            || action == #selector(bookmark)
         ){
             return true
         }
@@ -682,7 +687,8 @@ class QPageView: UIViewController{
             mnuController.menuItems = [
                 UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
                 UIMenuItem(title: "Revise", action: #selector(maskSelectedAya)),
-                UIMenuItem(title: "Share", action: #selector(shareAya))
+                UIMenuItem(title: "Share", action: #selector(shareAya)),
+                UIMenuItem(title: "Bookmark", action: #selector(bookmark))
             ]
             
             // This makes the menu item visible.

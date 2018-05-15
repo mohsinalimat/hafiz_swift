@@ -95,7 +95,7 @@ class SearchResultsViewController: UIViewController,
                     let suraNumber = -ayaPosition
                     let suraName = qData.suraName( suraIndex: suraNumber-1 )
                     let name = suraName?.name ?? "missing"
-                    textLabel.text = name
+                    textLabel.text = String(format:NSLocalizedString("SuraName", comment: ""),name)
                     cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
                     if let textDetails = cell.detailTextLabel {
                         textDetails.text = ""

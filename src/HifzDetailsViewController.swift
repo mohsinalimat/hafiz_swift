@@ -18,19 +18,16 @@ class HifzDetailsViewController: UIViewController {
     @IBOutlet weak var firstAya: UILabel!
     
     @IBAction func markAsRevised(_ sender: Any) {
-        //can't test before figuring out how to signout from my main account
         if let hifzRage = self.hifzRange{
-            let _ = QData.promoteHifz(hifzRage){ (snapshot:DataSnapshot?) in
-                if let snapshot = snapshot, let updatedHifzRange = QData.hifzRange(snapshot: snapshot) {
-                    self.setHifzRange(updatedHifzRange)
-                    self.updateViews()
-                    
-                    Utils.showMessage(
-                        self,
-                        title: "Revision Updated",
-                        message: "This memorized part has been marked as revised today"
-                    )
-                }
+            let _ = QData.promoteHifz(hifzRage){ updatedHifzRange in
+                self.setHifzRange(updatedHifzRange)
+                self.updateViews()
+                
+                Utils.showMessage(
+                    self,
+                    title: "Revision Updated",
+                    message: "This memorized part has been marked as revised today"
+                )
             }
         }
     }

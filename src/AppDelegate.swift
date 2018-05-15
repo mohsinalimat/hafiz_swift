@@ -107,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 hifzRef.observe(.childChanged, with: self.notifyDataChanged )
             }
 
-            if let pageMarks = QData.userData("page_marks"){
+            if let pageMarks = QData.userData("aya_marks"){
                 pageMarks.observe(.childAdded, with: self.notifyDataChanged )
                 pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
                 pageMarks.observe(.childChanged, with: self.notifyDataChanged )
@@ -136,6 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
 
     @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
+        print("FIR: data changed \(snapshot.key)")
         NotificationCenter.default.post(
             name: AppNotifications.dataUpdated, object: snapshot
         )

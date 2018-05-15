@@ -13,7 +13,22 @@ class QIndexViewController: UITableViewController{
     override
     func viewDidLoad() {
         // Preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = false
+        //self.clearsSelectionOnViewWillAppear = false
+
+        //relead data upon signed In user is changed
+        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.signedIn, object: nil)
+        
+        //relead data upon data change
+        NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
+
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc func onDataUpdated(){
+        tableView.reloadData()
     }
 
     override
@@ -42,6 +57,48 @@ class QIndexViewController: UITableViewController{
         return 0
     }
     
+    // MARK: - Table view UI delegates
+    
+    override
+    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        if let cell = tableView.cellForRow(at: indexPath) as? IndexTableViewCell{
+            var menuItems = [
+                UIMenuItem(title: "Tafseer", action: #selector(IndexTableViewCell.tafseer))
+            ]
+            menuItems.append(
+                UIMenuItem(title: cell.in_hifz ? "Update Hifz" : "Add Hifz", action: #selector(IndexTableViewCell.addUpdateHifz))
+            )
+            if !cell.bookmarked{
+                menuItems.append(
+                    UIMenuItem(title: "Bookmark", action: #selector(IndexTableViewCell.bookmark))
+                )
+            }
+
+            //cell.updateRangeColor() //to override selection forced background color
+            UIMenuController.shared.menuItems = menuItems
+            return true
+        }
+        return false
+    }
+    
+    override
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        return true // never called
+    }
+    
+    override
+    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        return // never called
+    }
+    
+    override
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //reset the ranges colors if found
+//        if let cell = tableView.cellForRow(at: indexPath) as? IndexTableViewCell{
+//            cell.updateHifzColor()
+//        }
+    }
+    
     override
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return String(format:NSLocalizedString("Part", comment:""),section+1)
@@ -57,6 +114,7 @@ class QIndexViewController: UITableViewController{
         let suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
 
         //let pagePrompt = NSLocalizedString("Pg", comment: "")
+        //var suraInfo: SuraInfo?
         var ayaPos = 0
         var partStartPage = 0
         var suraStartPage = 0
@@ -94,6 +152,7 @@ class QIndexViewController: UITableViewController{
 //        }
         if let suraName = qData.suraName(suraIndex: suraIndex) {
             if let suraCell = cell as? IndexTableViewCell{
+                suraCell.setAyaPos( ayaPos )
                 suraCell.suraNumber.text = partStart ? "..." : String(suraIndex+1)
                 suraCell.pageNumber.text = String(pageNumber)
                 suraCell.suraName.text = suraName.name
@@ -127,6 +186,13 @@ class QIndexViewController: UITableViewController{
             SelectEnd = ayaPos
         }
         
+        if  let tafseerView = segue.destination as? TafseerViewController,
+            let indexCell = sender as? IndexTableViewCell
+        {
+            let (sura,aya) = QData.instance.ayaLocation(indexCell.ayaPos)
+            tafseerView.ayaPosition = QData.instance.ayaPosition(sura: sura, aya: aya)
+        }
+        
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
@@ -145,4 +211,105 @@ class IndexTableViewCell : UITableViewCell {
     @IBOutlet weak var pageNumber: UILabel!
     @IBOutlet weak var firstAya: UILabel!
     @IBOutlet weak var backgroundImage: UIImageView!
+    
+    var ayaPos = 0
+    var bookmarked = false
+    var in_hifz = false
+    var hifzList:HifzList?
+    
+    func setAyaPos(_ aya: Int ){
+        self.ayaPos = aya
+        bookmarked = false
+        in_hifz = false
+        let qData = QData.instance
+        
+        QData.isBookmarked(aya){
+            yes in
+            self.bookmarked = yes
+        }
+        let sura = qData.suraIndex(ayaPosition: aya)
+        
+        
+        QData.suraHifzList(sura){
+            hifzList in
+            if let hifzList = hifzList,
+                let suraInfo = qData.suraInfo(sura){
+
+                self.hifzList = hifzList
+
+                if hifzList.count == 1,
+                    let hifzRange = hifzList.first {
+                    let totalSuraPages = suraInfo.endPage - suraInfo.page + 1
+                    if hifzRange.count == totalSuraPages{
+                        self.in_hifz = true // all sura inside hifz
+                    }
+                }
+            }
+            self.updateHifzColor()
+        }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(addUpdateHifz)
+            || action == #selector(bookmark)
+            || action == #selector(tafseer)
+    }
+    
+    @objc func tafseer(){
+        if let vc = self.parentViewController as? QIndexViewController{
+            vc.performSegue(withIdentifier: "ShowTafseer", sender: self)
+        }
+    }
+    
+    @objc func bookmark(){
+        if let vc = self.parentViewController as? QIndexViewController{
+            QData.bookmark(vc, ayaPos)
+            bookmarked = true
+        }
+    }
+    
+    @objc func addUpdateHifz(){
+        if in_hifz{
+            promoteHifz()
+        }else{
+            if let suraInfo = QData.instance.suraInfo(ayaPos: ayaPos){
+                let addParams = AddHifzParams(sura: suraInfo.sura, page: suraInfo.page, select:.all)
+                QData.addHifz(params: addParams){ hifzRange in
+                    self.hifzList = [hifzRange]
+                    self.in_hifz = true
+                    self.updateHifzColor()
+                    self.promoteHifz()
+                }
+            }
+        }
+    }
+   
+    func promoteHifz(){
+        if let hifzList = self.hifzList,
+            let hifzRange = hifzList.first,
+            let suraName = QData.instance.suraName(suraIndex: hifzRange.sura),
+            let vc = self.parentViewController as? QIndexViewController
+        {
+            Utils.confirmMessage(vc, "\(suraName.name) is added to your hifz", "Would you like to mark it as revised today?", .yes){ yes in
+                if yes {
+                    let _ = QData.promoteHifz(hifzRange){ hifzRange in
+                        self.hifzList = [hifzRange]
+                        Utils.showMessage(vc, title: "Done", message: "Good job :)")
+                        self.updateHifzColor()
+                    }
+                }
+            }
+        }
+    }
+    
+    func updateHifzColor(){
+        if in_hifz,
+            let hifzList = self.hifzList,
+            let hifzRange = hifzList.first{
+            self.backgroundColor = QData.hifzColor(range: hifzRange)
+        }
+        else{
+            self.backgroundColor = .white
+        }
+    }
 }

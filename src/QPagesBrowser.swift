@@ -555,12 +555,12 @@ class QPagesBrowser: UIViewController
         }
         
         let addToHifz = alertAction(.addUpdateHifz, addUpdateHifzTitle) // check if hifzRange is active
-        let bookmark = isBookmarked() ? nil : alertAction( .bookmark , "Bookmark")
+        //let bookmark = isBookmarked() ? nil : alertAction( .bookmark , "Bookmark")
         
         showAlertActions([
             startRevise,
             addToHifz,
-            bookmark
+            alertAction( .search , "Search")
         ])
 
     }
@@ -579,12 +579,15 @@ class QPagesBrowser: UIViewController
             }
             break
             
-        case .bookmark:
-            if !QData.checkSignedIn(self){
-                break
-            }
-            
-            let _ = QData.createBookmark(page: self.currentPageIndx()){snapshot in}
+        case .search:
+            self.showSearch()
+//            if !QData.checkSignedIn(self){
+//                break
+//            }
+//
+//            let _ = QData.createBookmark(aya: SelectStart){snapshot in
+//                Utils.showMessage(self, title: "Bookmark Added", message: "You can find it at the top of the Bookmarks tab")
+//            }
             break
             
         case .addUpdateHifz:
@@ -695,16 +698,14 @@ class QPagesBrowser: UIViewController
             break
             
         case .removeHifz:
-            if let hifzRange = selection as? HifzRange {
-                Utils.confirmMessage(
-                    self,
-                    "Confirm Remove Hifz",
-                    "{{hifzDescription}}", .yes_destructive
-                ){ isYes in
+            if let hifzRange = selection as? HifzRange,
+                let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
+                let desc = QData.describe(hifzTitle: hifzRange)
+                //TODO: duplicate code
+                Utils.confirmMessage(self, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
+                    isYes in
                     if isYes {
-                        QData.deleteHifz([hifzRange]){
-                            snapshot in
-                        }
+                        QData.deleteHifz([hifzRange]){ snapshot in }
                     }
                 }
             }

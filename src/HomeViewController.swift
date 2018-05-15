@@ -44,17 +44,14 @@ class HomeViewController: UITabBarController
         Utils.showNavBar(self)
         //navigationController?.setNavigationBarHidden(false, animated: true)
         updateSignInButtonTitle()
-    }
 
-    override func viewDidAppear(_ animated: Bool) {
-        //print("HomeViewController Appear")
         NotificationCenter.default.addObserver(
-           self,
-           selector: #selector(searchOpenAya),
-           name: AppNotifications.searchOpenAya,
-           object: nil
+            self,
+            selector: #selector(searchOpenAya),
+            name: AppNotifications.searchOpenAya,
+            object: nil
         )
-
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(searchViewResults),
@@ -68,7 +65,10 @@ class HomeViewController: UITabBarController
             name: AppNotifications.signedIn,
             object: nil
         )
+    }
 
+    override func viewDidAppear(_ animated: Bool) {
+        //print("HomeViewController Appear")
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -125,6 +125,15 @@ class HomeViewController: UITabBarController
                 "Select Language"
             )
             break
+        case .rateApp:
+            QData.publicDataValue("rate_url"){ val in
+                if let appURL = val {
+                    if let url = URL(string: appURL){
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            }
+            break
         case .shareTheApp:
             QData.publicDataValue("appstore"){ val in
                 if let appstore = val {
@@ -162,7 +171,8 @@ class HomeViewController: UITabBarController
     @IBAction func openActions(_ sender: Any) {
         let actions = [
             alertAction(.changeLang, "Change Language"),
-            alertAction(.shareTheApp, "Share this App")
+            alertAction(.shareTheApp, "Share this App"),
+            alertAction(.rateApp, "Rate Quran Hafiz")
         ]
         
         self.showAlertActions(actions)
