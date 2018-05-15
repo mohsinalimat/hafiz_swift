@@ -569,7 +569,9 @@ class QPagesBrowser: UIViewController
     func handleAlertAction(_ id: AlertActions,_ selection: Any?){
         switch id {
         case .revise:
-            if SelectStart != -1 {
+            if SelectStart != -1 &&
+                //if SelectStart is not in the visibile paages, select page start
+                QData.instance.pageIndex(ayaPosition: SelectStart) == self.currentPageIndx(){
                 self.setMaskStart(SelectStart)
             }else{
                 let qData = QData.instance

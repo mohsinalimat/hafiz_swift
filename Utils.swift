@@ -13,6 +13,7 @@ enum ConfirmationAlertType{
 }
 
 class Utils {
+    
     static func getDataFromUrl(
         url: URL,
         block: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void

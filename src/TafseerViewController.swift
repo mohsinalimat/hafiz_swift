@@ -9,11 +9,16 @@
 import UIKit
 
 let TafseerSources = [
-    "ar.muyassar",
-    "ar.jalalayn",
-    "en.yusufali",
-    "id.indonesian",
-    "tr.golpinarli"
+    "ar.muyassar",//Muyassar
+    "ar.jalalayn",//Jalalayn
+    "en.yusufali",//English
+    "id.indonesian",//Indonesian
+    "ms.basmeih", //Malay
+    "ta.tamil",//Tamil
+    "ur.maududi",//Urdu
+    "tr.golpinarli",//Turkish
+    "fr.hamidullah",//French
+    "de.aburida"//Deutch
 ]
 
 class TafseerViewController: UIViewController,
@@ -137,6 +142,19 @@ class TafseerViewController: UIViewController,
         }
     }
 
+    @IBAction func clickSelect(_ sender: Any) {
+        //navigationController?.removeQPageBrowser()
+        SelectStart = ayaPosition
+        SelectEnd = ayaPosition
+        navigationController?.popViewController(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            NotificationCenter.default.post(
+                name: AppNotifications.searchOpenAya,
+                object: self
+            )
+        }
+    }
+    
     // MARK: pageViewController delegate methods
 
     func pageViewController(

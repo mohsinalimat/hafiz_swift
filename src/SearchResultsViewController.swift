@@ -51,23 +51,9 @@ class SearchResultsViewController: UIViewController,
         NotificationCenter.default.removeObserver(self)
     }
     
-    func removeExistingPageBrowserFromStack(){
-        if let navController = navigationController{
-            if let ndx = navController.viewControllers.index(where: { (vc) in
-                if let _ = vc as? QPagesBrowser {
-                    return true
-                }
-                return false
-            })
-            {
-                navController.viewControllers.remove(at: ndx)
-            }
-        }
-    }
-
     @objc func searchOpenAya(vc: SearchViewController){
         //Remove existing QPageBrowser from stack
-        removeExistingPageBrowserFromStack()
+        navigationController?.removeQPageBrowser()
         self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)//
     }
 
@@ -77,12 +63,13 @@ class SearchResultsViewController: UIViewController,
     }
 
     func doSearch(){
-        resultsDescription.text = "Results for \(SearchText)"
 
         let qData = QData.instance
         
         self.results = qData.searchQuran(SearchText, max: 1000)
-        
+
+        resultsDescription.text = "\(results.count) Results for \(SearchText)"
+
         searchResultsTable.reloadData()
     }
     
@@ -141,7 +128,7 @@ class SearchResultsViewController: UIViewController,
         }
         
         if let _ = segue.destination as? QPagesBrowser{
-            removeExistingPageBrowserFromStack()
+            navigationController?.removeQPageBrowser()
 //            let qData = QData.instance
 //            vc.startingPage = qData.pageIndex(ayaPosition: SelectStart) + 1
         }

@@ -214,6 +214,7 @@ class QPageView: UIViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        newMask=true
         
         // Do any additional setup after loading the view, typically from a nib.
         //print ( "QPageView viewDidLoad()" )
@@ -431,6 +432,10 @@ class QPageView: UIViewController{
 
     //Rearrange the mask and aya buttons views and return the mask start page
     func positionMask( animate: Bool = false )->Int{
+        if maskHead == nil {
+            return -1
+        }
+        
         maskBody.isHidden = false
         maskHead.isHidden = false
 
@@ -500,20 +505,19 @@ class QPageView: UIViewController{
             let coveredLines = 15 - 1 - Int(ayaMapInfo.sline)
             maskBodyHeight = CGFloat(CGFloat(coveredLines) * pageHeight) / 15
 
-            if !self.newMask {//don't animate in the first positioning, to avoid flickering
-                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-                    self.maskHeadHeight.constant = maskHeadHeight
-                    self.maskHeadStartX.constant = maskHeadStartX
-                    self.maskBodyHeight.constant = maskBodyHeight
-                    self.view.layoutIfNeeded()
-                })
-            }else{
+//            if !self.newMask {//don't animate in the first positioning, to avoid flickering
+//                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+//                    self.maskHeadHeight.constant = maskHeadHeight
+//                    self.maskHeadStartX.constant = maskHeadStartX
+//                    self.maskBodyHeight.constant = maskBodyHeight
+//                    self.view.layoutIfNeeded()
+//                })
+//            }else{
                 self.newMask = false
                 self.maskHeadHeight.constant = maskHeadHeight
                 self.maskHeadStartX.constant = maskHeadStartX
                 self.maskBodyHeight.constant = maskBodyHeight
-                self.view.layoutIfNeeded()
-            }
+//            }
 
         }
         

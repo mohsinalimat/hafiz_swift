@@ -1094,7 +1094,7 @@ class QData{
                 if hRange.count == 1{
                     return "last page"
                 }
-                return "from: \(page_offset) - pages: \(hRange.count)"
+                return "last \(hRange.count) pages"
             }
             
             // mid range

@@ -164,5 +164,30 @@ extension UIViewController{
             }
         })
     }
+}
 
+extension UINavigationController{
+    func removeQPageBrowser(){
+        if let ndx = viewControllers.index(where: { (vc) in
+            if let _ = vc as? QPagesBrowser {
+                return true
+            }
+            return false
+        })
+        {
+            viewControllers.remove(at: ndx)
+        }
+    }
+    
+    func removeViewController(_ which: UIViewController){
+        if let ndx = viewControllers.index(where: { (vc) in
+            if which == vc {
+                return true
+            }
+            return false
+        })
+        {
+            viewControllers.remove(at: ndx)
+        }
+    }
 }
