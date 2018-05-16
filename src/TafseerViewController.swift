@@ -100,7 +100,16 @@ class TafseerViewController: UIViewController,
         self.ayaPosition = ayaPosition
         
         updatePicker()
+        updateTitle()
     }
+    
+    func updateTitle(){
+        let (sura,aya) = QData.instance.ayaLocation(ayaPosition)
+        if let suraName = QData.instance.suraName(suraIndex: sura){
+            self.title = "\(suraName.name) (\(aya+1))"
+        }
+    }
+    
     
     func createAyaView(_ ayaIndex: Int)->UIViewController{
         let viewController = storyboard!.instantiateViewController(withIdentifier: "TafseerAyaView")
@@ -182,6 +191,8 @@ class TafseerViewController: UIViewController,
         transitionCompleted completed: Bool)
     {
         updatePicker()
+        updateTitle()
+        
     }
     
 

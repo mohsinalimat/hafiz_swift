@@ -68,9 +68,14 @@ class SearchResultsViewController: UIViewController,
         
         self.results = qData.searchQuran(SearchText, max: 1000)
 
-        resultsDescription.text = "\(results.count) Results for \(SearchText)"
+        Utils.addToSearchHistory(SearchText, results.count)
+        
+        let plus = results.count >= 1000 ? "+" : ""
+
+        resultsDescription.text = "\(results.count)\(plus) Results for \(SearchText)"
 
         searchResultsTable.reloadData()
+        searchResultsTable.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
     }
     
     override func didReceiveMemoryWarning() {

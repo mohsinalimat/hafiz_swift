@@ -12,6 +12,10 @@ import GoogleSignIn
 
 class BookmarksViewController: UITableViewController {
 
+    enum NoDataStates{
+        case normal,notSignedIn,noData
+    }
+    
     var ayaMarks:[Int]?
     
     override func viewDidLoad() {
@@ -39,7 +43,7 @@ class BookmarksViewController: UITableViewController {
             readData()
         }else{
             self.ayaMarks = nil
-            setNoDataView(signInReqView)
+            setNoDataView(.notSignedIn)
             tableView.reloadData()
         }
     }
@@ -62,26 +66,34 @@ class BookmarksViewController: UITableViewController {
 
     func readData(sync: Bool = false){
         if QData.signedIn {
-            setNoDataView(nil)
-
             let _ = QData.bookmarks(sync:sync){ (list) in
                 if let ayaMarks = list {
                     self.ayaMarks = []
                     for ayaPos in ayaMarks{
                         self.ayaMarks!.append(ayaPos)
                     }
+                    self.setNoDataView( ayaMarks.count>0 ? .normal : .noData )
                     self.tableView.reloadData()
                     self.tableView.refreshControl!.endRefreshing()
                 }
             }
         }else{
-            setNoDataView( signInReqView )
+            setNoDataView( .notSignedIn )
         }
     }
     
-    func setNoDataView(_ vw: UIView? ){
-        tableView.backgroundView = vw
-        tableView.separatorStyle = vw == nil ? .singleLine : .none
+    func setNoDataView(_ state: NoDataStates ){
+        switch state{
+        case .normal:
+            tableView.backgroundView = nil
+            break
+        case .noData:
+            tableView.backgroundView = noDataView
+            break
+        case .notSignedIn:
+            tableView.backgroundView = signInReqView
+            break
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -110,8 +122,7 @@ class BookmarksViewController: UITableViewController {
 //            setNoDataView( pageMarks.count == 0 ? noDataView:nil)
 //            return pageMarks.count == 0 ? 0 : 1
 //        }
-//        return QData.signedIn ? 1 : 0
-        return 2
+        return QData.signedIn ? 2 : 1
         
     }
 
@@ -121,7 +132,7 @@ class BookmarksViewController: UITableViewController {
                 return pageMarks.count
             }
             //empty table or not signed in
-            return 0 //to show loading
+            return 0 
         }
         let hist = UserDefaults.standard.array(forKey: "nav_history") as? [Int] ?? []
         return hist.count

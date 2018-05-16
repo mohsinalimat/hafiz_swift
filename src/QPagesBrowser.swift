@@ -588,13 +588,17 @@ class QPagesBrowser: UIViewController
         }
         
         let addToHifz = alertAction(.addUpdateHifz, addUpdateHifzTitle) // check if hifzRange is active
-        //let bookmark = isBookmarked() ? nil : alertAction( .bookmark , "Bookmark")
-        
-        showAlertActions([
+
+        var actions = [
             startRevise,
-            addToHifz,
-            alertAction( .search , "Search")
-        ])
+            addToHifz
+        ]
+
+        if !isBookmarked(){
+            actions.append( alertAction( .bookmark , "Bookmark") )
+        }
+        
+        showAlertActions(actions)
 
     }
     
@@ -614,13 +618,19 @@ class QPagesBrowser: UIViewController
             
         case .search:
             self.showSearch()
-//            if !QData.checkSignedIn(self){
-//                break
-//            }
-//
-//            let _ = QData.createBookmark(aya: SelectStart){snapshot in
-//                Utils.showMessage(self, title: "Bookmark Added", message: "You can find it at the top of the Bookmarks tab")
-//            }
+            break
+        
+        case .bookmark:
+            if !QData.checkSignedIn(self){
+                break
+            }
+            
+            let aya = QData.instance.ayaPosition( pageIndex: self.currentPageIndx() )
+
+            let _ = QData.createBookmark(aya: aya){snapshot in
+                Utils.showMessage(self, title: "Page Bookmarked",
+                                  message: "You can find it at the top of the Bookmarks tab in the home screen")
+            }
             break
             
         case .addUpdateHifz:

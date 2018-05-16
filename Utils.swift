@@ -13,6 +13,20 @@ enum ConfirmationAlertType{
 }
 
 class Utils {
+
+    static func addToSearchHistory(_ text:String,_ results: Int = 1000 ){
+        if text.count > 0 && results > 0{
+            let settings = UserDefaults.standard
+            var hist = settings.value(forKey: "search_history") as? [String] ?? []
+            if let old = hist.index(of: text){
+                hist.remove(at: old)
+            }
+            hist.insert(text, at: 0)
+            hist = Array(hist.prefix(10))// only keep 10
+            //save in history
+            settings.set(hist,forKey: "search_history")
+        }
+    }
     
     static func getDataFromUrl(
         url: URL,

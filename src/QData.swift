@@ -651,7 +651,9 @@ class QData{
     
     static func bookmarks(sync: Bool,_ block: @escaping([Int]?)->Void )->Bool {
         if !sync, let bookmarks = cachedBookmarks {
-            block(bookmarks)
+            DispatchQueue.main.async{
+                block(bookmarks)
+            }
         }
         
         if let ref = userData("aya_marks") {
@@ -870,7 +872,9 @@ class QData{
     static func hifzList( sortByAge:Bool, sync:Bool, _ block: @escaping(HifzList?)->Void ){
         
         if !sync , let cached = cachedHifzList{
-            block(cached)
+            DispatchQueue.main.async{
+                block(cached)
+            }
         }
         
         if let userID = Auth.auth().currentUser?.uid {
@@ -927,10 +931,10 @@ class QData{
     static func suraHifzList(_ sura: Int, _ block: @escaping(HifzList?)->Void ){
         hifzList(sortByAge: false, sync: false){ hifzList in
             if let hifzList = hifzList {
-                let suraHifzList = hifzList.filter{ hifzRange in
+                let suraHifz = hifzList.filter{ hifzRange in
                     return sura == hifzRange.sura
                 }
-                block( suraHifzList )
+                block( suraHifz )
             }
             else{
                 block(nil)
@@ -998,7 +1002,9 @@ class QData{
     
     static func pageImagesBaseURL(_ block: @escaping(String?)->Void ){
         if let cached = QData._pageImagesBaseURL {
-            block( cached )
+            DispatchQueue.main.async{
+                block( cached )
+            }
         }
         
         Database.database().reference().child("public/images_url").observeSingleEvent(of: .value){

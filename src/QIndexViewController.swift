@@ -8,7 +8,9 @@
 
 import UIKit
 
-class QIndexViewController: UITableViewController{
+class QIndexViewController: UITableViewController
+    ,UIActionAlertsManager
+{
     
     override
     func viewDidLoad() {
@@ -34,10 +36,40 @@ class QIndexViewController: UITableViewController{
     override
     func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = .blue
-
-        //self.navigationController?.navigationBar.backgroundColor = UIColor(red: 51/256, green: 102/256, blue: 51/256, alpha: 1)
     }
 
+    // MARK: - Actions Alerts delegate methods
+
+    func handleAlertAction(_ id: AlertActions, _ selection: Any?) {
+        switch id {
+        case .revisedHifz:
+            //TODO: duplicate code
+            if let hifzRange = selection as? HifzRange{
+                let _ = QData.promoteHifz(hifzRange){
+                    snapshot in
+                    Utils.showMessage(self, title: "Revision saved", message: "Good Job :)")
+                }
+            }
+            break
+        case .removeHifz:
+            //TODO: duplicate code
+            if let hifzRange = selection as? HifzRange,
+                let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
+                let desc = QData.describe(hifzTitle: hifzRange)
+                //TODO: duplicate code
+                Utils.confirmMessage(self, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
+                    isYes in
+                    if isYes {
+                        QData.deleteHifz([hifzRange]){ snapshot in }
+                    }
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+    
     // MARK: - Table view data source delegates
     
     override
@@ -272,7 +304,19 @@ class IndexTableViewCell : UITableViewCell {
     
     @objc func addUpdateHifz(){
         if in_hifz{
-            confirmPromoteHifz()
+            //confirmPromoteHifz()
+            if let hifzList = self.hifzList,
+                let hifzRange = hifzList.first,
+                let suraName = self.suraName.text,
+                let vc = self.parentViewController
+            {
+                let desc=QData.describe(hifzTitle: hifzRange)
+                vc.showAlertActions([
+                    vc.alertAction(.revisedHifz, "Revised Today", hifzRange),
+                    vc.alertAction(.removeHifz, "Remove from Hifz", hifzRange)
+                ], "\(suraName) (\(desc))"
+                )
+            }
         }else{
             let qData = QData.instance
             if let ayaPos = self.ayaPos,
@@ -283,7 +327,7 @@ class IndexTableViewCell : UITableViewCell {
                         let vc = self.parentViewController as? QIndexViewController
                     {
                         //Existing partial hifz would be overwritten
-                        Utils.confirmMessage(vc, "Merge Existing Hifz?", "Parts of this sura is already in your hifz. Adding the whole sura would merge them", .yes_destructive){ yes in
+                        Utils.confirmMessage(vc, "Merge Existing Hifz?", "Parts of this sura is already in your hifz. Adding the whole sura would merge them into one", .yes_destructive){ yes in
                             if yes{
                                 self.addSuraToHifz(suraInfo: suraInfo)
                             }
@@ -306,27 +350,27 @@ class IndexTableViewCell : UITableViewCell {
             self.hifzList = [hifzRange]
             self.in_hifz = true
             self.updateHifzColor()
-            self.confirmPromoteHifz()
+            //self.confirmPromoteHifz()
         }
     }
    
-    func confirmPromoteHifz(){
-        if let hifzList = self.hifzList,
-            let hifzRange = hifzList.first,
-            let suraName = QData.instance.suraName(suraIndex: hifzRange.sura),
-            let vc = self.parentViewController as? QIndexViewController
-        {
-            Utils.confirmMessage(vc, "Sura \(suraName.name)", "Would you like to mark it as revised today?", .yes){ yes in
-                if yes {
-                    let _ = QData.promoteHifz(hifzRange){ hifzRange in
-                        self.hifzList = [hifzRange]
-                        Utils.showMessage(vc, title: "Done", message: "Good job :)")
-                        self.updateHifzColor()
-                    }
-                }
-            }
-        }
-    }
+//    func confirmPromoteHifz(){
+//        if let hifzList = self.hifzList,
+//            let hifzRange = hifzList.first,
+//            let suraName = QData.instance.suraName(suraIndex: hifzRange.sura),
+//            let vc = self.parentViewController as? QIndexViewController
+//        {
+//            Utils.confirmMessage(vc, "Sura \(suraName.name)", "Would you like to mark it as revised today?", .yes){ yes in
+//                if yes {
+//                    let _ = QData.promoteHifz(hifzRange){ hifzRange in
+//                        self.hifzList = [hifzRange]
+//                        Utils.showMessage(vc, title: "Done", message: "Good job :)")
+//                        self.updateHifzColor()
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     func updateHifzColor(){
         if in_hifz,

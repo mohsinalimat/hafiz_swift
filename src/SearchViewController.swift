@@ -19,9 +19,11 @@ class SearchViewController:
 
     var searchText: String?
     var results : [Int]?
+    var history: [String]?
     
     @IBOutlet weak var searchResultsTable: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var historyTable: UITableView!
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -33,8 +35,8 @@ class SearchViewController:
         
         // Do any additional setup after loading the view.
         searchBar.becomeFirstResponder();
-        searchBar.delegate = self
-        results = []
+        //searchBar.delegate = self //storyboard takes care of that
+        self.history = UserDefaults.standard.array(forKey: "search_history") as? [String] ?? ["الله", "الرحمن","الرحيم","الملك"]
     }
 
     @IBAction func onTapOutsideResults(_ sender: UITapGestureRecognizer) {
@@ -47,12 +49,9 @@ class SearchViewController:
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print( searchBar.text! )
         if  let searchText = searchBar.text,
             searchText.count > 0
-            //let searchResults = self.storyboard!.instantiateViewController(withIdentifier: "SearchResults") as? SearchResultsViewController
         {
-            //searchResults.searchText = searchText
             SearchText = searchText
 
             dismiss(animated: true, completion: nil)
@@ -61,61 +60,74 @@ class SearchViewController:
                 name: AppNotifications.searchViewResults,
                 object: self
             )
-
-
-            //navController.pushViewController(searchResults, animated: true)
         }
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.searchText = ""
-        if( searchText.count > 0 ){
-            self.searchText = searchText
-        }
+
+        self.searchText = searchText
         let qData = QData.instance
         
         self.results = qData.searchQuran(searchText, max: 10)
         
         searchResultsTable.reloadData()
+        historyTable.isHidden = searchText.count>0 ? true:false
     }
     
     // MARK: - UITableViewDataSource methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let results = self.results{
-            return results.count
+        if let id = tableView.restorationIdentifier {
+            if id == "SResults"{
+                if let results = self.results{
+                    return results.count
+                }
+            }
+            else if id == "History", let history = self.history {
+                return history.count
+            }
         }
-        return 0
+        return 0 // no history nor search results
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let table_id = tableView.restorationIdentifier ?? "SResults"
+        let cell_id = "\(table_id)Cell"
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SResult Item", for: indexPath)
-        let qData = QData.instance
-        if let results = self.results {
-            let ayaPosition = results[indexPath.row]
-            
-            if let textLabel = cell.textLabel{
-                if ayaPosition < 0 {
-                    let suraNumber = -ayaPosition
-                    let suraName = qData.suraName( suraIndex: suraNumber-1 )
-                    let name = suraName?.name ?? "missing"
-                    textLabel.text = String(format:NSLocalizedString("SuraName", comment: ""),name)
-                    cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
-                    if let textDetails = cell.detailTextLabel {
-                        textDetails.text = ""
+        let cell = tableView.dequeueReusableCell(withIdentifier: cell_id, for: indexPath)
+        
+        if table_id == "SResults"{
+            let qData = QData.instance
+            if let results = self.results {
+                let ayaPosition = results[indexPath.row]
+                
+                if let textLabel = cell.textLabel{
+                    if ayaPosition < 0 {
+                        let suraNumber = -ayaPosition
+                        let suraName = qData.suraName( suraIndex: suraNumber-1 )
+                        let name = suraName?.name ?? "missing"
+                        textLabel.text = String(format:NSLocalizedString("SuraName", comment: ""),name)
+                        cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
+                        if let textDetails = cell.detailTextLabel {
+                            textDetails.text = ""
+                        }
                     }
-                }
-                else{
-                    cell.tag = ayaPosition
-                    textLabel.text = qData.ayaText(ayaPosition: ayaPosition)
+                    else{
+                        cell.tag = ayaPosition
+                        textLabel.text = qData.ayaText(ayaPosition: ayaPosition)
 
-                    if let textDetails = cell.detailTextLabel {
-                        let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
-                        textDetails.text = qData.suraName(suraIndex:suraIndex)!.name + ": " +  String(ayaIndex+1)
+                        if let textDetails = cell.detailTextLabel {
+                            let (suraIndex,ayaIndex) = qData.ayaLocation(ayaPosition)
+                            textDetails.text = qData.suraName(suraIndex:suraIndex)!.name + ": " +  String(ayaIndex+1)
+                        }
                     }
                 }
+                
             }
-            
+        }
+        else if table_id == "History" {
+            if let history = self.history{
+                cell.textLabel?.text = history[indexPath.row]
+            }
         }
         
         return cell
@@ -123,44 +135,31 @@ class SearchViewController:
 
     // MARK: - UITableViewDelegate methods
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let results = self.results {
-            var ayaPosition = results[indexPath.row]
-            if ayaPosition < 0 {
+        let table_id = tableView.restorationIdentifier ?? "unknown"
+        let row = indexPath.row
+        
+        if table_id == "SResults", let results = self.results{
+            var aya = results[row]
+            if aya < 0 {
                 let qData = QData.instance
-                let suraIndex = -ayaPosition-1
-                ayaPosition = qData.ayaPosition(sura: suraIndex, aya: 0)
+                let suraIndex = -aya-1
+                aya = qData.ayaPosition(sura: suraIndex, aya: 0)
             }
-            SelectStart = ayaPosition
-            SelectEnd = ayaPosition
+            SelectStart = aya
+            SelectEnd = aya
             dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(
                 name: AppNotifications.searchOpenAya,
                 object: self
             )
+            
+            Utils.addToSearchHistory(searchBar.text ?? "") // as user opens a result, we save that search
+
+        }else if table_id == "History", let history = self.history{
+            searchBar.text = history[row]
+            self.searchBar(self.searchBar, textDidChange: history[row])
         }
     }
-    
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override
-//    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        if let viewCell = sender as? UITableViewCell, let qPagesBrowser = segue.destination as? QPagesBrowser {
-//            let ayaPosition = viewCell.tag, qData = QData.instance
-//
-//            qPagesBrowser.startingPage = qData.pageIndex(ayaPosition: ayaPosition) + 1
-//
-//            SelectStart = ayaPosition
-//            SelectEnd = ayaPosition
-//
-//            //Reset previous selections and mask
-//            MaskStart = -1
-//
-//            //dismiss(animated: true, completion: nil)
-//        }
-//
-//    }
+   
 
 }
