@@ -26,6 +26,8 @@ class BookmarksViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(onSignInUpdate), name: AppNotifications.signedIn, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onDataUpdated), name: AppNotifications.dataUpdated, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: AppNotifications.pageViewed, object: nil)
     }
     
     deinit {
@@ -52,6 +54,10 @@ class BookmarksViewController: UITableViewController {
 
     @objc func onDataUpdated(){
         readData(sync: false)
+    }
+    
+    @objc func reloadTableData(){
+        tableView.reloadData()
     }
 
     func readData(sync: Bool = false){
@@ -80,6 +86,7 @@ class BookmarksViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.backgroundColor = UIColor.darkGray
+        tableView.reloadData()
     }
 
     
@@ -99,31 +106,55 @@ class BookmarksViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         //return the number of sections
-        if let pageMarks = self.ayaMarks {
-            setNoDataView( pageMarks.count == 0 ? noDataView:nil)
-            return pageMarks.count == 0 ? 0 : 1
-        }
-        return QData.signedIn ? 1 : 0
+//        if let pageMarks = self.ayaMarks {
+//            setNoDataView( pageMarks.count == 0 ? noDataView:nil)
+//            return pageMarks.count == 0 ? 0 : 1
+//        }
+//        return QData.signedIn ? 1 : 0
+        return 2
         
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let pageMarks = self.ayaMarks{
-            return pageMarks.count
+        if section == 1{
+            if let pageMarks = self.ayaMarks{
+                return pageMarks.count
+            }
+            //empty table or not signed in
+            return 0 //to show loading
         }
-
-        return QData.signedIn ? 1:0 //to show loading
+        let hist = UserDefaults.standard.array(forKey: "nav_history") as? [Int] ?? []
+        return hist.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0{
+            return "Last Viewed"
+        }
+        return "Bookmarks"
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let qData = QData.instance
         let rowIndex = indexPath.row
-        
-        if  let ayaMarks = self.ayaMarks,
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath) as? BookmarkTableCellView
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
+
+        if indexPath.section == 0,
+            let hist = UserDefaults.standard.array(forKey: "nav_history") as? [Int]
         {
-            let ayaPos = ayaMarks[rowIndex]
+            return cellForAya(cell, hist[rowIndex], 0)
+        }
+        
+        if  let ayaMarks = self.ayaMarks{
+            return cellForAya(cell, ayaMarks[rowIndex], 1)
+        }
+        
+        return cell
+    }
+    
+    func cellForAya(_ cell:UITableViewCell, _ ayaPos:Int, _ section:Int )->UITableViewCell{
+        
+        if let cell = cell as? BookmarkTableCellView{
+            let qData = QData.instance
             let (sura,aya) = qData.ayaLocation(ayaPos)
             let suraName = qData.suraName(suraIndex: sura)
             let pageNumber = qData.pageIndex(ayaPosition: ayaPos)+1
@@ -134,29 +165,33 @@ class BookmarksViewController: UITableViewController {
                 cell.ayaText.text = ayaText
             }
             cell.tag = ayaPos //for segue use
+            if section == 0{
+                cell.icon.image = UIImage(named: "Timer")
+            }
             return cell
         }
         
-        let loadingCell = tableView.dequeueReusableCell(withIdentifier: "Loading", for: indexPath)
-        loadingCell.textLabel!.text = "Loading..."
-        return loadingCell
+        return cell
     }
     
     // Return right swipe edit actions
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        return [
-            UITableViewRowAction(style: .destructive, title: "Remove", handler: {
-                (rowAction, indexPath) in
-                
-                if let ayaPos = self.ayaMarks?.remove(at: indexPath.row){
-                    let _ = QData.deleteBookmark(aya: ayaPos){(snapshot) in
-                        //tableView.deleteRows(at: [indexPath], with: .fade)
-                        print( "Bookmark deleted")
-                    }//dataUpdated event will refresh the table
-                }
-            })
-        ]
+        if indexPath.section == 1{//skip navigation history
+            return [
+                UITableViewRowAction(style: .destructive, title: "Remove", handler: {
+                    (rowAction, indexPath) in
+                    
+                    if let ayaPos = self.ayaMarks?.remove(at: indexPath.row){
+                        let _ = QData.deleteBookmark(aya: ayaPos){(snapshot) in
+                            //tableView.deleteRows(at: [indexPath], with: .fade)
+                            print( "Bookmark deleted")
+                        }//dataUpdated event will refresh the table
+                    }
+                })
+            ]
+        }
+        return []
     }
     
     // MARK: - Navigation
@@ -179,4 +214,5 @@ class BookmarkTableCellView : UITableViewCell{
     @IBOutlet weak var ayaText: UILabel!
     @IBOutlet weak var pageNumber: UILabel!
     
+    @IBOutlet weak var icon: UIImageView!
 }

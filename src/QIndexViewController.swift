@@ -187,9 +187,10 @@ class QIndexViewController: UITableViewController{
         }
         
         if  let tafseerView = segue.destination as? TafseerViewController,
-            let indexCell = sender as? IndexTableViewCell
+            let indexCell = sender as? IndexTableViewCell,
+            let ayaPos = indexCell.ayaPos
         {
-            let (sura,aya) = QData.instance.ayaLocation(indexCell.ayaPos)
+            let (sura,aya) = QData.instance.ayaLocation(ayaPos)
             tafseerView.ayaPosition = QData.instance.ayaPosition(sura: sura, aya: aya)
         }
         
@@ -212,7 +213,7 @@ class IndexTableViewCell : UITableViewCell {
     @IBOutlet weak var firstAya: UILabel!
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    var ayaPos = 0
+    var ayaPos:Int?
     var bookmarked = false
     var in_hifz = false
     var hifzList:HifzList?
@@ -262,7 +263,8 @@ class IndexTableViewCell : UITableViewCell {
     }
     
     @objc func bookmark(){
-        if let vc = self.parentViewController as? QIndexViewController{
+        if let ayaPos = self.ayaPos,
+            let vc = self.parentViewController as? QIndexViewController{
             QData.bookmark(vc, ayaPos)
             bookmarked = true
         }
@@ -270,27 +272,51 @@ class IndexTableViewCell : UITableViewCell {
     
     @objc func addUpdateHifz(){
         if in_hifz{
-            promoteHifz()
+            confirmPromoteHifz()
         }else{
-            if let suraInfo = QData.instance.suraInfo(ayaPos: ayaPos){
-                let addParams = AddHifzParams(sura: suraInfo.sura, page: suraInfo.page, select:.all)
-                QData.addHifz(params: addParams){ hifzRange in
-                    self.hifzList = [hifzRange]
-                    self.in_hifz = true
-                    self.updateHifzColor()
-                    self.promoteHifz()
+            let qData = QData.instance
+            if let ayaPos = self.ayaPos,
+                let suraInfo = qData.suraInfo(ayaPos: ayaPos){
+                QData.suraHifzList(suraInfo.sura){ hifzList in
+                    if let hifzList = hifzList,
+                        hifzList.count > 0,
+                        let vc = self.parentViewController as? QIndexViewController
+                    {
+                        //Existing partial hifz would be overwritten
+                        Utils.confirmMessage(vc, "Merge Existing Hifz?", "Parts of this sura is already in your hifz. Adding the whole sura would merge them", .yes_destructive){ yes in
+                            if yes{
+                                self.addSuraToHifz(suraInfo: suraInfo)
+                            }
+                            
+                        }
+                    }
+                    else{
+                        self.addSuraToHifz(suraInfo: suraInfo)
+                    }
+                    
                 }
+                
             }
         }
     }
+    
+    func addSuraToHifz(suraInfo:SuraInfo){
+        let addParams = AddHifzParams(sura: suraInfo.sura, page: suraInfo.page, select:.all)
+        QData.addHifz(params: addParams){ hifzRange in
+            self.hifzList = [hifzRange]
+            self.in_hifz = true
+            self.updateHifzColor()
+            self.confirmPromoteHifz()
+        }
+    }
    
-    func promoteHifz(){
+    func confirmPromoteHifz(){
         if let hifzList = self.hifzList,
             let hifzRange = hifzList.first,
             let suraName = QData.instance.suraName(suraIndex: hifzRange.sura),
             let vc = self.parentViewController as? QIndexViewController
         {
-            Utils.confirmMessage(vc, "\(suraName.name) is added to your hifz", "Would you like to mark it as revised today?", .yes){ yes in
+            Utils.confirmMessage(vc, "Sura \(suraName.name)", "Would you like to mark it as revised today?", .yes){ yes in
                 if yes {
                     let _ = QData.promoteHifz(hifzRange){ hifzRange in
                         self.hifzList = [hifzRange]

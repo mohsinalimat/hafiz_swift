@@ -27,7 +27,7 @@ class TafseerViewController: UIViewController,
     UIPickerViewDelegate,
     UIPickerViewDataSource
 {
-    static var selectedTafseer = 0
+    private var _selectedTafseer:String?
     
     @IBOutlet weak var PageViewFrame: UIView!
     @IBOutlet weak var tafseerSourceSelector: UIPickerView!
@@ -41,6 +41,9 @@ class TafseerViewController: UIViewController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Read from defaults
+        _selectedTafseer = UserDefaults.standard.object(forKey: "sel_tafseer") as? String ?? TafseerSources[0]
         
         //Create horizontal pager
         pageViewController = UIPageViewController(
@@ -69,6 +72,14 @@ class TafseerViewController: UIViewController,
         gotoAya(ayaPosition)
     }
     
+    func selectedTafseer()->(name:String,index:Int){
+        let taf = _selectedTafseer ?? TafseerSources[0]
+        if let index = TafseerSources.index(of: taf){
+            return (name:taf, index:index)
+        }
+        return (name:TafseerSources[0], index:0)//fail safe
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         //navigationController?.setNavigationBarHidden(false, animated: true)
         Utils.showNavBar(self)
@@ -95,13 +106,13 @@ class TafseerViewController: UIViewController,
         let viewController = storyboard!.instantiateViewController(withIdentifier: "TafseerAyaView")
         if let tafseerAyaView = viewController as? TafseerAyaView{
             tafseerAyaView.ayaPosition = ayaIndex
-            tafseerAyaView.selectedTafseer = TafseerSources[TafseerViewController.selectedTafseer]
+            tafseerAyaView.selectedTafseer = selectedTafseer().name
         }
         return viewController
     }
 
     func updatePicker(){
-        tafseerSourceSelector.selectRow(TafseerViewController.selectedTafseer, inComponent: 0, animated: true)
+        tafseerSourceSelector.selectRow(selectedTafseer().index, inComponent: 0, animated: true)
         let qData = QData.instance
         if let tafseerView = pageViewController!.viewControllers![0] as? TafseerAyaView{
             let (cSuraIndex, _) = qData.ayaLocation( ayaPosition )
@@ -236,7 +247,10 @@ class TafseerViewController: UIViewController,
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch component{
         case 0:// tafseer
-            TafseerViewController.selectedTafseer = row
+            //user selects different tafseer
+            //update the cached value and the UserDefaults
+            _selectedTafseer = TafseerSources[row]
+            UserDefaults.standard.set(_selectedTafseer, forKey: "sel_tafseer")
             gotoAya( ayaPosition )
         case 1://sura
             updateAyaPosition( sura: row )

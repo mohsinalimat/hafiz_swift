@@ -264,6 +264,12 @@ class QPageView: UIViewController{
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if let parent = parentBrowserView(){
+            parent.recordNavigation(new:false, pageNumber:pageNumber)
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
         //positionAyatButtons()

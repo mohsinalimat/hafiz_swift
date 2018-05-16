@@ -91,8 +91,10 @@ class QPagesBrowser: UIViewController
         //gotoPage(pageNum: startingPage ?? 1)
         gotoPage(ayaPos: SelectStart)
         
+        //record the last navigation
+        recordNavigation(new:true)
         
-        setNavigationButtonsColor()
+        setNavigationButtonsColor()//footer navigation init
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -201,6 +203,37 @@ class QPagesBrowser: UIViewController
         let _ = checkGotoPage(ayaPos: ayaPos)
     }
 
+    var recordNavigationEnabled = false //skip the first navigation
+    
+    func recordNavigation(new: Bool = false, pageNumber:Int? = nil ){
+        
+        if !new && !recordNavigationEnabled {
+            recordNavigationEnabled = true//to skip the first gotoPage
+            return
+        }
+        
+        var hist = UserDefaults.standard.array(forKey: "nav_history") as? [Int] ?? []
+        if new {
+            if let old = hist.index(of: SelectStart){
+                hist.remove(at: old)
+            }
+            hist.insert(SelectStart, at: 0)
+            hist = Array(hist.prefix(3)) // only keep last 5
+        }
+        else if hist.count>1,
+            let pageNum = pageNumber
+        {//inner page navigation, only overwrite the top item
+            let pageFirstAya = QData.instance.ayaPosition(pageIndex: pageNum-1)
+            hist[0] = pageFirstAya
+        }
+        else{
+            return //nothing to update
+        }
+    
+        UserDefaults.standard.set(hist, forKey: "nav_history")
+        NotificationCenter.default.post(name: AppNotifications.pageViewed, object:hist)
+
+    }
     
     /// Navigate to a page, highlight and scroll to the selected aya
     ///
@@ -214,7 +247,7 @@ class QPagesBrowser: UIViewController
             let pageViewController = self.pageViewController,
             let startingViewController = viewControllerAtIndex( pageNum, storyboard: self.storyboard! )
         {
-        
+            
             //pass inital set of page viewers
             //TODO: create two pages if ipad landscape mode
             let viewControllers = [startingViewController]

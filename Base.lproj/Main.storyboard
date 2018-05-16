@@ -975,7 +975,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="49.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bookmark Empty" translatesAutoresizingMaskIntoConstraints="NO" id="I90-Pv-auf">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bookmark Empty" translatesAutoresizingMaskIntoConstraints="NO" id="I90-Pv-auf" userLabel="Icon">
                                             <rect key="frame" x="10" y="12.666666666666666" width="25" height="24.333333333333336"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="I90-Pv-auf" secondAttribute="height" id="OiQ-gL-gYy"/>
@@ -1024,6 +1024,7 @@
                                 <connections>
                                     <outlet property="ayaLocation" destination="qdT-Dg-pTo" id="cPa-gh-3Rf"/>
                                     <outlet property="ayaText" destination="nLa-sR-gbd" id="mKc-sO-y4q"/>
+                                    <outlet property="icon" destination="I90-Pv-auf" id="Xry-F7-qkI"/>
                                     <outlet property="pageNumber" destination="X1W-Xc-INR" id="djh-jP-jyx"/>
                                     <outlet property="suraName" destination="JoT-F3-y01" id="QXS-5c-clA"/>
                                     <segue destination="703-4V-yAM" kind="show" identifier="BookmarkShowPage" id="3aA-4e-oWN"/>
@@ -1641,6 +1642,6 @@
         <segue reference="Po2-Nt-YPQ"/>
         <segue reference="G6v-7F-wGi"/>
         <segue reference="MRI-6V-i3y"/>
-        <segue reference="7eF-O5-dQo"/>
+        <segue reference="3aA-4e-oWN"/>
     </inferredMetricsTieBreakers>
 </document>

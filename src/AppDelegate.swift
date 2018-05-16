@@ -149,5 +149,6 @@ struct AppNotifications {
     static var searchViewResults: NSNotification.Name { return NSNotification.Name(rawValue: "searchViewResults") }
     static var dataUpdated: NSNotification.Name { return NSNotification.Name(rawValue: "dataUpdated") }
     static var signedIn: NSNotification.Name { return NSNotification.Name(rawValue: "signedIn") }
+    static var pageViewed: NSNotification.Name { return NSNotification.Name(rawValue: "signedIn") }
 }
 
