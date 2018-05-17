@@ -36,7 +36,22 @@ class SearchViewController:
         // Do any additional setup after loading the view.
         searchBar.becomeFirstResponder();
         //searchBar.delegate = self //storyboard takes care of that
-        self.history = UserDefaults.standard.array(forKey: "search_history") as? [String] ?? ["الله", "الرحمن","الرحيم","الملك"]
+        self.history = UserDefaults.standard.array(forKey: "search_history") as? [String] ?? [
+            "محمد",
+            "نوح",
+            "ادريس",
+            "ابراهيم",
+            "اسماعيل",
+            "اسحاق",
+            "يعقوب",
+            "يوسف",
+            "موسى",
+            "هارون",
+            "عيسى",
+            "ايوب",
+            "داوود",
+            "سليمان"
+        ]
     }
 
     @IBAction func onTapOutsideResults(_ sender: UITapGestureRecognizer) {
@@ -52,6 +67,23 @@ class SearchViewController:
         if  let searchText = searchBar.text,
             searchText.count > 0
         {
+            if let results = self.results, results.count == 0{
+                // no results, check page numbers
+                if let pageNumber = Int(searchText){
+                    if pageNumber>0 && pageNumber<=QData.lastPageIndex{
+                        let aya = QData.instance.ayaPosition(pageIndex: pageNumber-1)
+                        SelectStart = aya
+                        SelectEnd = aya
+                        dismiss(animated: true, completion: nil)
+                        NotificationCenter.default.post(
+                            name: AppNotifications.searchOpenAya,
+                            object: self
+                        )
+                    }
+                }
+                return
+            }
+            
             SearchText = searchText
 
             dismiss(animated: true, completion: nil)

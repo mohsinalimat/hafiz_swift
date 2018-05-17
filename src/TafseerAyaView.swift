@@ -27,14 +27,15 @@ class TafseerAyaView: UIViewController
                 string: "\n\(ayaText)\n\n",
                 attributes: [
                     NSAttributedStringKey.foregroundColor: UIColor.blue,
-                    NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17)
+                    //NSAttributedStringKey.writingDirection: NSWritingDirectionAttributeName.,
+                    NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)
                 ]
             )
             let tafseerText = QData.getTafseer( aya, selectedTafseer ) ?? "Tafseer not found"
             let coloredTafseerText = NSAttributedString(
                 string: tafseerText,
                 attributes:[
-                    NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)
+                    NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)
                 ]
             )
             

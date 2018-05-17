@@ -22,7 +22,7 @@ class Utils {
                 hist.remove(at: old)
             }
             hist.insert(text, at: 0)
-            hist = Array(hist.prefix(10))// only keep 10
+            hist = Array(hist.prefix(30))// maximum records
             //save in history
             settings.set(hist,forKey: "search_history")
         }

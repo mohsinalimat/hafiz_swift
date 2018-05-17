@@ -8,13 +8,13 @@
 
 import UIKit
 import Firebase
-import GoogleSignIn
+//import GoogleSignIn
 
 class HomeViewController: UITabBarController
     ,UITabBarControllerDelegate
     ,UIPopoverPresentationControllerDelegate
-    ,GIDSignInDelegate
-    ,GIDSignInUIDelegate
+//    ,GIDSignInDelegate
+//    ,GIDSignInUIDelegate
     ,UIActionAlertsManager
 {
     
@@ -23,8 +23,9 @@ class HomeViewController: UITabBarController
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         // GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().signInSilently()
+//        GIDSignIn.sharedInstance().uiDelegate = self
+//        GIDSignIn.sharedInstance().signInSilently()
+        
         
         updateSignInButtonTitle()
         
@@ -179,13 +180,13 @@ class HomeViewController: UITabBarController
     }
 
     // MARK: - GIDSignInDelegate methods
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if let _ = user{
-            print( "HomeViewController Signed IN!!" )
-        }else{
-            print( "Not Signed In" )
-        }
-    }
+//    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+//        if let _ = user{
+//            print( "HomeViewController Signed IN!!" )
+//        }else{
+//            print( "Not Signed In" )
+//        }
+//    }
 
     
     /*

@@ -37,10 +37,12 @@
 		2DDE909120A9C29E00E919D1 /* tafseer in Resources */ = {isa = PBXBuildFile; fileRef = 2DDE909020A9C29D00E919D1 /* tafseer */; };
 		2DF0E09A202634BC00B3C493 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF0E099202634BC00B3C493 /* SearchViewController.swift */; };
 		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
-		C7AA0084DAD6431A754B28B3 /* Pods_quran_hafiz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */; };
+		48CEF29625EFC3A73CA36212 /* Pods_Quran_Hafiz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F41A7775580A4279B32B3A /* Pods_Quran_Hafiz.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		032FD291E754CF92C1D3BCFA /* Pods-Quran Hafiz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quran Hafiz.release.xcconfig"; path = "Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz.release.xcconfig"; sourceTree = "<group>"; };
+		18F41A7775580A4279B32B3A /* Pods_Quran_Hafiz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quran_Hafiz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D159E831F7F5B5F00AFE7E2 /* TafseerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TafseerViewController.swift; sourceTree = "<group>"; };
 		2D1B62C8208BB0F800C2DD28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D1B62CA208BB2F100C2DD28 /* LayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerView.swift; sourceTree = "<group>"; };
@@ -78,9 +80,8 @@
 		2DDE909020A9C29D00E919D1 /* tafseer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tafseer; sourceTree = "<group>"; };
 		2DF0E099202634BC00B3C493 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TafseerAyaView.swift; sourceTree = "<group>"; };
-		4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-quran_hafiz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz.debug.xcconfig"; sourceTree = "<group>"; };
-		A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-quran_hafiz.release.xcconfig"; path = "Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz.release.xcconfig"; sourceTree = "<group>"; };
 		B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_quran_hafiz.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B94C559163AF1C69B7E3EAA3 /* Pods-Quran Hafiz.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quran Hafiz.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +89,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7AA0084DAD6431A754B28B3 /* Pods_quran_hafiz.framework in Frameworks */,
 				2DDE908F20A8B42F00E919D1 /* AudioToolbox.framework in Frameworks */,
+				48CEF29625EFC3A73CA36212 /* Pods_Quran_Hafiz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +175,7 @@
 			children = (
 				2DDE908E20A8B42F00E919D1 /* AudioToolbox.framework */,
 				B4935835F8F4C2AA8E24F8A7 /* Pods_quran_hafiz.framework */,
+				18F41A7775580A4279B32B3A /* Pods_Quran_Hafiz.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -225,8 +227,8 @@
 		F0E78305E50635FABB6BB4C7 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */,
-				A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */,
+				B94C559163AF1C69B7E3EAA3 /* Pods-Quran Hafiz.debug.xcconfig */,
+				032FD291E754CF92C1D3BCFA /* Pods-Quran Hafiz.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -326,16 +328,22 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseFacebookAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseFacebookAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		98FCB3FD09FD4B78752B6049 /* [CP] Check Pods Manifest.lock */ = {
@@ -349,7 +357,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-quran_hafiz-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Quran Hafiz-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -362,7 +370,10 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
@@ -371,6 +382,9 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
@@ -379,7 +393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-quran_hafiz/Pods-quran_hafiz-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quran Hafiz/Pods-Quran Hafiz-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -470,7 +484,7 @@
 /* Begin XCBuildConfiguration section */
 		2D41B24C1F9BC0A800199BAD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4C753912A5EC14A5B22EB6E4 /* Pods-quran_hafiz.debug.xcconfig */;
+			baseConfigurationReference = B94C559163AF1C69B7E3EAA3 /* Pods-Quran Hafiz.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = quran_hafiz.entitlements;
@@ -490,18 +504,19 @@
 		};
 		2D41B24D1F9BC0A800199BAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A53EF6F6B1535E6EEEABF818 /* Pods-quran_hafiz.release.xcconfig */;
+			baseConfigurationReference = 032FD291E754CF92C1D3BCFA /* Pods-Quran Hafiz.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = quran_hafiz.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = PTHW63WY46;
 				INFOPLIST_FILE = "$(SRCROOT)/src/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muslim-web.hafiz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "475e5381-bbf6-40b3-906b-de5e89121168";
-				PROVISIONING_PROFILE_SPECIFIER = dev4quranhafiz;
+				PROVISIONING_PROFILE = "31927c95-602d-4874-915b-fef24358bf95";
+				PROVISIONING_PROFILE_SPECIFIER = dist4quranhafiz;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;

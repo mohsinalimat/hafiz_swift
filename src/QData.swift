@@ -7,8 +7,10 @@
 //
 
 import UIKit
-import GoogleSignIn
+//import GoogleSignIn
 import Firebase
+import FirebaseAuthUI
+
 
 typealias NamedIntegers = [String:Int]
 typealias PageInfo = (suraIndex:Int, ayaIndex:Int, ayaPos:Int, ayaCount:Int)
@@ -632,6 +634,9 @@ class QData{
             {
                 block(true)
             }
+            else{
+                block(false)
+            }
         })
         {//user is not logged in not bookmarked
             block(false)
@@ -903,7 +908,7 @@ class QData{
             }
         }
         else{
-            print( "Not authenticated" )
+            //print( "Not authenticated" )
             block(nil)
         }
     }
@@ -1016,7 +1021,10 @@ class QData{
     
     static func signIn(_ vc: UIViewController){
         //TODO: implement different sign in providers
-        GIDSignIn.sharedInstance().signIn()
+        //GIDSignIn.sharedInstance().signIn()
+        if let authViewController = FUIAuth.defaultAuthUI()?.authViewController(){
+            vc.present(authViewController, animated: true)
+        }
     }
     
     static func checkSignedIn(_ vc: UIViewController,_ msg:String? = nil)->Bool{
@@ -1039,8 +1047,8 @@ class QData{
             if isYes {
                 do {
                     try Auth.auth().signOut() //signout from Firebase
-                    GIDSignIn.sharedInstance().signOut()
-                    GIDSignIn.sharedInstance().disconnect()
+                    try FUIAuth.defaultAuthUI()?.signOut()
+                    //GIDSignIn.sharedInstance().disconnect()
                 }
                 catch let error as NSError{
                     print(error.localizedDescription)

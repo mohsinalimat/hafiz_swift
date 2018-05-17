@@ -8,131 +8,108 @@
 
 import UIKit
 import Firebase
-import GoogleSignIn
-
-
+//import GoogleSignIn
+import FirebaseAuthUI
+import FirebaseGoogleAuthUI
+import FirebaseFacebookAuthUI
+//import FirebaseTwitterAuthUI
+//import TwitterKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     var window: UIWindow?
     
     static var orientation:UIInterfaceOrientationMask = .all
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+
         FirebaseApp.configure()
+
+//        TWTRTwitter.sharedInstance().start(
+//            withConsumerKey:"dtEp4yNEwFPLiAFp7quhK9WRo",
+//            consumerSecret:"DcJp90rYkbOUNr7DXZkVEDWDgFCrWUD6YD0mKaIygNnwDV1GlL"
+//        )
+        
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            if let user = user{
+                print ("FIR: Auth: User is \(user.uid)")
+                self.handleSignedIn()
+            }else{
+                self.handleSignedOut()
+                print("FIR: Auth: User is out")
+            }
+        }
+
+        if let authUI = FUIAuth.defaultAuthUI(){
+            authUI.delegate = self
+            authUI.providers = [
+                FUIGoogleAuth()
+                ,FUIFacebookAuth()
+                //,FUITwitterAuth()
+                //,FUIPhoneAuth(authUI:FUIAuth.defaultAuthUI()),
+            ]
+        }
+
         Database.database().isPersistenceEnabled = true
-        
-        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
-        GIDSignIn.sharedInstance().delegate = self
-        
         
         return true
     }
     
-    @available(iOS 9.0, *)
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                         sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                         annotation: [:])
-    }
-    
-    //for ios 8 or older
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                         sourceApplication: sourceApplication,
-                         annotation: annotation)
-    }
-    
-    
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    func application(_ app: UIApplication, open url: URL,
+                     options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool
+    {
+        let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String?
+        
+        print("FIR: open url \(url.absoluteString) from \(sourceApplication!) options: \(options)")
+
+        if let authUI = FUIAuth.defaultAuthUI(){
+            
+            if authUI.handleOpen(url, sourceApplication: sourceApplication) {
+                return true
+            }
+        
+        }
+        // other URL handling goes here.
+        return false
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-    }
+    //MARK: - FireUIAuth In delegate methods
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-
-    //Invoked so many times
-    //Not invoked upon calling UIViewController.attemptRotationToDeviceOrientation() !!!!!
-    //or UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation") !!!
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        //return AppDelegate.orientation
-        return .all
-    }
-
-    //MARK: - Google Sign In delegate methods
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        // ...
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+        // handle user and error as necessary
         if let error = error {
             // ...
-            print( "AppDelegate Google Failed to sign in :(" )
+            print( "AppDelegate FUIAuth Failed to sign in :(" )
             print( error )
             return
         }
-
-        print( "AppDelegate Google signed in :)" )
-
-        guard let authentication = user.authentication else { return }
         
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-
-        Auth.auth().signIn(with: credential) { (user, error) in
-            if let error = error {
-                print("AppDelegate Firebase Failed to sign in :(")
-                print(error)
-                return
-            }
-            print( "AppDelegate Firebase signed in :)" )
-            
-            if let hifzRef = QData.userData("hifz"){
-                hifzRef.observe(.childAdded, with: self.notifyDataChanged )
-                hifzRef.observe(.childRemoved, with: self.notifyDataChanged )
-                hifzRef.observe(.childChanged, with: self.notifyDataChanged )
-            }
-
-            if let pageMarks = QData.userData("aya_marks"){
-                pageMarks.observe(.childAdded, with: self.notifyDataChanged )
-                pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
-                pageMarks.observe(.childChanged, with: self.notifyDataChanged )
-            }
-
-            NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
-        }
+        print( "AppDelegate FUIAuth signed in :)" )
+//      NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
     }
     
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        // Perform any operations when the user disconnects from app here.
-        // ...
-        if let error = error {
-            print( "AppDelegate Failed to sign out" )
-            print( error )
-            return
+    func handleSignedIn(){
+        if let hifzRef = QData.userData("hifz"){
+            hifzRef.observe(.childAdded, with: self.notifyDataChanged )
+            hifzRef.observe(.childRemoved, with: self.notifyDataChanged )
+            hifzRef.observe(.childChanged, with: self.notifyDataChanged )
         }
 
-        print( "AppDelegate Signed out" )
+        if let pageMarks = QData.userData("aya_marks"){
+            pageMarks.observe(.childAdded, with: self.notifyDataChanged )
+            pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
+            pageMarks.observe(.childChanged, with: self.notifyDataChanged )
+        }
 
-        NotificationCenter.default.post(name: AppNotifications.signedIn, object: user)
-        NotificationCenter.default.post(name: AppNotifications.dataUpdated, object: user)
-
-        // User is signed out
-        // broadcast a notification to refresh the data
+        NotificationCenter.default.post(name: AppNotifications.signedIn, object: nil)
+        NotificationCenter.default.post(name: AppNotifications.dataUpdated, object: nil)
+    }
+    
+    func handleSignedOut(){
+        NotificationCenter.default.post(name: AppNotifications.dataUpdated, object: nil)
+        NotificationCenter.default.post(name: AppNotifications.signedIn, object: nil)
     }
 
     @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
@@ -140,6 +117,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         NotificationCenter.default.post(
             name: AppNotifications.dataUpdated, object: snapshot
         )
+    }
+
+    //MARK: - Orientation delegates
+    
+    //Invoked so many times
+    //Not invoked upon calling UIViewController.attemptRotationToDeviceOrientation() !!!!!
+    //or UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation") !!!
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        //return AppDelegate.orientation
+        return .all
     }
 
 }

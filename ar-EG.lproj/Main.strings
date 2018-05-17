@@ -39,10 +39,10 @@
 "MHQ-W5-P5q.title" = "السور";
 
 /* Class = "UIButton"; normalTitle = "<< Next"; ObjectID = "N6s-jL-Je1"; */
-"N6s-jL-Je1.normalTitle" = "<< Next";
+"N6s-jL-Je1.normalTitle" = "تالي >>";
 
 /* Class = "UILabel"; text = "Sura Name #"; ObjectID = "NCk-k9-21j"; */
-"NCk-k9-21j.text" = "Sura Name #";
+"NCk-k9-21j.text" = "اسم السورة #";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "Okm-hp-4sU"; */
 "Okm-hp-4sU.text" = "Subtitle";
@@ -66,10 +66,10 @@
 "YF8-bP-TUs.normalTitle" = "<<";
 
 /* Class = "UINavigationItem"; title = "Sura Name"; ObjectID = "cuz-mW-wfp"; */
-"cuz-mW-wfp.title" = "Sura Name";
+"cuz-mW-wfp.title" = "اسم السورة";
 
 /* Class = "UIButton"; normalTitle = "Previous >>"; ObjectID = "gNU-SZ-zXv"; */
-"gNU-SZ-zXv.normalTitle" = "Previous >>";
+"gNU-SZ-zXv.normalTitle" = "<< سابق";
 
 /* Class = "UIButton"; normalTitle = "<<"; ObjectID = "huS-jI-2Ou"; */
 "huS-jI-2Ou.normalTitle" = "<<";
@@ -78,16 +78,16 @@
 "oGq-2Z-yCC.text" = "سورة #";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "t44-l6-cGh"; */
-"t44-l6-cGh.text" = "Detail";
+"t44-l6-cGh.text" = "بيانات";
 
 /* Class = "UILabel"; text = "Sura"; ObjectID = "tXa-kd-M9t"; */
-"tXa-kd-M9t.text" = "Sura";
+"tXa-kd-M9t.text" = "سورة";
 
 /* Class = "UINavigationController"; title = "AppNavigation"; ObjectID = "uE6-fb-nNK"; */
 "uE6-fb-nNK.title" = "AppNavigation";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "xsr-RL-NTD"; */
-"xsr-RL-NTD.text" = "Detail";
+"xsr-RL-NTD.text" = "بيانات";
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "y6m-Vw-RfU"; */
 "y6m-Vw-RfU.text" = "Title";

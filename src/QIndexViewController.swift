@@ -320,11 +320,12 @@ class IndexTableViewCell : UITableViewCell {
         }else{
             let qData = QData.instance
             if let ayaPos = self.ayaPos,
-                let suraInfo = qData.suraInfo(ayaPos: ayaPos){
+               let suraInfo = qData.suraInfo(ayaPos: ayaPos),
+               let vc = self.parentViewController as? QIndexViewController
+            {
                 QData.suraHifzList(suraInfo.sura){ hifzList in
                     if let hifzList = hifzList,
-                        hifzList.count > 0,
-                        let vc = self.parentViewController as? QIndexViewController
+                        hifzList.count > 0
                     {
                         //Existing partial hifz would be overwritten
                         Utils.confirmMessage(vc, "Merge Existing Hifz?", "Parts of this sura is already in your hifz. Adding the whole sura would merge them into one", .yes_destructive){ yes in
@@ -335,11 +336,11 @@ class IndexTableViewCell : UITableViewCell {
                         }
                     }
                     else{
-                        self.addSuraToHifz(suraInfo: suraInfo)
+                        if QData.checkSignedIn(vc){
+                            self.addSuraToHifz(suraInfo: suraInfo)
+                        }
                     }
-                    
                 }
-                
             }
         }
     }

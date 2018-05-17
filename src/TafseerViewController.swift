@@ -29,6 +29,8 @@ class TafseerViewController: UIViewController,
 {
     private var _selectedTafseer:String?
     
+    @IBOutlet weak var bookmarkButton: UIBarButtonItem!
+    
     @IBOutlet weak var PageViewFrame: UIView!
     @IBOutlet weak var tafseerSourceSelector: UIPickerView!
 
@@ -36,6 +38,7 @@ class TafseerViewController: UIViewController,
     var lastAya = 6236
     var pageViewController:UIPageViewController?
     var ayaPosition:Int = 0
+    var isBookmarked = false
 
     // MARK: UIViewController delegate methods
 
@@ -70,8 +73,15 @@ class TafseerViewController: UIViewController,
 
         //Show initial pager page
         gotoAya(ayaPosition)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTitle), name: AppNotifications.dataUpdated, object: nil)
+
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     func selectedTafseer()->(name:String,index:Int){
         let taf = _selectedTafseer ?? TafseerSources[0]
         if let index = TafseerSources.index(of: taf){
@@ -103,10 +113,16 @@ class TafseerViewController: UIViewController,
         updateTitle()
     }
     
-    func updateTitle(){
-        let (sura,aya) = QData.instance.ayaLocation(ayaPosition)
-        if let suraName = QData.instance.suraName(suraIndex: sura){
+    @objc func updateTitle(){
+        let qData = QData.instance
+        let (sura,aya) = qData.ayaLocation(ayaPosition)
+        if let suraName = qData.suraName(suraIndex: sura){
             self.title = "\(suraName.name) (\(aya+1))"
+        }
+        
+        QData.isBookmarked(ayaPosition){ is_yes in
+            self.isBookmarked = is_yes
+            self.bookmarkButton.image = UIImage(named: is_yes ? "Bookmark Filled" : "Bookmark Empty")
         }
     }
     
@@ -140,6 +156,15 @@ class TafseerViewController: UIViewController,
         let ayaPosition = qData.ayaPosition(sura: sura, aya: 0)
         gotoAya(ayaPosition)
         tafseerSourceSelector.reloadComponent(2)//refresh Ayat
+    }
+    
+    @IBAction func clickBookmark(_ sender: UIBarButtonItem) {
+        if isBookmarked{
+            QData.deleteBookmark(aya: ayaPosition){ snapshot in self.updateTitle()
+            }
+        }else{
+            QData.bookmark(self, self.ayaPosition)//will show a notification
+        }
     }
     
     func updateAyaPosition( aya:Int ){
