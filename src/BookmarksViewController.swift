@@ -140,11 +140,33 @@ class BookmarksViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0{
-            return "Last Viewed"
+            return AStr.lastViewed
         }
-        return "Bookmarks"
+        return AStr.bookmarks
     }
 
+    override
+    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        let menuItems = [
+            UIMenuItem(title: AStr.tafseer, action: #selector(BookmarkTableCellView.tafseer)),
+            UIMenuItem(title: AStr.revise, action: #selector(BookmarkTableCellView.revise))
+        ]
+        
+        UIMenuController.shared.menuItems = menuItems
+        return true
+    }
+    
+    override
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        return true // never called
+    }
+    
+    override
+    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        return // never called
+    }
+
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let rowIndex = indexPath.row
         let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)
@@ -172,6 +194,7 @@ class BookmarksViewController: UITableViewController {
             cell.suraName.text = suraName?.name ?? "missing"
             cell.pageNumber.text = "\(pageNumber)"
             cell.ayaLocation.text = "(\(aya+1))"
+            cell.aya = ayaPos
             if let ayaText = qData.ayaText(ayaPosition: ayaPos){
                 cell.ayaText.text = ayaText
             }
@@ -190,13 +213,13 @@ class BookmarksViewController: UITableViewController {
         
         if indexPath.section == 1{//skip navigation history
             return [
-                UITableViewRowAction(style: .destructive, title: "Remove", handler: {
+                UITableViewRowAction(style: .destructive, title: AStr.remove, handler: {
                     (rowAction, indexPath) in
                     
                     if let ayaPos = self.ayaMarks?.remove(at: indexPath.row){
                         let _ = QData.deleteBookmark(aya: ayaPos){(snapshot) in
                             //tableView.deleteRows(at: [indexPath], with: .fade)
-                            print( "Bookmark deleted")
+                            print( "Bookmark deleted" )
                         }//dataUpdated event will refresh the table
                     }
                 })
@@ -211,8 +234,9 @@ class BookmarksViewController: UITableViewController {
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         //let qPagesBrowser = segue.destination as! QPagesBrowser
-        if let viewCell = sender as? UITableViewCell {
-            SelectStart = viewCell.tag
+        if let viewCell = sender as? BookmarkTableCellView, let aya = viewCell.aya {
+            //this will work for both tafseer and page view
+            SelectStart = aya
             SelectEnd = SelectStart
         }
     }
@@ -226,4 +250,26 @@ class BookmarkTableCellView : UITableViewCell{
     @IBOutlet weak var pageNumber: UILabel!
     
     @IBOutlet weak var icon: UIImageView!
+    
+    var aya:Int?
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(revise)
+            || action == #selector(tafseer)
+    }
+    
+    @objc func tafseer(){
+        //TODO: duplicate code, move to utils
+        if let vc = self.parentViewController{
+            vc.navigationController?.removeTafseer()//only allow one instance in the stack
+            vc.performSegue(withIdentifier: "ShowTafseer", sender: self)
+        }
+    }
+    @objc func revise(){
+        //TODO: duplicate code, move to utils
+        MaskStart = aya ?? SelectStart
+        if let vc = self.parentViewController{
+            vc.performSegue(withIdentifier: "ShowPage", sender: self)
+        }
+    }
 }

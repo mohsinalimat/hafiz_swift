@@ -72,7 +72,7 @@ class SearchResultsViewController: UIViewController,
         
         let plus = results.count >= 1000 ? "+" : ""
 
-        resultsDescription.text = "\(results.count)\(plus) Results for \(SearchText)"
+        resultsDescription.text = AStr.nResultsForS(ns: "\(results.count)\(plus)", s: SearchText)
 
         searchResultsTable.reloadData()
         searchResultsTable.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
@@ -100,7 +100,7 @@ class SearchResultsViewController: UIViewController,
                     let suraNumber = -ayaPosition
                     let suraName = qData.suraName( suraIndex: suraNumber-1 )
                     let name = suraName?.name ?? "missing"
-                    textLabel.text = String(format:NSLocalizedString("SuraName", comment: ""),name)
+                    textLabel.text = AStr.suraName(s: name)
                     cell.tag = qData.ayaPosition(sura: suraNumber-1, aya: 0)
                     if let textDetails = cell.detailTextLabel {
                         textDetails.text = ""

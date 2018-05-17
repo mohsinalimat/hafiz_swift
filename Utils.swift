@@ -15,7 +15,7 @@ enum ConfirmationAlertType{
 class Utils {
 
     static func addToSearchHistory(_ text:String,_ results: Int = 1000 ){
-        if text.count > 0 && results > 0{
+        if text.count > 1 && results > 0{
             let settings = UserDefaults.standard
             var hist = settings.value(forKey: "search_history") as? [String] ?? []
             if let old = hist.index(of: text){
@@ -115,7 +115,7 @@ class Utils {
                         preferredStyle:UIAlertControllerStyle.alert
         )
         
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        alert.addAction(UIAlertAction(title: AStr.ok, style: UIAlertActionStyle.default, handler: nil))
         
         host.present(alert, animated: true, completion: nil)
     }
@@ -133,8 +133,8 @@ class Utils {
             message: message,
             preferredStyle:UIAlertControllerStyle.alert
         )
-        let yesTitle = (type == .yes || type == .yes_destructive ) ? "Yes" : "OK"
-        let noTitle = (type == .yes || type == .yes_destructive ) ? "No" : "Cancel"
+        let yesTitle = (type == .yes || type == .yes_destructive ) ? AStr.yes : AStr.ok
+        let noTitle = (type == .yes || type == .yes_destructive ) ? AStr.no : AStr.cancel
         let yesStyle:UIAlertActionStyle = (type == .yes_destructive) ? .destructive : .default
 
         alert.addAction(UIAlertAction(title: yesTitle, style: yesStyle, handler: { _ in
@@ -153,5 +153,34 @@ class Utils {
         return Int64( Date().timeIntervalSince1970*1000 + daysOffset * dayLength )
     }
     
+    static func confirmAddSuraToHifz( vc: UIViewController, sura:Int, block: @escaping(Bool)->Void ){
+        let qData = QData.instance
+        
+        if let suraInfo = qData.suraInfo(sura)
+        {
+            QData.suraHifzList(suraInfo.sura){ hifzList in
+                if let hifzList = hifzList,
+                    hifzList.count > 0
+                {
+                    //Existing partial hifz would be overwritten
+                    Utils.confirmMessage(
+                        vc,
+                        AStr.mergeExistingHifz,
+                        AStr.mergeExistingHifzDesc,
+                        .yes_destructive
+                    ){ yes in
+                        if yes{
+                            block(true)
+                        }
+                    }
+                }
+                else{
+                    let isSignedIn =  QData.checkSignedIn(vc)
+                    block(isSignedIn)
+                }
+            }
+        }
+
+    }
 
 }

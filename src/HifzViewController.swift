@@ -63,23 +63,23 @@ class HifzTableViewCell : UITableViewCell {
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        return action == #selector(reviseHifz)
-            || action == #selector(readHifz)
-            || action == #selector(removeHifz)
-            || action == #selector(viewHifzDetails)
+        return
+               action == #selector(readHifz)
+            || action == #selector(updateHifz)
+            || action == #selector(showTafseer)
     }
 
-    @objc func reviseHifz(){
-        if let vc = self.parentViewController as? HifzViewController{
-            vc.performSegue(withIdentifier: "ReviseHifz", sender: self)
-        }
-    }
+//    @objc func reviseHifz(){
+//        if let vc = self.parentViewController as? HifzViewController{
+//            vc.performSegue(withIdentifier: "ReviseHifz", sender: self)
+//        }
+//    }
 
-    @objc func viewHifzDetails(){
-        if let vc = self.parentViewController as? HifzViewController{
-            vc.performSegue(withIdentifier: "ViewHifzDetails", sender: self)
-        }
-    }
+//    @objc func viewHifzDetails(){
+//        if let vc = self.parentViewController as? HifzViewController{
+//            vc.performSegue(withIdentifier: "ViewHifzDetails", sender: self)
+//        }
+//    }
 
     @objc func readHifz(){
         if let vc = self.parentViewController as? HifzViewController{
@@ -87,24 +87,29 @@ class HifzTableViewCell : UITableViewCell {
         }
     }
 
-    @objc func removeHifz(){
-        if  let vc = self.parentViewController as? HifzViewController,
-            let hifzRange = self.hifzRange,
-            let suraName = QData.instance.suraName(suraIndex: hifzRange.sura) {
-            
-            let desc = QData.describe(hifzTitle: hifzRange)
-            //TODO: duplicate code
-            Utils.confirmMessage(vc, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
-                isYes in
-                if isYes {
-                    QData.deleteHifz([self.hifzRange!]){ snapshot in }
-                }
-            }
+    @objc func updateHifz(){
+        if  let hifzRange = self.hifzRange,
+            let suraName = self.suraName.text,
+            let vc = self.parentViewController
+        {
+            let desc=QData.describe(hifzTitle: hifzRange)
+            vc.showAlertActions([
+                vc.alertAction(.revisedHifz, AStr.revisedToday, hifzRange),
+                vc.alertAction(.removeHifz, AStr.removeFromHifz, hifzRange)
+                ], "\(suraName) (\(desc))"
+            )
         }
     }
+    
+    @objc func showTafseer(){
+        if let vc = self.parentViewController as? HifzViewController{
+            vc.performSegue(withIdentifier: "ShowTafseer", sender: self)
+        }
+    }
+    
 }
 
-class HifzViewController: UITableViewController {
+class HifzViewController: UITableViewController, UIActionAlertsManager {
 
     var hifzRanges:HifzList?
     
@@ -146,7 +151,40 @@ class HifzViewController: UITableViewController {
     @IBAction func signInClicked(_ sender: Any) {
         QData.signIn(self)
     }
-    
+
+    func handleAlertAction(_ id: AlertActions, _ selection: Any?) {
+        switch id {
+        case .revisedHifz:
+            //TODO: duplicate code, move to Utils
+            if let hifzRange = selection as? HifzRange{
+                let _ = QData.promoteHifz(hifzRange){
+                    snapshot in
+                    Utils.showMessage(self, title: AStr.revisionSaved, message: AStr.goodJob)
+                }
+            }
+            break
+        case .removeHifz:
+            //TODO: duplicate code, move to Utils
+            if let hifzRange = selection as? HifzRange,
+                let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
+                let desc = QData.describe(hifzTitle: hifzRange)
+                //TODO: duplicate code
+                Utils.confirmMessage(
+                    self,
+                    AStr.removeSfromHifz(s: AStr.suraSdescS(s: suraName.name, d: desc)) ,
+                    AStr.areYouSure,
+                    .yes_destructive) { yes in
+                    if yes {
+                        QData.deleteHifz([hifzRange]){ snapshot in }
+                    }
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+
     @objc func onSignInUpdate(){
         if QData.signedIn{
             readData()
@@ -237,7 +275,7 @@ class HifzViewController: UITableViewController {
         
         //TODO: if not logged in, show login required message
         let loadingCell = tableView.dequeueReusableCell(withIdentifier: "Loading", for: indexPath)
-        loadingCell.textLabel?.text = "Loading Hifz data..."
+        loadingCell.textLabel?.text = AStr.loading
         return loadingCell
     }
     
@@ -246,10 +284,10 @@ class HifzViewController: UITableViewController {
         //print ("shouldShowMenuForRowAt(\(indexPath.row))")
         if let cell = tableView.cellForRow(at: indexPath) as? HifzTableViewCell{
             UIMenuController.shared.menuItems =  [
-                UIMenuItem(title: "Read", action: #selector(HifzTableViewCell.readHifz)),
-                UIMenuItem(title: "Revise", action: #selector(HifzTableViewCell.reviseHifz)),
+                UIMenuItem(title: AStr.read, action: #selector(HifzTableViewCell.readHifz)),
+                UIMenuItem(title: AStr.tafseer, action: #selector(HifzTableViewCell.showTafseer)),
                 //UIMenuItem(title: "Details", action: #selector(HifzTableViewCell.viewHifzDetails))
-                UIMenuItem(title: "Remove", action: #selector(HifzTableViewCell.removeHifz))
+                UIMenuItem(title: AStr.update, action: #selector(HifzTableViewCell.updateHifz))
             ]
             cell.updateRangeColor()
             return true
@@ -263,9 +301,9 @@ class HifzViewController: UITableViewController {
     {
         //Never called
         return action == #selector(HifzTableViewCell.readHifz)
-            || action == #selector(HifzTableViewCell.viewHifzDetails)
-            || action == #selector(HifzTableViewCell.reviseHifz)
-            || action == #selector(HifzTableViewCell.removeHifz)
+            //|| action == #selector(HifzTableViewCell.viewHifzDetails)
+            || action == #selector(HifzTableViewCell.updateHifz)
+            || action == #selector(HifzTableViewCell.showTafseer)
     }
 
     //UIMenuController will call the cell view to check if the action is supported,
@@ -286,7 +324,7 @@ class HifzViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         return [
-            UITableViewRowAction(style: .normal, title: "Revised today", handler: {
+            UITableViewRowAction(style: .normal, title: AStr.revisedToday, handler: {
                 (rowAction, indexPath) in
                 
                 if let hifzRange = self.hifzRanges?.remove(at: indexPath.row){

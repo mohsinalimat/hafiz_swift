@@ -24,6 +24,7 @@
 		2D41B2481F9BC0A800199BAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D7F5F6B1F04BDA40076316B /* Main.storyboard */; };
 		2D41B2491F9BC0A800199BAD /* SuraNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA01F33FCFC00EAC321 /* SuraNames.plist */; };
 		2D41B24A1F9BC0A800199BAD /* qdata.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DCEFDA41F3498E800EAC321 /* qdata.json */; };
+		2D51D9D920ADEBF2001A38FB /* AStr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D51D9D820ADEBF2001A38FB /* AStr.swift */; };
 		2D6A7188208CE88C0012A67B /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */; };
 		2D7B728F2079D7DD002273A6 /* normalized_quran.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B728D2079D7DC002273A6 /* normalized_quran.plist */; };
 		2D7B72922079DD0C002273A6 /* quran_text.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B72902079DD0C002273A6 /* quran_text.plist */; };
@@ -50,6 +51,7 @@
 		2D48D3551F40D9720058552F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		2D48D35D1F530AAA0058552F /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2D48D35F1F530CF40058552F /* pg_map */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pg_map; sourceTree = "<group>"; };
+		2D51D9D820ADEBF2001A38FB /* AStr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AStr.swift; path = src/AStr.swift; sourceTree = "<group>"; };
 		2D6A7187208CE88C0012A67B /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		2D6A718B208D86E20012A67B /* ar-EG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-EG"; path = "ar-EG.lproj/Main.strings"; sourceTree = "<group>"; };
 		2D7B728E2079D7DC002273A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/normalized_quran.plist; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		2D0C542F20621FA700FBEF8F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				2D51D9D820ADEBF2001A38FB /* AStr.swift */,
 				2D1B62CA208BB2F100C2DD28 /* LayerView.swift */,
 				2DD8D7601FA69F73008DD81D /* Utils.swift */,
 				2DD8D75E1FA65725008DD81D /* Extensions.swift */,
@@ -417,6 +420,7 @@
 				2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */,
 				2D41B23F1F9BC0A800199BAD /* HomeViewController.swift in Sources */,
 				2DF0E09A202634BC00B3C493 /* SearchViewController.swift in Sources */,
+				2D51D9D920ADEBF2001A38FB /* AStr.swift in Sources */,
 				2D41B2401F9BC0A800199BAD /* QIndexViewController.swift in Sources */,
 				2D1B62CB208BB2F100C2DD28 /* LayerView.swift in Sources */,
 				2D41B2411F9BC0A800199BAD /* MainViewController.swift in Sources */,

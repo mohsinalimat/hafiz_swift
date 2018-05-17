@@ -104,7 +104,7 @@ class QPageView: UIViewController{
 
     @IBAction func PageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
-            print( "Press state is:\(sender.state.rawValue)")
+            //print( "Press state is:\(sender.state.rawValue)")
             let qData = QData.instance
             let pageImageView = sender.view!
             let location = sender.location(in: pageImageView)
@@ -135,6 +135,7 @@ class QPageView: UIViewController{
     // MARK: - selector functions
     
     @objc func showTafseer(){
+        navigationController?.removeTafseer()//only allow one instance in the stack
         performSegue(withIdentifier: "ShowTafseer", sender: clickedAya)
     }
     
@@ -271,7 +272,7 @@ class QPageView: UIViewController{
     }
     
     override func viewDidLayoutSubviews() {
-        print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
+        //print ( "QPageView viewDidLayoutSubviews(pg:\(pageNumber!))" )
         //positionAyatButtons()
         positionMask(followPage: false)
         positionSelection()
@@ -279,7 +280,7 @@ class QPageView: UIViewController{
     }
     
     override func viewWillLayoutSubviews() {
-        print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
+        //print ( "QPageView viewWillLayoutSubviews(pg:\(pageNumber!))" )
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -679,7 +680,7 @@ class QPageView: UIViewController{
     }
     
     func showAyaMenu(onView:UIView){
-        print("showAyaMenu()")
+        //print("showAyaMenu()")
         showNavBar(show: false)
         //Utils.showNavBar(self, false)
         //navigationController?.setNavigationBarHidden(true, animated: true)
@@ -691,10 +692,10 @@ class QPageView: UIViewController{
             mnuController.setTargetRect(menuRect, in: self.pageImage)
             
             mnuController.menuItems = [
-                UIMenuItem(title: "Tafseer", action: #selector(showTafseer)),
-                UIMenuItem(title: "Revise", action: #selector(maskSelectedAya)),
-                UIMenuItem(title: "Share", action: #selector(shareAya)),
-                UIMenuItem(title: "Bookmark", action: #selector(bookmark))
+                UIMenuItem(title: AStr.tafseer, action: #selector(showTafseer)),
+                UIMenuItem(title: AStr.revise, action: #selector(maskSelectedAya)),
+                UIMenuItem(title: AStr.bookmark, action: #selector(bookmark)),
+                UIMenuItem(title: AStr.share, action: #selector(shareAya))
             ]
             
             // This makes the menu item visible.

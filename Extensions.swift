@@ -144,7 +144,7 @@ extension UIViewController{
         }
         
         //Add the cancel action
-        alertController.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+        alertController.addAction( UIAlertAction(title: AStr.cancel, style: .cancel) )
         
         //show the actions
         self.present(alertController, animated: true)
@@ -158,17 +158,17 @@ extension UIViewController{
     ///   - selection: An associated data
     /// - Returns: the action item to append to UIAlertController
     func alertAction(_ id:AlertActions,_ title:String,_ selection:Any? = nil)->UIAlertAction{
-        return UIAlertAction(title: title, style: .default, handler: { (action) in
+        return UIAlertAction( title: title, style: .default ){ action in
             if let manager = self as? UIActionAlertsManager{
                 manager.handleAlertAction(id, selection)
             }
-        })
+        }
     }
 }
 
 extension UINavigationController{
     func removeQPageBrowser(){
-        if let ndx = viewControllers.index(where: { (vc) in
+        if let ndx = viewControllers.index(where: { vc in
             if let _ = vc as? QPagesBrowser {
                 return true
             }
@@ -178,9 +178,22 @@ extension UINavigationController{
             viewControllers.remove(at: ndx)
         }
     }
+
+    func removeTafseer(){
+        if let ndx = viewControllers.index(where: { vc in
+            if let _ = vc as? TafseerViewController {
+                return true
+            }
+            return false
+        })
+        {
+            viewControllers.remove(at: ndx)
+        }
+    }
     
+    //Not called
     func removeViewController(_ which: UIViewController){
-        if let ndx = viewControllers.index(where: { (vc) in
+        if let ndx = viewControllers.index(where: { vc in
             if which == vc {
                 return true
             }

@@ -144,7 +144,7 @@ class QPagesBrowser: UIViewController
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        print("QPagesBrowser willDisappear")
+        //print("QPagesBrowser willDisappear")
         //showNavBar()
         NotificationCenter.default.removeObserver(self)
     }
@@ -345,7 +345,7 @@ class QPagesBrowser: UIViewController
         self.title = suraName.name
         
         navBarTitle.text = suraName.name
-        navBarBackButton.titleLabel?.text = "Back"
+        navBarBackButton.titleLabel?.text = AStr.back
         if UIView.userInterfaceLayoutDirection(
             for: navbar.semanticContentAttribute) == .rightToLeft
         {
@@ -353,7 +353,8 @@ class QPagesBrowser: UIViewController
         }
 
         //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
-        let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
+        //let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
+        let pageInfo = AStr.miniPartNPageN(part: partNumber, page: pageIndex+1)
         self.footerInfoButton.setTitle(pageInfo, for: .normal)
         
         //let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
@@ -544,7 +545,7 @@ class QPagesBrowser: UIViewController
         if sender.state == .ended {
             autoRotate = true
             
-            print ("Current Portrait is \(UIDevice.current.orientation.isPortrait)")
+            //print ("Current Portrait is \(UIDevice.current.orientation.isPortrait)")
             
             if sender.scale > 1 {
                 //AppDelegate.orientation = .landscape
@@ -557,7 +558,7 @@ class QPagesBrowser: UIViewController
             
             UIDevice.current.setValue(AppDelegate.orientation.rawValue, forKey: "orientation")
             UIViewController.attemptRotationToDeviceOrientation()
-            print ("New Portrait is \(UIDevice.current.orientation.isPortrait)")
+            //print ("New Portrait is \(UIDevice.current.orientation.isPortrait)")
             
             //Deprecated UIApplication.shared.setStatusBarOrientation(UIInterfaceOrientation.landscapeLeft, animated: true)
             //print( self.shouldAutorotate )
@@ -569,9 +570,9 @@ class QPagesBrowser: UIViewController
     func showActionsMenuAlert(){
         
         let qData = QData.instance
-        let startRevise = MaskStart == -1 ? alertAction( .revise, "Revise" ) : nil
+        let startRevise = MaskStart == -1 ? alertAction( .revise, AStr.revise ) : nil
         
-        var addUpdateHifzTitle = "Add/Update Hifz"
+        var addUpdateHifzTitle = AStr.addUpdateHifz
         
         if let pageView = self.currentPageView(),
             let pageNumber = pageView.pageNumber,
@@ -581,9 +582,9 @@ class QPagesBrowser: UIViewController
             let suraInfoList = qData.pageSuraInfoList(pageNumber-1, pageMap: pageMap)
             //Decide whether to show "add hifz", "add/update hifz" or "update hifz"
             if hifzList.count == 0{
-                addUpdateHifzTitle = "Add to Hifz"
+                addUpdateHifzTitle = AStr.addHifz
             }else if hifzList.count == suraInfoList.count {
-                addUpdateHifzTitle = "Update Hifz"
+                addUpdateHifzTitle = AStr.updateHifz
             }
         }
         
@@ -595,7 +596,7 @@ class QPagesBrowser: UIViewController
         ]
 
         if !isBookmarked(){
-            actions.append( alertAction( .bookmark , "Bookmark") )
+            actions.append( alertAction(.bookmark , AStr.bookmark) )
         }
         
         showAlertActions(actions)
@@ -628,8 +629,8 @@ class QPagesBrowser: UIViewController
             let aya = QData.instance.ayaPosition( pageIndex: self.currentPageIndx() )
 
             let _ = QData.createBookmark(aya: aya){snapshot in
-                Utils.showMessage(self, title: "Page Bookmarked",
-                                  message: "You can find it at the top of the Bookmarks tab in the home screen")
+                Utils.showMessage(self, title: AStr.bookmarkAdded,
+                                  message: AStr.bookmarkAddedDesc)
             }
             break
             
@@ -672,7 +673,7 @@ class QPagesBrowser: UIViewController
                         }
                         return nil
                     }
-                    showAlertActions(actions, "Select Sura")
+                    showAlertActions(actions, AStr.selectSura)
                 }
             }
             //Couldn't get the map
@@ -690,18 +691,18 @@ class QPagesBrowser: UIViewController
                 
                 if totalPages > 1 {//more than one page
                     let suraName = qData.suraName(suraIndex: suraInfo.sura)
-                    var actions = [alertAction(.addHifzSelectRange,"Whole Sura",addHifzParams)]
+                    var actions = [alertAction(.addHifzSelectRange,AStr.wholeSura,addHifzParams)]
                     
                     if currPage<suraInfo.endPage && currPage-suraInfo.page>0{
-                        actions.append(alertAction(.addHifzSelectRange,"From Sura Start", addHifzParams.fromSelect(.fromStart) ) )
+                        actions.append(alertAction(.addHifzSelectRange,AStr.fromSuraStart, addHifzParams.fromSelect(.fromStart) ) )
                     }
                     if currPage>suraInfo.page && suraInfo.endPage-currPage>0{
-                        actions.append(alertAction( .addHifzSelectRange,"To Sura End", addHifzParams.fromSelect(.toEnd)))
+                        actions.append(alertAction( .addHifzSelectRange,AStr.toSuraEnd, addHifzParams.fromSelect(.toEnd)))
                     }
                     
-                    actions.append(alertAction(.addHifzSelectRange,"Current Page",addHifzParams.fromSelect(.page)))
+                    actions.append(alertAction(.addHifzSelectRange,AStr.currentPage,addHifzParams.fromSelect(.page)))
                     
-                    showAlertActions(actions, "Add \(suraName!.name) to your hifz")
+                    showAlertActions(actions, AStr.addStoYourHifz(s: suraName!.name))
                 }
                 else{
                     handleAlertAction(.addHifzSelectRange,addHifzParams)
@@ -712,30 +713,37 @@ class QPagesBrowser: UIViewController
                 //HifzRange is selected
                 //Show "Revised today" or "Remove from Hifz"
                 let actions = [
-                    alertAction( .revisedHifz, "Revised today", hifzRange),
-                    alertAction(.removeHifz, "Remove from Hifz", hifzRange),
+                    alertAction( .revisedHifz, AStr.revisedToday, hifzRange),
+                    alertAction(.removeHifz, AStr.removeFromHifz, hifzRange),
                 ]
                 let desc = QData.describe(hifzTitle: hifzRange)
                 if let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
-                    showAlertActions(actions, "\(suraName.name) (\(desc))")
+                    showAlertActions(actions, AStr.suraSdescS(s: suraName.name, d: desc))
                 }
             }
             break
 
         case .addHifzSelectRange:
             if let addHifzParams = selection as? AddHifzParams {
-                QData.addHifz(params: addHifzParams){
-                    hifzRange in
-                    print( "Added HifzRange \(hifzRange)")
+                if addHifzParams.select == .all {
+                    //prompt user if merge will happen
+                    Utils.confirmAddSuraToHifz(vc: self, sura: addHifzParams.sura){ yes in
+                        if yes{
+                            QData.addHifz(params: addHifzParams){ hifzRange in }
+                        }
+                    }
+                }else{
+                    QData.addHifz(params: addHifzParams){ hifzRange in }
                 }
             }
             break
             
         case .revisedHifz:
+            //TODO: duplicate code
             if let hifzRange = selection as? HifzRange{
                 let _ = QData.promoteHifz(hifzRange){
                     snapshot in
-                    Utils.showMessage(self, title: "Revision saved", message: "Good Job :)")
+                    Utils.showMessage(self, title: AStr.revisionSaved, message: AStr.goodJob)
                 }
             }
             break
@@ -745,9 +753,13 @@ class QPagesBrowser: UIViewController
                 let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
                 let desc = QData.describe(hifzTitle: hifzRange)
                 //TODO: duplicate code
-                Utils.confirmMessage(self, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
-                    isYes in
-                    if isYes {
+                Utils.confirmMessage(
+                    self,
+                    AStr.removeSfromHifz(s: AStr.suraSdescS(s: suraName.name, d: desc)), //"Remove \(suraName.name) (\(desc)) from your hifz"
+                    AStr.areYouSure,
+                    .yes_destructive
+                ){ yes in
+                    if yes {
                         QData.deleteHifz([hifzRange]){ snapshot in }
                     }
                 }
@@ -760,7 +772,7 @@ class QPagesBrowser: UIViewController
     }
 
     @objc func searchOpenAya(vc: SearchViewController){
-        print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
+        //print("QPagesBrowser.searchOpenAya( \(SelectStart) )")
         let qData = QData.instance
         let pageIndex = qData.pageIndex(ayaPosition: SelectStart)
         gotoPage(pageNum: pageIndex+1)

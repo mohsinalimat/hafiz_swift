@@ -47,7 +47,7 @@ class QIndexViewController: UITableViewController
             if let hifzRange = selection as? HifzRange{
                 let _ = QData.promoteHifz(hifzRange){
                     snapshot in
-                    Utils.showMessage(self, title: "Revision saved", message: "Good Job :)")
+                    Utils.showMessage(self, title: AStr.revisionSaved, message: AStr.goodJob)
                 }
             }
             break
@@ -57,9 +57,13 @@ class QIndexViewController: UITableViewController
                 let suraName = QData.instance.suraName(suraIndex: hifzRange.sura){
                 let desc = QData.describe(hifzTitle: hifzRange)
                 //TODO: duplicate code
-                Utils.confirmMessage(self, "Remove \(suraName.name) (\(desc)) from your hifz", "Are you sure?", .yes_destructive){
-                    isYes in
-                    if isYes {
+                Utils.confirmMessage(
+                    self,
+                    AStr.removeSfromHifz(s: AStr.suraSdescS(s: suraName.name, d: desc)),
+                    AStr.areYouSure,
+                    .yes_destructive
+                ){ yes in
+                    if yes {
                         QData.deleteHifz([hifzRange]){ snapshot in }
                     }
                 }
@@ -95,14 +99,14 @@ class QIndexViewController: UITableViewController
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         if let cell = tableView.cellForRow(at: indexPath) as? IndexTableViewCell{
             var menuItems = [
-                UIMenuItem(title: "Tafseer", action: #selector(IndexTableViewCell.tafseer))
+                UIMenuItem(title: AStr.tafseer, action: #selector(IndexTableViewCell.tafseer))
             ]
             menuItems.append(
-                UIMenuItem(title: cell.in_hifz ? "Update Hifz" : "Add Hifz", action: #selector(IndexTableViewCell.addUpdateHifz))
+                UIMenuItem(title: cell.in_hifz ? AStr.updateHifz : AStr.addHifz, action: #selector(IndexTableViewCell.addUpdateHifz))
             )
             if !cell.bookmarked{
                 menuItems.append(
-                    UIMenuItem(title: "Bookmark", action: #selector(IndexTableViewCell.bookmark))
+                    UIMenuItem(title: AStr.bookmark, action: #selector(IndexTableViewCell.bookmark))
                 )
             }
 
@@ -133,7 +137,7 @@ class QIndexViewController: UITableViewController
     
     override
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return String(format:NSLocalizedString("Part", comment:""),section+1)
+        return AStr.partN(n: section+1)
     }
 
     override
@@ -145,8 +149,6 @@ class QIndexViewController: UITableViewController
         let partIndex = indexPath.section
         let suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
 
-        //let pagePrompt = NSLocalizedString("Pg", comment: "")
-        //var suraInfo: SuraInfo?
         var ayaPos = 0
         var partStartPage = 0
         var suraStartPage = 0
@@ -184,7 +186,7 @@ class QIndexViewController: UITableViewController
 //        }
         if let suraName = qData.suraName(suraIndex: suraIndex) {
             if let suraCell = cell as? IndexTableViewCell{
-                suraCell.setAyaPos( ayaPos )
+                suraCell.setCellInfo( ayaPos, suraIndex )
                 suraCell.suraNumber.text = partStart ? "..." : String(suraIndex+1)
                 suraCell.pageNumber.text = String(pageNumber)
                 suraCell.suraName.text = suraName.name
@@ -246,21 +248,24 @@ class IndexTableViewCell : UITableViewCell {
     @IBOutlet weak var backgroundImage: UIImageView!
     
     var ayaPos:Int?
+    var sura:Int?
     var bookmarked = false
     var in_hifz = false
     var hifzList:HifzList?
     
-    func setAyaPos(_ aya: Int ){
+    func setCellInfo(_ aya: Int, _ sura:Int ){
         self.ayaPos = aya
+        self.sura = sura
         bookmarked = false
         in_hifz = false
         let qData = QData.instance
         
-        QData.isBookmarked(aya){
-            yes in
-            self.bookmarked = yes
-        }
-        let sura = qData.suraIndex(ayaPosition: aya)
+//  Not needed to improve performance
+//        QData.isBookmarked(aya){
+//            yes in
+//            self.bookmarked = yes
+//        }
+        //let sura = qData.suraIndex(ayaPosition: aya)
         
         
         QData.suraHifzList(sura){
@@ -289,7 +294,9 @@ class IndexTableViewCell : UITableViewCell {
     }
     
     @objc func tafseer(){
+        //TODO: duplicate code, move to utils
         if let vc = self.parentViewController as? QIndexViewController{
+            vc.navigationController?.removeTafseer()//only allow one instance in the stack
             vc.performSegue(withIdentifier: "ShowTafseer", sender: self)
         }
     }
@@ -303,42 +310,31 @@ class IndexTableViewCell : UITableViewCell {
     }
     
     @objc func addUpdateHifz(){
-        if in_hifz{
-            //confirmPromoteHifz()
+        if in_hifz{//all sura in hifz
             if let hifzList = self.hifzList,
                 let hifzRange = hifzList.first,
                 let suraName = self.suraName.text,
                 let vc = self.parentViewController
             {
-                let desc=QData.describe(hifzTitle: hifzRange)
-                vc.showAlertActions([
-                    vc.alertAction(.revisedHifz, "Revised Today", hifzRange),
-                    vc.alertAction(.removeHifz, "Remove from Hifz", hifzRange)
-                ], "\(suraName) (\(desc))"
+                let desc = QData.describe(hifzTitle: hifzRange)
+                
+                vc.showAlertActions(
+                    [
+                        vc.alertAction(.revisedHifz, AStr.revisedToday, hifzRange),
+                        vc.alertAction(.removeHifz, AStr.removeFromHifz, hifzRange)
+                    ],
+                    AStr.suraSdescS(s: suraName, d: desc)
                 )
             }
         }else{
-            let qData = QData.instance
-            if let ayaPos = self.ayaPos,
-               let suraInfo = qData.suraInfo(ayaPos: ayaPos),
-               let vc = self.parentViewController as? QIndexViewController
+            //let qData = QData.instance
+            if let vc = self.parentViewController as? QIndexViewController,
+                let sura = self.sura,
+                let suraInfo = QData.instance.suraInfo(sura)
             {
-                QData.suraHifzList(suraInfo.sura){ hifzList in
-                    if let hifzList = hifzList,
-                        hifzList.count > 0
-                    {
-                        //Existing partial hifz would be overwritten
-                        Utils.confirmMessage(vc, "Merge Existing Hifz?", "Parts of this sura is already in your hifz. Adding the whole sura would merge them into one", .yes_destructive){ yes in
-                            if yes{
-                                self.addSuraToHifz(suraInfo: suraInfo)
-                            }
-                            
-                        }
-                    }
-                    else{
-                        if QData.checkSignedIn(vc){
-                            self.addSuraToHifz(suraInfo: suraInfo)
-                        }
+                Utils.confirmAddSuraToHifz(vc:vc, sura:sura){ yes in
+                    if yes {
+                        self.addSuraToHifz(suraInfo: suraInfo)
                     }
                 }
             }

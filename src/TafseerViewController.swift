@@ -37,8 +37,12 @@ class TafseerViewController: UIViewController,
     var firstAya = 0
     var lastAya = 6236
     var pageViewController:UIPageViewController?
-    var ayaPosition:Int = 0
+    var ayaPosition:Int?
     var isBookmarked = false
+    
+    var currAya:Int{
+        return ayaPosition ?? SelectStart
+    }
 
     // MARK: UIViewController delegate methods
 
@@ -46,7 +50,7 @@ class TafseerViewController: UIViewController,
         super.viewDidLoad()
         
         //Read from defaults
-        _selectedTafseer = UserDefaults.standard.object(forKey: "sel_tafseer") as? String ?? TafseerSources[0]
+        _selectedTafseer = UserDefaults.standard.object(forKey: "sel_tafseer") as? String ?? TafseerSources[2]
         
         //Create horizontal pager
         pageViewController = UIPageViewController(
@@ -72,7 +76,7 @@ class TafseerViewController: UIViewController,
         }
 
         //Show initial pager page
-        gotoAya(ayaPosition)
+        gotoAya(ayaPosition ?? SelectStart)
 
         NotificationCenter.default.addObserver(self, selector: #selector(updateTitle), name: AppNotifications.dataUpdated, object: nil)
 
@@ -102,7 +106,7 @@ class TafseerViewController: UIViewController,
         
         pageViewController!.setViewControllers(
            viewControllers,
-           direction: (self.ayaPosition >= ayaPosition) ? .reverse : .forward,
+           direction: (self.currAya >= ayaPosition) ? .reverse : .forward,
             //direction: .forward
            animated: true,
            completion: nil)
@@ -115,12 +119,12 @@ class TafseerViewController: UIViewController,
     
     @objc func updateTitle(){
         let qData = QData.instance
-        let (sura,aya) = qData.ayaLocation(ayaPosition)
+        let (sura,aya) = qData.ayaLocation(currAya)
         if let suraName = qData.suraName(suraIndex: sura){
             self.title = "\(suraName.name) (\(aya+1))"
         }
         
-        QData.isBookmarked(ayaPosition){ is_yes in
+        QData.isBookmarked(currAya){ is_yes in
             self.isBookmarked = is_yes
             self.bookmarkButton.image = UIImage(named: is_yes ? "Bookmark Filled" : "Bookmark Empty")
         }
@@ -140,9 +144,9 @@ class TafseerViewController: UIViewController,
         tafseerSourceSelector.selectRow(selectedTafseer().index, inComponent: 0, animated: true)
         let qData = QData.instance
         if let tafseerView = pageViewController!.viewControllers![0] as? TafseerAyaView{
-            let (cSuraIndex, _) = qData.ayaLocation( ayaPosition )
+            let (cSuraIndex, _) = qData.ayaLocation( currAya )
             ayaPosition = tafseerView.ayaPosition!
-            let (suraIndex,ayaIndex) = qData.ayaLocation( ayaPosition )
+            let (suraIndex,ayaIndex) = qData.ayaLocation( currAya )
             tafseerSourceSelector.selectRow(suraIndex, inComponent: 1, animated: true)
             if cSuraIndex != suraIndex {
                 tafseerSourceSelector.reloadComponent(2)//reload verse list
@@ -160,16 +164,16 @@ class TafseerViewController: UIViewController,
     
     @IBAction func clickBookmark(_ sender: UIBarButtonItem) {
         if isBookmarked{
-            QData.deleteBookmark(aya: ayaPosition){ snapshot in self.updateTitle()
+            let _ = QData.deleteBookmark(aya: currAya){ snapshot in self.updateTitle()
             }
         }else{
-            QData.bookmark(self, self.ayaPosition)//will show a notification
+            QData.bookmark(self, self.currAya)//will show a notification
         }
     }
     
     func updateAyaPosition( aya:Int ){
         let qData = QData.instance
-        let (sIndex,_) = qData.ayaLocation(self.ayaPosition) //read current sura
+        let (sIndex,_) = qData.ayaLocation(self.currAya) //read current sura
         let ayaPosition = qData.ayaPosition(sura: sIndex, aya: aya)//create new position
         gotoAya(ayaPosition)//update current position
     }
@@ -177,27 +181,21 @@ class TafseerViewController: UIViewController,
     // MARK: Action handlers
     
     @IBAction func clickNext(_ sender: Any) {
-        if ayaPosition+1 < lastAya {
-            gotoAya( ayaPosition + 1 )
+        if currAya+1 < lastAya {
+            gotoAya( currAya + 1 )
         }
     }
     @IBAction func clickPrevious(_ sender: Any) {
-        if ayaPosition > 0 {
-            gotoAya( ayaPosition - 1 )
+        if currAya > 0 {
+            gotoAya( currAya - 1 )
         }
     }
 
     @IBAction func clickSelect(_ sender: Any) {
-        //navigationController?.removeQPageBrowser()
-        SelectStart = ayaPosition
-        SelectEnd = ayaPosition
-        navigationController?.popViewController(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            NotificationCenter.default.post(
-                name: AppNotifications.searchOpenAya,
-                object: self
-            )
-        }
+        navigationController?.removeQPageBrowser()//only allow one page browser instance
+        SelectStart = currAya
+        SelectEnd = SelectStart
+        self.performSegue(withIdentifier: "ShowPage", sender: self)
     }
     
     // MARK: pageViewController delegate methods
@@ -262,7 +260,7 @@ class TafseerViewController: UIViewController,
             return 114
         default:
             let qData = QData.instance
-            let (suraIndex, _) = qData.ayaLocation( ayaPosition )
+            let (suraIndex, _) = qData.ayaLocation( currAya )
             return qData.ayaCount(suraIndex: suraIndex)!
         }
     }
@@ -287,7 +285,7 @@ class TafseerViewController: UIViewController,
             //update the cached value and the UserDefaults
             _selectedTafseer = TafseerSources[row]
             UserDefaults.standard.set(_selectedTafseer, forKey: "sel_tafseer")
-            gotoAya( ayaPosition )
+            gotoAya( currAya )
         case 1://sura
             updateAyaPosition( sura: row )
         default://aya

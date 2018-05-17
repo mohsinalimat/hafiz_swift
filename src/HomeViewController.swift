@@ -8,24 +8,16 @@
 
 import UIKit
 import Firebase
-//import GoogleSignIn
 
 class HomeViewController: UITabBarController
     ,UITabBarControllerDelegate
     ,UIPopoverPresentationControllerDelegate
-//    ,GIDSignInDelegate
-//    ,GIDSignInUIDelegate
     ,UIActionAlertsManager
 {
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        // GIDSignIn.sharedInstance().delegate = self
-//        GIDSignIn.sharedInstance().uiDelegate = self
-//        GIDSignIn.sharedInstance().signInSilently()
-        
         
         updateSignInButtonTitle()
         
@@ -36,14 +28,12 @@ class HomeViewController: UITabBarController
     
     @objc func updateSignInButtonTitle()
     {
-        signInBarButton.title = QData.signedIn ? "Sign Out" : "Sign In"
+        signInBarButton.image = UIImage(named: QData.signedIn ? "logout" : "login")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         //Show Navigation bar
-        //navigationController?.navigationBar.isHidden = false
         Utils.showNavBar(self)
-        //navigationController?.setNavigationBarHidden(false, animated: true)
         updateSignInButtonTitle()
 
         NotificationCenter.default.addObserver(
@@ -78,7 +68,7 @@ class HomeViewController: UITabBarController
     }
 
     @objc func searchOpenAya(vc: SearchViewController){
-        self.performSegue(withIdentifier: "OpenPagesBrowser", sender: self)
+        self.performSegue(withIdentifier: "ShowPage", sender: self)
     }
 
     @IBOutlet weak var signInBarButton: UIBarButtonItem!
@@ -123,7 +113,7 @@ class HomeViewController: UITabBarController
                 alertAction(.arabic, "عربي", "ar"),
                 alertAction(.english, "English", "en")
                 ],
-                "Select Language"
+                AStr.selectLanguage
             )
             break
         case .rateApp:
@@ -139,7 +129,7 @@ class HomeViewController: UITabBarController
             QData.publicDataValue("appstore"){ val in
                 if let appstore = val {
                     let activityViewController = UIActivityViewController(
-                        activityItems: ["Try out this App",appstore],
+                        activityItems: [AStr.tryOutThisApp,appstore],
                         applicationActivities: nil
                     )
                     activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
@@ -151,8 +141,8 @@ class HomeViewController: UITabBarController
             if let langCode = selection as? String{
                 Utils.confirmMessage(
                     self,
-                    "App Restart Required",
-                    "In order to change the language, the App must be closed and reopened",
+                    AStr.appRestartRequired,
+                    AStr.appRestartRequiredDesc,
                     .yes )
                 {
                     isYes in
@@ -171,35 +161,14 @@ class HomeViewController: UITabBarController
 
     @IBAction func openActions(_ sender: Any) {
         let actions = [
-            alertAction(.changeLang, "Change Language"),
-            alertAction(.shareTheApp, "Share this App"),
-            alertAction(.rateApp, "Rate Quran Hafiz")
+            alertAction(.changeLang, AStr.changeLanguage),
+            alertAction(.shareTheApp, AStr.shareQuranHafiz),
+            alertAction(.rateApp, AStr.rateQuranHafiz)
         ]
         
         self.showAlertActions(actions)
     }
 
-    // MARK: - GIDSignInDelegate methods
-//    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-//        if let _ = user{
-//            print( "HomeViewController Signed IN!!" )
-//        }else{
-//            print( "Not Signed In" )
-//        }
-//    }
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    */
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier! == "OpenPagesBrowser" {
-//            print( "Prepare segue OpenPagesBrowser" )
-//        }
-//    }
-    
 }
 
 

@@ -31,7 +31,7 @@ class TafseerAyaView: UIViewController
                     NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)
                 ]
             )
-            let tafseerText = QData.getTafseer( aya, selectedTafseer ) ?? "Tafseer not found"
+            let tafseerText = QData.getTafseer( aya, selectedTafseer ) ?? "Missing"
             let coloredTafseerText = NSAttributedString(
                 string: tafseerText,
                 attributes:[

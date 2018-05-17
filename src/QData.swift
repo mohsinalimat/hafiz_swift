@@ -647,8 +647,8 @@ class QData{
         if QData.checkSignedIn(vc){
             let _ = QData.createBookmark(aya: aya){snapshot in
                 Utils.showMessage(vc,
-                                  title: "Bookmark Added",
-                                  message: "You can find it at the top of the Bookmarks tab"
+                                  title: AStr.bookmarkAdded,
+                                  message: AStr.bookmarkAddedDesc
                 )
             }
         }
@@ -1031,7 +1031,7 @@ class QData{
         if QData.signedIn{
             return true
         }
-        Utils.confirmMessage( vc, msg ?? "Sign In required to proceed", "Would you like to sign in now?", .yes){
+        Utils.confirmMessage( vc, msg ?? AStr.signInRequired, AStr.signInRequiredDesc, .yes){
             isYes in
             if isYes{
                 QData.signIn( vc )
@@ -1043,7 +1043,7 @@ class QData{
     static func signOut(_ vc: UIViewController){
         let email = Auth.auth().currentUser?.email ?? "current user"
         
-        Utils.confirmMessage(vc, "This will sign out \(email)", "Are you sure?", .yes){  isYes in
+        Utils.confirmMessage(vc, AStr.signOutS(s: email), AStr.areYouSure, .yes){  isYes in
             if isYes {
                 do {
                     try Auth.auth().signOut() //signout from Firebase
@@ -1090,11 +1090,11 @@ class QData{
         let days = Int(hRange.age)
         switch(days){
         case 0:
-            return "today"
+            return AStr.today
         case 1:
-            return "yesterday"
+            return AStr.yesterday
         default:
-            return "\(days) days ago"
+            return AStr.nDaysAgo(n: days)
         }
     }
 
@@ -1104,31 +1104,34 @@ class QData{
             let total_sura_pages = suraInfo.endPage - suraInfo.page + 1
 
             if hRange.count == total_sura_pages{//whole sura
-                return "all pages: \(hRange.count)"
+                return AStr.allPagesN(n: hRange.count)
             }
             
             if page_offset == 0{//start sura
                 if hRange.count == 1{
-                    return "first page"
+                    return AStr.firstPage
                 }
-                return "\(hRange.count) of \(total_sura_pages) pages" // from start
+                return AStr.nOfyPages(n: hRange.count, y: total_sura_pages)
+                //return "\(hRange.count) of \(total_sura_pages) pages" // from start
             }
             
             if hRange.page + hRange.count == suraInfo.endPage + 1{ // end range
                 if hRange.count == 1{
-                    return "last page"
+                    return AStr.lastPage
                 }
-                return "last \(hRange.count) pages"
+                return AStr.lastNpages(n: hRange.count)
             }
             
             // mid range
             if hRange.count == 1{
-                return "the page: \(page_offset)"
+                return AStr.thePageN(n: page_offset)
+                //return "the page: \(page_offset)"
             }
-            
-            return "from: \(page_offset) - pages: \(hRange.count)"
+            return AStr.nPagesFromY(n: hRange.count, y: page_offset)
+            //return "from: \(page_offset) - pages: \(hRange.count)"
         }
-        return "from: \(hRange.page) - pages: \(hRange.count)"
+
+        return AStr.nPagesFromY(n: hRange.count, y: hRange.page) //fail safe
     }
 
     

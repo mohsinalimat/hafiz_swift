@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
 
 //        TWTRTwitter.sharedInstance().start(
 //            withConsumerKey:"dtEp4yNEwFPLiAFp7quhK9WRo",
-//            consumerSecret:"DcJp90rYkbOUNr7DXZkVEDWDgFCrWUD6YD0mKaIygNnwDV1GlL"
+//            consumerSecret:"xxxxx"
 //        )
         
         Auth.auth().addStateDidChangeListener { (auth, user) in

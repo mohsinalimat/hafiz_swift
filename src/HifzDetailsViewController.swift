@@ -25,8 +25,8 @@ class HifzDetailsViewController: UIViewController {
                 
                 Utils.showMessage(
                     self,
-                    title: "Revision Updated",
-                    message: "This memorized part has been marked as revised today"
+                    title: AStr.revisionSaved,
+                    message: AStr.goodJob
                 )
             }
         }

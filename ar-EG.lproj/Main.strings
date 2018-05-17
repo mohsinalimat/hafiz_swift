@@ -53,8 +53,14 @@
 /* Class = "UISearchBar"; PqC-id-iya.scopeButtonTitles[0] = "Title"; ObjectID = "PqC-id-iya"; */
 "PqC-id-iya.scopeButtonTitles[0]" = "Title";
 
+/* Class = "UISearchBar"; PqC-id-iya.scopeButtonTitles[0] = "Title"; ObjectID = "PqC-id-iya"; */
+"PqC-id-iya.scopeButtonTitles[0]" = "Title";
+
 /* Class = "UISearchBar"; PqC-id-iya.scopeButtonTitles[1] = "Title"; ObjectID = "PqC-id-iya"; */
 "PqC-id-iya.scopeButtonTitles[1]" = "Title";
+
+/* Class = "UISearchBar"; PqC-id-iya.placeholder = "Title"; ObjectID = "PqC-id-iya"; */
+"PqC-id-iya.placeholder" = "تص او سورة أو صفحة";
 
 /* Class = "UIViewController"; title = "Page View"; ObjectID = "S4R-Ja-viH"; */
 "S4R-Ja-viH.title" = "عرض الصفحة";
@@ -68,8 +74,14 @@
 /* Class = "UINavigationItem"; title = "Sura Name"; ObjectID = "cuz-mW-wfp"; */
 "cuz-mW-wfp.title" = "اسم السورة";
 
+/* Class = "UINavigationItem"; title = "Sura Name"; ObjectID = "sqy-At-Uum"; */
+"sqy-At-Uum.title" = "البحث";
+
 /* Class = "UIButton"; normalTitle = "Previous >>"; ObjectID = "gNU-SZ-zXv"; */
 "gNU-SZ-zXv.normalTitle" = "<< سابق";
+
+/* Class = "UIButton"; normalTitle = "Previous >>"; ObjectID = "mep-aU-l1z"; */
+"mep-aU-l1z.normalTitle" = "عرض";
 
 /* Class = "UIButton"; normalTitle = "<<"; ObjectID = "huS-jI-2Ou"; */
 "huS-jI-2Ou.normalTitle" = "<<";
@@ -91,4 +103,29 @@
 
 /* Class = "UILabel"; text = "Title"; ObjectID = "y6m-Vw-RfU"; */
 "y6m-Vw-RfU.text" = "Title";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "kHA-tK-68e"; */
+"kHA-tK-68e.text" = "لم تقم بعد باضافة صفحات او سور لمحفوظاتك";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "bql-f7-xJ3"; */
+"bql-f7-xJ3.text" = "لم تقم بعد باضافة علامات لآيات أو صفحات";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "E6x-i7-xQi"; */
+"E6x-i7-xQi.text" = "يجب ان تسجل دخول لحسابك لكي يمكنك حفظ علامات";
+
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "WJG-i9-mWX"; */
+"WJG-i9-mWX.text" = "يجب ان تسجل دخول لحسابك لكي يمكنك تسجيل ومتابعة محفوظاتك";
+
+/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "KMb-3I-u9Y"; */
+"KMb-3I-u9Y.normalTitle" = "تسجيل الدخول";
+
+/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "aKx-do-BCm"; */
+"aKx-do-BCm.normalTitle" = "تسجيل الدخول";
+
+
+/* Class = "UIButton"; normalTitle = "Back"; ObjectID = "7PC-Nf-mNf"; */
+"7PC-Nf-mNf.normalTitle" = "رجوع";
+
+
 
