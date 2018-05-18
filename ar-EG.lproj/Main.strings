@@ -60,7 +60,7 @@
 "PqC-id-iya.scopeButtonTitles[1]" = "Title";
 
 /* Class = "UISearchBar"; PqC-id-iya.placeholder = "Title"; ObjectID = "PqC-id-iya"; */
-"PqC-id-iya.placeholder" = "تص او سورة أو صفحة";
+"PqC-id-iya.placeholder" = "نص او سورة أو صفحة";
 
 /* Class = "UIViewController"; title = "Page View"; ObjectID = "S4R-Ja-viH"; */
 "S4R-Ja-viH.title" = "عرض الصفحة";

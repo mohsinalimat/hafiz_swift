@@ -31,7 +31,7 @@
 "Bookmark" = "Bookmark";
 "signOut" = "Sign Out";
 "signIn" = "Sign In";
-"changeLanguage" = "Change Language";
+"changeLanguage" = "تغيير اللغة";
 "shareQuranHafiz" = "Share Quran Hafiz";
 "rateQuranHafiz" = "Rate Quran Hafiz";
 "Cancel" = "Cancel";
@@ -73,7 +73,7 @@
 "textSuraPage"="text,sura or page";
 "Search"="Search";
 "nResultsForS"="%@ results for %@";
-"FooterInfo"="p%d:s%d";
+"miniPartNPageN"="%d:pg%d";
 "partNPageN"="Part %d - Page %d";
 "signOutS"="This will sign out %@";
 "appRestartRequired"="App Restart Required";

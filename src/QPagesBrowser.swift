@@ -34,12 +34,12 @@ class QPagesBrowser: UIViewController
 
     // MARK: - Outlets
     
-    @IBOutlet weak var navBarShowMenu: UIBarButtonItem!
     @IBOutlet weak var goNextButton: UIButton!
     @IBOutlet weak var goPrevButton: UIButton!
     @IBOutlet weak var pagesContainer: UIView! //unused
     @IBOutlet weak var footerSuraNameLabel: UILabel!
     @IBOutlet weak var footerInfoButton: UIButton!
+    @IBOutlet weak var footerFullInfoButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet var navbar: UIView!
     @IBOutlet weak var navBarTitle: UILabel!
@@ -354,8 +354,10 @@ class QPagesBrowser: UIViewController
 
         //let nextPageArrow = pageIndex < lastPage - 2 ? " >>" : ""
         //let pageInfo = String(format:NSLocalizedString("FooterInfo", comment: ""), partNumber,pageIndex+1)
+        
         let pageInfo = AStr.miniPartNPageN(part: partNumber, page: pageIndex+1)
         self.footerInfoButton.setTitle(pageInfo, for: .normal)
+        self.footerFullInfoButton.setTitle(AStr.partNPageN(part: partNumber, page: pageIndex+1), for: .normal)
         
         //let maskedAya = (MaskStart == -1) ? "" : ":\(qData.ayaLocation(MaskStart).aya+1)"
         self.footerSuraNameLabel.text = suraName.name //+ maskedAya
@@ -441,11 +443,13 @@ class QPagesBrowser: UIViewController
     /// - Parameter sender: long press gesture object
     @objc func onLongPressNext(_ sender: UILongPressGestureRecognizer){
         if MaskStart != -1, let pageView = currentPageView() {
+            let lineWidth = view.frame.width
+            let sneekWidth = lineWidth / 6
             if sender.state == .began {
-                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant + 60
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant + sneekWidth
             }
             else if sender.state == .ended{
-                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant - 60
+                pageView.maskHeadStartX.constant = pageView.maskHeadStartX.constant - sneekWidth
             }
         }else{
             let qData = QData.instance

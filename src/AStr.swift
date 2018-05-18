@@ -95,7 +95,7 @@ class AStr {
         return String(format:NSLocalizedString("thePageN", comment: ""),n)
     }
     static func nPagesFromY(n:Int,y:Int)->String{
-        return String(format:NSLocalizedString("nPagesFromY", comment: ""),n,y)
+        return String(format:NSLocalizedString("nPagesFromY", comment: ""),y,n)
     }
     static func nDaysAgo(n:Int)->String{
         return String(format:NSLocalizedString("nDaysAgo", comment: ""),n)
@@ -176,7 +176,7 @@ class AStr {
         return String(format:NSLocalizedString("nResultsForS", comment: "%@ results for %@"),ns,s)
     }
     static func miniPartNPageN(part:Int,page:Int)->String{
-        return String(format: NSLocalizedString("FooterInfo", comment: "p%d:s%d"), part, page)
+        return String(format: NSLocalizedString("miniPartNPageN", comment: "%d:p%d"), part, page)
     }
     static func partNPageN(part:Int,page:Int)->String{
         return String(format: NSLocalizedString("partNPageN", comment: "Part %d - Page %d"), part, page)
@@ -194,7 +194,7 @@ class AStr {
         return NSLocalizedString("tryOutThisApp", comment: "")
     }
     static var bookmarkAdded:String{
-        return NSLocalizedString("pageBookmarked", comment: "")
+        return NSLocalizedString("bookmarkAdded", comment: "")
     }
     static var bookmarkAddedDesc:String{
         return NSLocalizedString("bookmarkAddedDesc", comment: "")

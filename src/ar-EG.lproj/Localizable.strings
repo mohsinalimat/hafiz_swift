@@ -31,7 +31,7 @@
 "signOut" = "تسجيل خروج";
 "signIn" = "تسجيل دخول";
 
-"changeLanguage" = "تغيير اللغة";
+"changeLanguage" = "Change Language";
 "shareQuranHafiz" = "انشر حافظ القرآن";
 "rateQuranHafiz" = "تقييم حافظ القرآن";
 "Cancel" = "الغاء";
@@ -72,13 +72,14 @@
 "textSuraPage"="نص أو سورة أو صفحة";
 "Search"="بحث";
 "nResultsForS"="%@ نتائج ل %@";
-"partNPageN"="الجزء %d - صفحة %d";
+"miniPartNPageN"="%d:ص%d";
+"partNPageN"="جزء %d - صفحة %d";
 "signOutS"="هذا سيسجل خروجك %@";
 "appRestartRequired"="مطلوب اعادة تشغيل البرنامج";
 "appRestartRequiredDesc"="لكي تستخدم البرنامج باللغة المطلوبة يجب ان تغلق البرنامج وتعيد فتحه مرة أخرى";
 "tryOutThisApp"="ادعوكم لتجربة برنامج حافظ القرآن";
 "bookmarkAdded"="تم اضافة علامة";
-"bookmarkedAddedDesc"="يمكنك ان تجدها في أول قائمة العلامات في الصفحة الرئيسية";
+"bookmarkAddedDesc"="يمكنك ان تجدها في أول قائمة العلامات في الصفحة الرئيسية";
 "selectSura"="اختر السورة";
 "signInRequired"="يجب الدخول على حسابك لإكمال هذه العملية";
 "signInRequiredDesc"="هل تود تسجيل الدخول الآن؟";
