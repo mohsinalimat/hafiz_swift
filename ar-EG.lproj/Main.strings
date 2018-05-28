@@ -127,5 +127,11 @@
 /* Class = "UIButton"; normalTitle = "Back"; ObjectID = "7PC-Nf-mNf"; */
 "7PC-Nf-mNf.normalTitle" = "رجوع";
 
+/* Class = "UILabel"; text = "Failed to download page image"; ObjectID = "JuE-Rs-BbE"; */
+"JuE-Rs-BbE.text" = "لم يمكن تنزيل صورة الصفحة";
+
+/* Class = "UIButton"; normalTitle = "Retry"; ObjectID = "4Xg-Lq-bc5"; */
+"4Xg-Lq-bc5.normalTitle" = "إعادة المحاولة";
+
 
 

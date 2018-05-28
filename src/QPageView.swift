@@ -11,13 +11,7 @@ import Firebase
 
 class QPageView: UIViewController{
 
-    struct Colors {
-        static var ayaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.12) }
-        static var maskedAyaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1) }
-        static var maskNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 0, alpha: 0.12) }
-        static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
-    }
-    
+   
     var newMask = true
     var isBookmarked: Bool?
     var pageNumber: Int? //will be set by the creator ViewController
@@ -78,6 +72,8 @@ class QPageView: UIViewController{
     @IBOutlet weak var pageScroller: UIScrollView!
     @IBOutlet weak var pageBackground: UIImageView!
     @IBOutlet var downloadErrorView: UIView!
+    @IBOutlet var readingStop: UIView!
+    @IBOutlet weak var readingStopIndicator: UIImageView!
     
     @IBAction func pageImageTapped(_ sender: UIGestureRecognizer) {
         //retreatMask()
@@ -241,18 +237,45 @@ class QPageView: UIViewController{
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
+    var readingImageView:UIImageView?
+    
     //Reset cache and redraw the data
     @objc func readData(){
 
         self.hifzList = nil
         
-//        if let pageNumber = self.pageNumber{
-//            let _ = QData.isBookmarked(pageNumber-1 ){(is_true) in
-//                self.isBookmarked = is_true
-//            }
-//        }
         createHifzColors()
+
+        let readingStopPage = Utils.getReadingStop()
+        
+        if self.pageIndex == readingStopPage{
+            if self.readingImageView == nil {// already created
+                let imageView = UIImageView(image: UIImage(named: "Bookmark Filled"))
+                imageView.tintColor = AppColors.greenBg
+                imageView.alpha = 0.4
+                imageView.contentMode = .scaleToFill
+                view.addSubview(imageView)
+
+                let alignment = (readingStopPage % 2 == 0) ?
+                    imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:-5) :
+                    imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:5)
+                
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                
+                NSLayoutConstraint.activate([
+                    imageView.widthAnchor.constraint(equalToConstant: 25),
+                    imageView.heightAnchor.constraint(equalToConstant: 50),
+                    imageView.topAnchor.constraint(equalTo:view.topAnchor),
+                    alignment
+                ])
+                
+                readingImageView = imageView // to be able to remove it
+            }
+        }else{
+            self.readingImageView?.removeFromSuperview()
+            self.readingImageView = nil
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -261,7 +284,7 @@ class QPageView: UIViewController{
         pageTapGesture.isEnabled = (MaskStart != -1)
         if let pageNumber = self.pageNumber {
             let bgImage = (pageNumber % 2 == 0) ? "left_page" : "right_page"
-            pageBackground.image = UIImage(named: bgImage)!
+            pageBackground?.image = UIImage(named: bgImage)!
         }
     }
     
@@ -356,7 +379,7 @@ class QPageView: UIViewController{
                             //Apply the image data in the UI thread (similar to javascript:window.setTimeout())
                             DispatchQueue.main.async {
                                 //Set the imageView source
-                                self.pageImage.image = downloadedImage
+                                self.pageImage?.image = downloadedImage
                                 self.pageLoadingIndicator.stopAnimating()
                             }
                         }
@@ -386,7 +409,7 @@ class QPageView: UIViewController{
                 let qData = QData.instance
                 for ayaFullInfo in pageMap{
                     let btn = UIView()
-                    btn.backgroundColor = Colors.ayaBtn
+                    btn.backgroundColor = AppColors.ayaBtn
                     btn.layer.cornerRadius = 5
 //                    let tap = UILongPressGestureRecognizer(target: self, action: #selector(onClickAyaButton))
 //                    btn.addGestureRecognizer(tap)
@@ -448,16 +471,16 @@ class QPageView: UIViewController{
             return -1
         }
         
-        maskBody.isHidden = false
-        maskHead.isHidden = false
+        maskBody?.isHidden = false
+        maskHead?.isHidden = false
 
         //let maskAyaPosition = MaskStart
 
         if MaskStart == -1{
-            maskBodyHeight.constant = 0
-            maskHeadStartX.constant = 0
-            maskHeadHeight.constant = 0
-            btnCloseMask.isHidden = true
+            maskBodyHeight?.constant = 0
+            maskHeadStartX?.constant = 0
+            maskHeadHeight?.constant = 0
+            btnCloseMask?.isHidden = true
             return -1 // mask is hidden
         }
         
@@ -465,10 +488,10 @@ class QPageView: UIViewController{
         let maskStartPage = qData.pageIndex(ayaPosition: MaskStart)
         let currPageIndex = self.pageIndex
         if  currPageIndex < maskStartPage {
-            maskBodyHeight.constant = 0
-            maskHeadStartX.constant = 0
-            maskHeadHeight.constant = 0
-            btnCloseMask.isHidden = true
+            maskBodyHeight?.constant = 0
+            maskHeadStartX?.constant = 0
+            maskHeadHeight?.constant = 0
+            btnCloseMask?.isHidden = true
             return maskStartPage// active page is before masked page, nothing to show
         }
         //somthing to show
@@ -479,13 +502,13 @@ class QPageView: UIViewController{
             //mask started in an earlier page, active page is totally covered
             //maskHead.isHidden = true
             //maskHeadStartX.constant = 0
-            maskHeadHeight.constant = 0
-            btnCloseMask.isHidden = true
-            maskBodyHeight.constant = imageRect.size.height
+            maskHeadHeight?.constant = 0
+            btnCloseMask?.isHidden = true
+            maskBodyHeight?.constant = imageRect.size.height
             return maskStartPage
         }
         
-        btnCloseMask.isHidden = false
+        btnCloseMask?.isHidden = false
         //maskHead.isHidden = false
 
         
@@ -526,9 +549,9 @@ class QPageView: UIViewController{
 //                })
 //            }else{
                 self.newMask = false
-                self.maskHeadHeight.constant = maskHeadHeight
-                self.maskHeadStartX.constant = maskHeadStartX
-                self.maskBodyHeight.constant = maskBodyHeight
+                self.maskHeadHeight?.constant = maskHeadHeight
+                self.maskHeadStartX?.constant = maskHeadStartX
+                self.maskBodyHeight?.constant = maskBodyHeight
 //            }
 
         }
@@ -585,35 +608,42 @@ class QPageView: UIViewController{
     }
 
     func scrollToBottom(){
-        pageScroller.contentSize = pageImage.frame.size
-        let bottomOffset = CGPoint(x: 0, y: pageImage.frame.size.height - pageScroller.frame.size.height)
-        pageScroller.setContentOffset(bottomOffset, animated: true)
+        if let pageScroller = self.pageScroller, let pageImage = self.pageImage{
+            pageScroller.contentSize = pageImage.frame.size
+            let bottomOffset = CGPoint(x: 0, y: pageImage.frame.size.height - pageScroller.frame.size.height)
+            pageScroller.setContentOffset(bottomOffset, animated: true)
+        }
     }
 
     func scrollToTop(){
         let topOffset = CGPoint(x: 0, y: 0)
-        pageScroller.setContentOffset(topOffset, animated: true)
+        pageScroller?.setContentOffset(topOffset, animated: true)
     }
 
     func scrollToMaskStart(){
-        pageScroller.contentSize = pageImage.frame.size
-        pageScroller.scrollRectToVisible(selectHead.frame, animated: true)
+        if let pageScroller = self.pageScroller,
+            let pageImage = self.pageImage,
+            let selectHead = self.selectHead
+        {
+            pageScroller.contentSize = pageImage.frame.size
+            pageScroller.scrollRectToVisible(selectHead.frame, animated: true)
+        }
     }
 
     func scrollToSelectedAya(){
-        if selectHead.isHidden != true {
-            pageScroller.contentSize = pageImage.frame.size
+        if selectHead?.isHidden == false {
+            pageScroller?.contentSize = pageImage.frame.size
             var sel_rect = selectHead.frame
-            if selectBody.isHidden == false {
+            if selectBody?.isHidden == false {
                 sel_rect.size.height = sel_rect.height + selectBody.frame.height
             }
-            if selectEnd.isHidden == false {
+            if selectEnd?.isHidden == false {
                 sel_rect.size.height = sel_rect.height + selectEnd.frame.height
             }
             if sel_rect.height > pageScroller.frame.height{
                 sel_rect.size.height = pageScroller.frame.height
             }
-            pageScroller.scrollRectToVisible(sel_rect, animated: true)
+            pageScroller?.scrollRectToVisible(sel_rect, animated: true)
         }
     }
 
@@ -861,7 +891,7 @@ class QPageView: UIViewController{
                 let selectStartInfo = qData.ayaMapInfo(SelectStart, pageMap: pageMap)! //TODO: validate not nil
                 let selectEndInfo = SelectStart == SelectEnd ? selectStartInfo : qData.ayaMapInfo(SelectEnd, pageMap: pageMap)!
                 let ypos = pageHeight * CGFloat(selectStartInfo.sline) / 15
-                selectHeadY.constant = ypos
+                selectHeadY?.constant = ypos
                 var startX = (CGFloat(selectStartInfo.spos) * pageWidth) / 1000
                 if startX < pageWidth/20 {
                     startX = 0

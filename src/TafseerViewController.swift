@@ -9,16 +9,19 @@
 import UIKit
 
 let TafseerSources = [
-    "ar.muyassar",//Muyassar
-    "ar.jalalayn",//Jalalayn
-    "en.yusufali",//English
-    "id.indonesian",//Indonesian
-    "ms.basmeih", //Malay
-    "ta.tamil",//Tamil
-    "ur.maududi",//Urdu
-    "tr.golpinarli",//Turkish
-    "fr.hamidullah",//French
-    "de.aburida"//Deutch
+    "ar.muyassar",
+    "ar.jalalayn",
+    "ur.maududi",
+    "fa.ansarian",
+    "ta.tamil",
+    "hi.farooq",
+    "de.aburida",
+    "en.yusufali",
+    "es.bornez",
+    "fr.hamidullah",
+    "id.indonesian",
+    "tr.golpinarli",
+    "ms.basmeih"
 ]
 
 class TafseerViewController: UIViewController,

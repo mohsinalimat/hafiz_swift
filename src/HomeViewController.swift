@@ -28,7 +28,7 @@ class HomeViewController: UITabBarController
     
     @objc func updateSignInButtonTitle()
     {
-        signInBarButton.image = UIImage(named: QData.signedIn ? "logout" : "login")
+        signInBarButton.image = UIImage(named: QData.signedIn ? "AccessFilled" : "Access")
     }
     
     override func viewWillAppear(_ animated: Bool) {

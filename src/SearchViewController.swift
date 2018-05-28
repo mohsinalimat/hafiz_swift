@@ -35,23 +35,30 @@ class SearchViewController:
         
         // Do any additional setup after loading the view.
         searchBar.becomeFirstResponder();
+        readSearchHistory()
         //searchBar.delegate = self //storyboard takes care of that
-        self.history = UserDefaults.standard.array(forKey: "search_history") as? [String] ?? [
-            "محمد",
-            "نوح",
-            "ادريس",
-            "ابراهيم",
-            "اسماعيل",
-            "اسحاق",
-            "يعقوب",
-            "يوسف",
-            "موسى",
-            "هارون",
-            "عيسى",
-            "ايوب",
-            "داوود",
-            "سليمان"
-        ]
+    }
+    
+    func readSearchHistory(){
+        self.history = UserDefaults.standard.array(forKey: "search_history") as? [String] ?? []
+        if self.history!.count == 0{
+            self.history = [
+                "محمد",
+                "نوح",
+                "ادريس",
+                "ابراهيم",
+                "اسماعيل",
+                "اسحاق",
+                "يعقوب",
+                "يوسف",
+                "موسى",
+                "هارون",
+                "عيسى",
+                "ايوب",
+                "داوود",
+                "سليمان"
+            ]
+        }
     }
 
     @IBAction func onTapOutsideResults(_ sender: UITapGestureRecognizer) {
@@ -73,7 +80,7 @@ class SearchViewController:
                     if pageNumber>0 && pageNumber<=QData.lastPageIndex{
                         let aya = QData.instance.ayaPosition(pageIndex: pageNumber-1)
                         SelectStart = aya
-                        SelectEnd = aya
+                        SelectEnd = SelectStart
                         dismiss(animated: true, completion: nil)
                         NotificationCenter.default.post(
                             name: AppNotifications.searchOpenAya,
@@ -178,7 +185,7 @@ class SearchViewController:
                 aya = qData.ayaPosition(sura: suraIndex, aya: 0)
             }
             SelectStart = aya
-            SelectEnd = aya
+            SelectEnd = SelectStart
             dismiss(animated: true, completion: nil)
             NotificationCenter.default.post(
                 name: AppNotifications.searchOpenAya,
@@ -192,6 +199,23 @@ class SearchViewController:
             self.searchBar(self.searchBar, textDidChange: history[row])
         }
     }
-   
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let table_id = tableView.restorationIdentifier ?? "unknown"
+        if table_id == "History" {
+            return [
+                UITableViewRowAction(style: .destructive, title: AStr.remove, handler: {
+                    (rowAction, indexPath) in
+                    if let history = self.history {
+                        let historyItem = history[indexPath.row]
+                        let _ = Utils.removeSearchHistory(historyItem)
+                        self.readSearchHistory()
+                        tableView.reloadData()
+                    }
+                })
+            ]
+        }
+        return []
 
+    }
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 public enum AlertActions {
-    case revise, search ,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz, bookmark
+    case revise, search ,addUpdateHifz, addHifzSelectSura, addHifzSelectRange, revisedHifz, removeHifz, bookmark, newBookmark, setReadingStop
     case signOut, signIn, changeLang, shareTheApp, rateApp
     case arabic, english
 }

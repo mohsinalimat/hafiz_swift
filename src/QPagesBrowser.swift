@@ -595,10 +595,16 @@ class QPagesBrowser: UIViewController
         let addToHifz = alertAction(.addUpdateHifz, addUpdateHifzTitle) // check if hifzRange is active
 
         var actions = [
-            startRevise,
-            addToHifz
+            startRevise
         ]
+        
+        let readingStop = Utils.getReadingStop()
+        if readingStop != currentPageIndx(){
+            actions.append( alertAction(.setReadingStop , AStr.setReadingStop) )
+        }
 
+        actions.append(addToHifz)
+        
         if !isBookmarked(){
             actions.append( alertAction(.bookmark , AStr.bookmark) )
         }
@@ -624,17 +630,24 @@ class QPagesBrowser: UIViewController
         case .search:
             self.showSearch()
             break
-        
+
         case .bookmark:
             if !QData.checkSignedIn(self){
                 break
             }
-            
             let aya = QData.instance.ayaPosition( pageIndex: self.currentPageIndx() )
-
+            
             let _ = QData.createBookmark(aya: aya){snapshot in
                 Utils.showMessage(self, title: AStr.bookmarkAdded,
                                   message: AStr.bookmarkAddedDesc)
+            }
+            break
+
+        case .setReadingStop:
+            Utils.confirmMessage(self, AStr.confirmSetReadingStop(from: Utils.getReadingStop(), to: self.currentPageIndx()), AStr.areYouSure , .yes){ yes in
+                if yes{
+                    Utils.saveSetting("reading_stop", self.currentPageIndx())
+                }
             }
             break
             
@@ -810,7 +823,7 @@ class QPagesBrowser: UIViewController
     func setNavigationButtonsColor(){
         var bgColor = UIColor.clear
         if MaskStart != -1 {
-            bgColor = QPageView.Colors.maskNavBg
+            bgColor = AppColors.maskNavBg
         }
 //        else if SelectStart != -1 {
 //            bgColor = QPageView.Colors.selectNavBg

@@ -691,6 +691,7 @@ class QData{
             
             pageMarks.observeSingleEvent(of: .childAdded) { (snapshot) in
                 block(snapshot)
+                AppDelegate.notifyDataChanged(snapshot: snapshot)
             }
             
             
@@ -706,6 +707,7 @@ class QData{
             
             pageMarks.observeSingleEvent(of: .childRemoved) { (snapshot) in
                 block(snapshot)
+                AppDelegate.notifyDataChanged(snapshot: snapshot)
             }
             
             pageMarks.child(String(aya)).removeValue()
@@ -772,6 +774,7 @@ class QData{
             hifz.observeSingleEvent(of: .childRemoved){
                 snapshot in
                 block(snapshot)
+                AppDelegate.notifyDataChanged(snapshot: snapshot)
             }
             
             var dict:[AnyHashable:Any] = [:]
@@ -813,6 +816,7 @@ class QData{
 //                    print("Hifz:Error: got the wrong node \(snapshot.key) instead of \(hifzID) ")
 //                }
                 block(hifzRange)
+                AppDelegate.notifyDataChanged(snapshot: snapshot)
             }
             
             let dict : NSDictionary = [
@@ -1124,10 +1128,10 @@ class QData{
             
             // mid range
             if hRange.count == 1{
-                return AStr.thePageN(n: page_offset)
+                return AStr.thePageN(n: page_offset+1)
                 //return "the page: \(page_offset)"
             }
-            return AStr.nPagesFromY(n: hRange.count, y: page_offset)
+            return AStr.nPagesFromY(n: hRange.count, y: page_offset+1)
             //return "from: \(page_offset) - pages: \(hRange.count)"
         }
 

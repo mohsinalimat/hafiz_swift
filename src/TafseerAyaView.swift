@@ -12,7 +12,9 @@ class TafseerAyaView: UIViewController
 {
 
     //@IBOutlet weak var AyaView: UITextView!
-    @IBOutlet weak var tafseerTextView: UITextView!
+    
+    @IBOutlet weak var ayaText: UITextView!
+    @IBOutlet weak var tafseerText: UITextView!
     
     var ayaPosition:Int?
     var selectedTafseer:String?
@@ -23,28 +25,30 @@ class TafseerAyaView: UIViewController
         // Do any additional setup after loading the view.
         if let aya = ayaPosition,
             let ayaText = QData.instance.ayaText(ayaPosition: aya){
-            let coloredAyaText = NSMutableAttributedString(
-                string: "\n\(ayaText)\n\n",
-                attributes: [
-                    NSAttributedStringKey.foregroundColor: UIColor.blue,
-                    //NSAttributedStringKey.writingDirection: NSWritingDirectionAttributeName.,
-                    NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)
-                ]
-            )
+//            let coloredAyaText = NSMutableAttributedString(
+//                string: "\n\(ayaText)\n\n",
+//                attributes: [
+//                    NSAttributedStringKey.foregroundColor: UIColor.blue,
+//                    //NSAttributedStringKey.writingDirection: NSWritingDirectionAttributeName.,
+//                    NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)
+//                ]
+//            )
             let tafseerText = QData.getTafseer( aya, selectedTafseer ) ?? "Missing"
-            let coloredTafseerText = NSAttributedString(
-                string: tafseerText,
-                attributes:[
-                    NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)
-                ]
-            )
             
-            coloredAyaText.append( coloredTafseerText )
+            self.tafseerText.text = tafseerText
+//            let coloredTafseerText = NSAttributedString(
+//                string: tafseerText,
+//                attributes:[
+//                    NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18)
+//                ]
+//            )
             
-            tafseerTextView.attributedText = coloredAyaText
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.tafseerTextView.isScrollEnabled = true
-            }
+            //coloredAyaText.append( coloredTafseerText )
+            
+            self.ayaText.text = ayaText
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                self.tafseerTextView.isScrollEnabled = true
+//            }
         }
         
     }

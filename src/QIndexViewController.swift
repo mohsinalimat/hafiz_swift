@@ -78,22 +78,36 @@ class QIndexViewController: UITableViewController
     
     override
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 30
+        return 31
     }
 
     override
-    func tableView(_ tableView: UITableView, numberOfRowsInSection partIndex: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
         let qData = QData.instance
         
-        if let partInfo = qData.partInfo(partIndex: partIndex) {
-            let rows = partInfo.endSura - partInfo.sura
-            return rows + 1
+        switch sectionIndex{
+        case 0://reading position
+            return 1
+        default:
+            let partIndex = sectionIndex - 1
+            if let partInfo = qData.partInfo(partIndex: partIndex) {
+                let rows = partInfo.endSura - partInfo.sura
+                return rows + 1
+            }
         }
         
         return 0
     }
     
     // MARK: - Table view UI delegates
+    
+    override
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = AppColors.silverBg
+        if let header = view as? UITableViewHeaderFooterView{
+            header.textLabel?.textColor = AppColors.blueText
+        }
+    }
     
     override
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
@@ -137,73 +151,84 @@ class QIndexViewController: UITableViewController
     
     override
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return AStr.partN(n: section+1)
+        if section == 0{
+            return AStr.readingStop
+        }
+        return AStr.partN(n: section)
     }
 
     override
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let qData = QData.instance
-        //var cellID = "SuraStart"
-
-        let partIndex = indexPath.section
-        let suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
-
         var ayaPos = 0
         var partStartPage = 0
         var suraStartPage = 0
         var pageNumber = 0
-        //var suraPrefix = "\(suraIndex+1)"
-        var partStart = false
-        //let backgroundView = UIImageView(image: UIImage(named: "Heart"))
+        var insideSura = false
+        var suraIndex = 0
+        var aya = 0
 
-        if let partInfo = qData.partInfo(partIndex: partIndex) {
-            partStartPage = partInfo.page
-            ayaPos = qData.ayaPosition(sura: partInfo.sura, aya: partInfo.aya)
-        }
-
-        if let sInfo = qData.suraInfo(suraIndex) {
-            suraStartPage = sInfo.page
-        }
-
-        if indexPath.row == 0 {
-            //first row in the section, it could be a part or a sura
-            pageNumber = partStartPage + 1
-            if suraStartPage != partStartPage{
-                //suraPrefix = "..."
-                //cellID = "SuraResume"
-                partStart = true
+        if indexPath.section == 0 { // reading stop
+            let readingStop = Utils.readSetting("reading_stop") as? Int ?? 0
+            pageNumber = readingStop + 1
+            if let pageInfo = qData.pageInfo(readingStop){
+                aya = pageInfo.ayaIndex
+                suraIndex = pageInfo.suraIndex
+                ayaPos = pageInfo.ayaPos
+                if pageInfo.ayaIndex != 0{
+                    insideSura = true
+                }
             }
-        }else{
-            pageNumber = suraStartPage + 1
-            ayaPos = qData.ayaPosition(sura: suraIndex, aya: 0)
+        }
+        else {// parts and suras
+            let partIndex = indexPath.section - 1
+            
+            suraIndex = qData.suraIndex(partIndex: partIndex) + indexPath.row
+            
+            if let partInfo = qData.partInfo(partIndex: partIndex) {
+                partStartPage = partInfo.page
+                aya = partInfo.aya
+                ayaPos = qData.ayaPosition(sura: partInfo.sura, aya: aya)
+            }
+
+            if let sInfo = qData.suraInfo(suraIndex) {
+                suraStartPage = sInfo.page
+            }
+
+            if indexPath.row == 0 {
+                //first row in the section, it could be a part or a sura
+                pageNumber = partStartPage + 1//displayed page
+                if suraStartPage != partStartPage{
+                    //the part started in the middle of a sura
+                    insideSura = true
+                }
+            }else{
+                pageNumber = suraStartPage + 1
+                ayaPos = qData.ayaPosition(sura: suraIndex, aya: 0)
+                aya = 0
+            }
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "SuraStart", for: indexPath)
         cell.tag = ayaPos
-//        if cellID == "SuraStart"{
-//            cell.backgroundView = UIImageView(image:UIImage(named: "index_item_background")!)
-//        }
-        if let suraName = qData.suraName(suraIndex: suraIndex) {
-            if let suraCell = cell as? IndexTableViewCell{
-                suraCell.setCellInfo( ayaPos, suraIndex )
-                suraCell.suraNumber.text = partStart ? "..." : String(suraIndex+1)
-                suraCell.pageNumber.text = String(pageNumber)
-                suraCell.suraName.text = suraName.name
-                if let ayaText = qData.ayaText(ayaPosition: ayaPos){
-                    suraCell.firstAya.text = ayaText
-                }
-                suraCell.backgroundImage.image = partStart ? nil : UIImage(named: "index_item_background")
+        
+        if let suraName = qData.suraName(suraIndex: suraIndex),
+           let suraCell = cell as? IndexTableViewCell
+        {
+            suraCell.setCellInfo( ayaPos, suraIndex )
+            suraCell.suraNumber.text = insideSura ? "..." : String(suraIndex+1)
+            suraCell.pageNumber.text = String(pageNumber)
+            let ayaNumber = (aya>0) ? " (\(aya+1))" : ""
+            suraCell.suraName.text = suraName.name + ayaNumber
+            if let ayaText = qData.ayaText(ayaPosition: ayaPos){
+                suraCell.firstAya.text = ayaText
             }
-//            else{
-//                cell.textLabel?.text = "\(suraPrefix) \(suraName.name)";
-//                cell.detailTextLabel?.text = "\(pageNumber)" //String(format:pagePrompt, pageNumber)
-//            }
+            suraCell.backgroundImage.image = insideSura ? nil : UIImage(named: "index_item_background")
         }
         
         return cell;
     }
-    
     
     override
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -231,7 +256,7 @@ class QIndexViewController: UITableViewController
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        var titles = [String]()
+        var titles = ["*"]
         for n in 1...30 {
             titles.append(String(n))
         }

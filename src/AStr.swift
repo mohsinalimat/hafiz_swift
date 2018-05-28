@@ -109,6 +109,12 @@ class AStr {
     static var lastViewed:String{
         return NSLocalizedString("lastViewed", comment: "Last Viewed Locations")
     }
+    static var readingStop:String{
+        return NSLocalizedString("readingStop", comment: "Reading stop")
+    }
+    static var setReadingStop:String{
+        return NSLocalizedString("setReadingStop", comment: "Set reading stop")
+    }
     static var bookmarks:String{
         return NSLocalizedString("Bookmarks", comment: "")
     }
@@ -210,5 +216,8 @@ class AStr {
         return NSLocalizedString("selectSura", comment: "")
     }
 
+    static func confirmSetReadingStop(from:Int, to:Int)->String{
+        return String(format:NSLocalizedString("confirmSetReadingStop", comment: "Confirm changing your reading position from page  %d to page %d"), from, to)
+    }
 
 }

@@ -15,12 +15,18 @@
 
 "ar.muyassar" = "الميسر";
 "ar.jalalayn" = "الجلالين";
+"ur.maududi" = "اردو";
+"fa.ansarian" = "فارسي";
+"ta.tamil" = "தமிழ்";
+"hi.farooq" = "हिंदी";
+"de.aburida" = "Deutch";
 "en.yusufali" = "English";
-"tr.golpinarli" = "Turkish";
-"fr.hamidullah" = "French";
-"de.bubenheim" = "Deutch";
+"es.bornez" = "Español";
+"fr.hamidullah" = "Francais";
 "id.indonesian" = "Indonesian";
-"ms.basmeih" = "Malayu";
+"tr.golpinarli" = "Türk";
+"ms.basmeih" = "Malay";
+
 "Tafseer" = "تفسير";
 "Revise" = "مراجعة";
 "Remove" = "حذف";
@@ -56,7 +62,7 @@
 "removeFromHifz"="حذف من محفوظاتك";
 "removeSFromHifz"="حذف %@ من محفوظاتك";
 "addStoYourHifz"="اضافة %@ الى محفوظاتك";
-"areYouSure"="هل انت متأكد?";
+"areYouSure"="هل انت متأكد؟";
 "Yes"="نعم";
 "No"="لا";
 "mergeExistingHifz"="دمج محفوظات حالية";
@@ -75,11 +81,14 @@
 "miniPartNPageN"="%d:ص%d";
 "partNPageN"="جزء %d - صفحة %d";
 "signOutS"="هذا سيسجل خروجك %@";
-"appRestartRequired"="مطلوب اعادة تشغيل البرنامج";
-"appRestartRequiredDesc"="لكي تستخدم البرنامج باللغة المطلوبة يجب ان تغلق البرنامج وتعيد فتحه مرة أخرى";
+"appRestartRequired"="App Restart Required";
+"appRestartRequiredDesc"="In order to change the language, the App must be closed and reopened";
 "tryOutThisApp"="ادعوكم لتجربة برنامج حافظ القرآن";
 "bookmarkAdded"="تم اضافة علامة";
 "bookmarkAddedDesc"="يمكنك ان تجدها في أول قائمة العلامات في الصفحة الرئيسية";
 "selectSura"="اختر السورة";
 "signInRequired"="يجب الدخول على حسابك لإكمال هذه العملية";
 "signInRequiredDesc"="هل تود تسجيل الدخول الآن؟";
+"readingStop" = "مؤشر القراءة";
+"setReadingStop" = "ضع مؤشر القراءة";
+"confirmSetReadingStop" = "نقل مؤشر القراءة من صفحة:%d الى صفحة:%d";

@@ -166,7 +166,14 @@ class BookmarksViewController: UITableViewController {
         return // never called
     }
 
-    
+    override
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = AppColors.silverBg
+        if let header = view as? UITableViewHeaderFooterView{
+            header.textLabel?.textColor = AppColors.blueText
+        }
+    }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let rowIndex = indexPath.row
         let cell = tableView.dequeueReusableCell(withIdentifier: "Bookmark", for: indexPath)

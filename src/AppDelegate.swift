@@ -74,7 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         return false
     }
 
-
     //MARK: - FireUIAuth In delegate methods
 
     func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
@@ -91,17 +90,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     }
     
     func handleSignedIn(){
-        if let hifzRef = QData.userData("hifz"){
-            hifzRef.observe(.childAdded, with: self.notifyDataChanged )
-            hifzRef.observe(.childRemoved, with: self.notifyDataChanged )
-            hifzRef.observe(.childChanged, with: self.notifyDataChanged )
-        }
-
-        if let pageMarks = QData.userData("aya_marks"){
-            pageMarks.observe(.childAdded, with: self.notifyDataChanged )
-            pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
-            pageMarks.observe(.childChanged, with: self.notifyDataChanged )
-        }
+//        if let hifzRef = QData.userData("hifz"){
+//            hifzRef.observe(.childAdded, with: self.notifyDataChanged )
+//            hifzRef.observe(.childRemoved, with: self.notifyDataChanged )
+//            hifzRef.observe(.childChanged, with: self.notifyDataChanged )
+//        }
+//
+//        if let pageMarks = QData.userData("aya_marks"){
+//            pageMarks.observe(.childAdded, with: self.notifyDataChanged )
+//            pageMarks.observe(.childRemoved, with: self.notifyDataChanged )
+//            pageMarks.observe(.childChanged, with: self.notifyDataChanged )
+//        }
 
         NotificationCenter.default.post(name: AppNotifications.signedIn, object: nil)
         NotificationCenter.default.post(name: AppNotifications.dataUpdated, object: nil)
@@ -112,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         NotificationCenter.default.post(name: AppNotifications.signedIn, object: nil)
     }
 
-    @objc func notifyDataChanged(snapshot:DataSnapshot)->Void{
+    static func notifyDataChanged(snapshot:DataSnapshot)->Void{
         print("FIR: data changed \(snapshot.key)")
         NotificationCenter.default.post(
             name: AppNotifications.dataUpdated, object: snapshot
@@ -137,5 +136,15 @@ struct AppNotifications {
     static var dataUpdated: NSNotification.Name { return NSNotification.Name(rawValue: "dataUpdated") }
     static var signedIn: NSNotification.Name { return NSNotification.Name(rawValue: "signedIn") }
     static var pageViewed: NSNotification.Name { return NSNotification.Name(rawValue: "signedIn") }
+}
+
+struct AppColors {
+    static var ayaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.12) }
+//    static var maskedAyaBtn: UIColor { return UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1) }
+    static var maskNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 0, alpha: 0.12) }
+    static var selectNavBg: UIColor { return UIColor(red: 0, green: 0, blue: 1, alpha: 0.12) }
+    static var blueText: UIColor { return UIColor(hue: 214/360, saturation: 1, brightness: 1, alpha: 1) }
+    static var silverBg: UIColor { return UIColor(white: 0.90, alpha: 1) }
+    static var greenBg: UIColor { return UIColor(red: 51/256, green: 102/256, blue: 51/256, alpha: 1) }
 }
 

@@ -14,6 +14,21 @@ enum ConfirmationAlertType{
 
 class Utils {
 
+    static func saveSetting(_ id: String, _ val: Any ){
+        let settings = UserDefaults.standard
+        settings.set(val, forKey:id)
+        NotificationCenter.default.post(name: AppNotifications.dataUpdated, object:nil)
+    }
+
+    static func readSetting(_ id: String )->Any?{
+        let settings = UserDefaults.standard
+        return settings.value(forKey: id)
+    }
+    
+    static func getReadingStop()->Int{
+        return Utils.readSetting("reading_stop") as? Int ?? 0
+    }
+    
     static func addToSearchHistory(_ text:String,_ results: Int = 1000 ){
         if text.count > 1 && results > 0{
             let settings = UserDefaults.standard
@@ -27,7 +42,19 @@ class Utils {
             settings.set(hist,forKey: "search_history")
         }
     }
-    
+
+    static func removeSearchHistory(_ text:String )->[String]{
+        let settings = UserDefaults.standard
+        var hist = settings.value(forKey: "search_history") as? [String] ?? []
+        if let old = hist.index(of: text){
+            hist.remove(at: old)
+        }
+        //save in history
+        settings.set(hist,forKey: "search_history")
+        
+        return hist
+    }
+
     static func getDataFromUrl(
         url: URL,
         block: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void

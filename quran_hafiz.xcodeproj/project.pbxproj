@@ -34,7 +34,6 @@
 		2DC6C5301FB8D43D006939EF /* QPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC6C52F1FB8D43D006939EF /* QPageViewController.swift */; };
 		2DD8D75F1FA65725008DD81D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D75E1FA65725008DD81D /* Extensions.swift */; };
 		2DD8D7611FA69F73008DD81D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8D7601FA69F73008DD81D /* Utils.swift */; };
-		2DDE908F20A8B42F00E919D1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DDE908E20A8B42F00E919D1 /* AudioToolbox.framework */; };
 		2DDE909120A9C29E00E919D1 /* tafseer in Resources */ = {isa = PBXBuildFile; fileRef = 2DDE909020A9C29D00E919D1 /* tafseer */; };
 		2DF0E09A202634BC00B3C493 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF0E099202634BC00B3C493 /* SearchViewController.swift */; };
 		2DF881F61F9F57CF0045EFCF /* TafseerAyaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF881F51F9F57CF0045EFCF /* TafseerAyaView.swift */; };
@@ -91,7 +90,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DDE908F20A8B42F00E919D1 /* AudioToolbox.framework in Frameworks */,
 				48CEF29625EFC3A73CA36212 /* Pods_Quran_Hafiz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

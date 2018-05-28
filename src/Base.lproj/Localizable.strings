@@ -12,20 +12,24 @@
 "PartInfo" = "Page %d - Sura %d - %@";
 "FooterInfo" = "p%d:p%d";
 "FooterSuraName" = "%d-%@%@";
-"ar.muyassar" = "Muyassar";
-"ar.jalalayn" = "Jalalayn";
+
+"ar.muyassar" = "الميسر";
+"ar.jalalayn" = "الجلالين";
+"ur.maududi" = "اردو";
+"fa.ansarian" = "فارسي";
+"ta.tamil" = "தமிழ்";
+"hi.farooq" = "हिंदी";
+"de.aburida" = "Deutch";
 "en.yusufali" = "English";
-"tr.golpinarli" = "Turkish";
-"fr.hamidullah" = "French";
-"de.bubenheim" = "Deutch";
+"es.bornez" = "Español";
+"fr.hamidullah" = "Francais";
 "id.indonesian" = "Indonesian";
-"ms.basmeih" = "Malayu";
-"ta.tamil" = "Tamil";
-"ur.maududi" = "Urdu";
+"tr.golpinarli" = "Türk";
+"ms.basmeih" = "Malay";
+
 "Tafseer" = "Tafseer";
 "Revise" = "Revise";
 "Remove" = "Remove";
-
 "addHifz" = "Add Hifz";
 "updateHifz" = "Update Hifz";
 "Bookmark" = "Bookmark";
@@ -76,10 +80,14 @@
 "miniPartNPageN"="%d:pg%d";
 "partNPageN"="Part %d - Page %d";
 "signOutS"="This will sign out %@";
-"appRestartRequired"="App Restart Required";
-"appRestartRequiredDesc"="In order to change the language, the App must be closed and reopened";
+"appRestartRequired"="مطلوب اعادة تشغيل البرنامج";
+"appRestartRequiredDesc"="لكي تستخدم البرنامج باللغة المطلوبة يجب ان تغلق البرنامج وتعيد فتحه مرة أخرى";
 "tryOutThisApp"="Try out the Quran Hafiz app";
 "bookmarkAdded"="Bookmark created";
 "bookmarkAddedDesc"="You can find it at the top of the Bookmarks tab in the home screen";
 "signInRequired"="Sign In required to proceed";
 "signInRequiredDesc"="Would you like to sign in now?";
+"readingStop" = "Reading stop";
+"setReadingStop" = "Set reading stop";
+"confirmSetReadingStop" = "Moving your reading position from page:%d to page:%d";
+
